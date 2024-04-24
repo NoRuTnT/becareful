@@ -1,4 +1,4 @@
-package com.becareful.backend.domain.report.config;
+package com.becareful.backend.common.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
   public class S3Config {
-    @Value("${amazon.aws.acceskey}")
+    @Value("${amazon.aws.accesskey}")
     private String accessKey;
 
     @Value("${amazon.aws.secretkey}")
