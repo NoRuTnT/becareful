@@ -3,3 +3,4 @@ spring:
     import:
       - application-db.yml
       - application-security.yml
+      - application-s3.yml
