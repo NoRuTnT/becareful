@@ -22,6 +22,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def naverApiKey = localProperties.getProperty("naver.api.key")
+if (naverApiKey == null) {
+    throw new FileNotFoundException("Naver Api Key not found. Define location with naver.api.key in the local.properties file.")
+}
+
 android {
     namespace "com.a207.becarefulcrosswalk"
     compileSdk flutter.compileSdkVersion
@@ -45,17 +50,22 @@ android {
         applicationId "com.a207.becarefulcrosswalk"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders["naverApiKey"] = naverApiKey
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders = [naverApiKey: naverApiKey]
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            manifestPlaceholders = [naverApiKey: naverApiKey]
         }
     }
 }
