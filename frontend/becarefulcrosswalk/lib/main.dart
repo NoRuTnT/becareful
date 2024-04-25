@@ -1,4 +1,5 @@
 import 'package:becarefulcrosswalk/screens/main_screen.dart';
+import 'package:becarefulcrosswalk/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +12,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MainScreen(),
+      routes: {
+        '/': (context) => MainScreen(),
+        '/map': (context) => const MapScreen(),
+      },
+      initialRoute: '/',
     );
   }
 }
