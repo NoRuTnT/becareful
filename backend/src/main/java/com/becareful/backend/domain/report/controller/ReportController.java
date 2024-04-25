@@ -20,7 +20,7 @@ public class ReportController {
     private ReportService reportService;
 
     @PostMapping(value = "/report")
-    public SuccessResponse createProduct(@RequestPart(value = "reportDetail") ReportResponseDto reportResponseDto) throws IOException {
+    public SuccessResponse createProduct(@RequestPart(value = "reportDetail") ReportResponseDto reportResponseDto) {
         String presignedUrl = reportService.createReport(reportResponseDto);
         return new SuccessResponse(HttpStatus.OK , "success").builder().result(presignedUrl).build();
     }
