@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
@@ -56,6 +57,7 @@ class _MapScreenState extends State<MapScreen> {
           }
         },
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }

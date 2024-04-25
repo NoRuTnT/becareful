@@ -1,14 +1,14 @@
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:flutter/cupertino.dart';
 
-class logo_widget extends StatelessWidget {
-  const logo_widget({
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(

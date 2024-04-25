@@ -5,18 +5,18 @@ class ServiceBoxWidget extends StatelessWidget {
     super.key,
     required this.color,
     required this.serviceName,
+    required this.serviceScreen,
   });
 
-  final String color;
+  final Color color;
   final String serviceName;
+  final String serviceScreen;
 
   @override
   Widget build(BuildContext context) {
-    final Color displayColor = Color(int.parse('0xFF' + color));
-
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.pushNamed(context, '/map');
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '$serviceScreen');
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
@@ -28,7 +28,7 @@ class ServiceBoxWidget extends StatelessWidget {
             top: BorderSide(color: Colors.black, width: 2.0),
             bottom: BorderSide(color: Colors.black, width: 2.0),
           ),
-          color: displayColor,
+          color: color,
         ),
         child: Text(
           textAlign: TextAlign.center,

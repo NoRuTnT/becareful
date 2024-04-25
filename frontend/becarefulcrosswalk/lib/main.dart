@@ -1,4 +1,4 @@
-import 'package:becarefulcrosswalk/screens/main_screen.dart';
+import 'package:becarefulcrosswalk/screens/landing_screen.dart';
 import 'package:becarefulcrosswalk/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +13,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (context) => MainScreen(),
+        '/': (context) => LandingScreen(),
         '/map': (context) => const MapScreen(),
+        // '/report': (context) => const ReportScreen(),
+        // '/userGuide' : (context) => const userGuideScreen(),
       },
       initialRoute: '/',
     );
