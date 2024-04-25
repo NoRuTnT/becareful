@@ -9,10 +9,10 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(),
-      body: Center(
+      body: const Center(
         child: Column(
           children: [
-            const SizedBox(
+            SizedBox(
               height: 180,
             ),
             ServiceBoxWidget(
@@ -30,6 +30,7 @@ class MainScreen extends StatelessWidget {
           ],
         ),
       ),
+      // bottomNavigationBar: BottomBar(),
     );
   }
 }
