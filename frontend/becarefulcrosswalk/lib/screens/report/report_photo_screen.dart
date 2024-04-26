@@ -1,18 +1,20 @@
 import 'dart:io';
 
+import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
+import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-class ReportScreen extends StatefulWidget {
-  const ReportScreen({super.key});
+class ReportPhotoScreen extends StatefulWidget {
+  const ReportPhotoScreen({super.key});
 
   @override
-  State<ReportScreen> createState() => _ReportScreenState();
+  State<ReportPhotoScreen> createState() => _ReportPhotoScreenState();
 }
 
-class _ReportScreenState extends State<ReportScreen> {
+class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
   CameraController? _controller;
   Future<void>? _initializeControllerFuture;
   String _displayText = '사진 촬영 버튼을 눌러\n신고할 장소를 찍어주세요.';
@@ -116,38 +118,52 @@ class _ReportScreenState extends State<ReportScreen> {
             _image == null
                 ? Row(
                     children: [
-                      ButtonWidget(
-                        text: "사진 촬영",
-                        backgroundColor: lightRed,
-                        onPressed: _takePicture,
+                      Expanded(
+                        child: ButtonWidget(
+                          text: "사진 촬영",
+                          backgroundColor: lightRed,
+                          onPressed: _takePicture,
+                        ),
                       ),
                     ],
                   )
                 : Row(
                     children: <Widget>[
-                      ButtonWidget(
-                        text: "재촬영",
-                        backgroundColor: lightPurple,
-                        onPressed: () {
-                          setState(() {
-                            _image = null;
-                            _displayText = '사진 촬영 버튼을 눌러\n신고할 장소를 찍어주세요.';
-                          });
-                        },
+                      Expanded(
+                        child: ButtonWidget(
+                          text: "재촬영",
+                          backgroundColor: lightPurple,
+                          onPressed: () {
+                            setState(() {
+                              _image = null;
+                              _displayText = '사진 촬영 버튼을 눌러\n신고할 장소를 찍어주세요.';
+                            });
+                          },
+                        ),
                       ),
                       const SizedBox(
                         width: 10,
                       ),
-                      ButtonWidget(
-                        text: "다음",
-                        backgroundColor: lightRed,
-                        onPressed: () {},
+                      Expanded(
+                        child: ButtonWidget(
+                          text: "다음",
+                          backgroundColor: lightRed,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReportVoiceScreen(),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
           ],
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }
