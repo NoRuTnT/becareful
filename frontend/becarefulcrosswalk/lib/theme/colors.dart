@@ -18,3 +18,9 @@ const white = Color(0XFFF5F5F5);
 
 const red2 = Color(0XFFFF7053);
 const green2 = Color(0XFF67E467);
+
+const strokeRed = Color(0XFFB39090);
+const strokeYellow = Color(0XFFA69A82);
+const strokeGreen = Color(0XFF95A493);
+const strokeBlue = Color(0XFF94ADC5);
+const strokePurple = Color(0XFFD1BED5);
