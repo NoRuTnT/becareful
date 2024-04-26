@@ -6,6 +6,7 @@ import com.becareful.backend.domain.intersection.service.IntersectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +17,17 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api")
 public class IntersectionController {
-    private static IntersectionService intersectionService;
+    private final IntersectionService intersectionService;
 
     @GetMapping(value = "/intersection")
-    public SuccessResponse getIntersection(@RequestPart(value = "IntersectionId") Long intersectionId){
-        List<Trafficlight> response = intersectionService.getIntersection(intersectionId);
-        return new SuccessResponse(HttpStatus.OK , "success").builder().result(response).build();
+    public ResponseEntity<SuccessResponse> getIntersection(@RequestPart(value = "IntersectionId") Long intersectionId){
+        List<Trafficlight> trafficlgihtresponse = intersectionService.getIntersection(intersectionId);
+        SuccessResponse response = SuccessResponse.builder()
+            .status(HttpStatus.OK)
+            .message("성공적으로 신호등이 조회되었습니다")
+            .result(trafficlgihtresponse)
+            .build();
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -17,11 +17,18 @@ import java.io.IOException;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api")
 public class ReportController {
-    private ReportService reportService;
+
+    private final ReportService reportService;
 
     @PostMapping(value = "/report")
-    public SuccessResponse createProduct(@RequestPart(value = "reportDetail") ReportResponseDto reportResponseDto) {
+    public ResponseEntity<SuccessResponse> createProduct(@RequestBody(required = false) ReportResponseDto reportResponseDto) {
         String presignedUrl = reportService.createReport(reportResponseDto);
-        return new SuccessResponse(HttpStatus.OK , "success").builder().result(presignedUrl).build();
+        SuccessResponse response = SuccessResponse.builder()
+            .status(HttpStatus.OK)
+            .message("success")
+            .result(presignedUrl)
+            .build();
+
+        return ResponseEntity.ok(response);
     }
 }
