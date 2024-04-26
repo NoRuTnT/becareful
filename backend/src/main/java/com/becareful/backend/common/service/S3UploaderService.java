@@ -18,7 +18,6 @@ import java.util.UUID;
 public class S3UploaderService {
     @Value("${amazon.aws.bucket}")
     private String bucket;
-
     private final AmazonS3 amazonS3;
 
     public String getPreSignedUrl(String fileName) {
@@ -53,7 +52,7 @@ public class S3UploaderService {
 
     public String createPath(String fileName) {
         String fileId = createFileId();
-        return String.format("%s/%s", fileId + fileName);
+        return String.format("%s", fileId + fileName);
     }
 }
 
