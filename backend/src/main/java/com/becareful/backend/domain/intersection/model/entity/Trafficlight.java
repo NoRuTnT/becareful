@@ -15,6 +15,7 @@ public class Trafficlight {
 
     @Id
     @Column(name = "traffic_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Long trafficId;
 
     @ManyToOne(fetch = FetchType.LAZY)
