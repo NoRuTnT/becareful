@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReportService {
-    private S3UploaderService s3UploaderService;
-    private AmazonS3 amazonS3;
+    private final S3UploaderService s3UploaderService;
+    private final AmazonS3 amazonS3;
     @Value("${amazon.aws.bucket}")
     private String bucket;
-    private ReportRepository reportRepository;
+    private final ReportRepository reportRepository;
 
     @Transactional
     public String createReport(ReportResponseDto reportResponseDto){
