@@ -4,16 +4,19 @@ class ButtonWidget extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final VoidCallback onPressed;
+  final double height;
 
   ButtonWidget({
     required this.text,
     required this.backgroundColor,
     required this.onPressed,
+    this.height = 55.0,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox(
+      height: height,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -26,7 +29,7 @@ class ButtonWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          padding: EdgeInsets.symmetric(vertical: 10),
+          minimumSize: Size(double.infinity, 20),
         ),
         child: Text(
           text,
