@@ -17,7 +17,7 @@ class TrafficInfoScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               direction + " 방향",
               style: TextStyle(
                 color: lightGray,
@@ -25,7 +25,7 @@ class TrafficInfoScreen extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text(
+            const Text(
               length + "미터 횡단보도",
               style: TextStyle(
                 color: lightGray,
@@ -33,7 +33,7 @@ class TrafficInfoScreen extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text(
+            const Text(
               lightColor + " " + remainingTime + "초",
               style: TextStyle(
                 color: green2,
@@ -43,9 +43,9 @@ class TrafficInfoScreen extends StatelessWidget {
             ),
             Stack(
               children: [
-                Center(
+                const Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                         horizontal: 20, vertical: 50),
                     child: Column(
                       children: [
