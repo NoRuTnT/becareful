@@ -31,6 +31,7 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
     final firstCamera = cameras.first;
     _controller = CameraController(firstCamera, ResolutionPreset.medium);
     _initializeControllerFuture = _controller!.initialize();
+    setState(() {});
   }
 
   Future<void> _takePicture() async {
