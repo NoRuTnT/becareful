@@ -26,14 +26,14 @@ class _ReportSttScreenState extends State<ReportSttScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Text(

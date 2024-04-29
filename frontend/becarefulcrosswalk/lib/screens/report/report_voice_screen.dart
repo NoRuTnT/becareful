@@ -1,3 +1,4 @@
+import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/report/report_complete_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_stt_result_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
@@ -5,6 +6,7 @@ import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class ReportVoiceScreen extends StatefulWidget {
@@ -40,7 +42,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
             print("인식된 텍스트: $_text");
           },
         ),
-        listenFor: Duration(seconds: 30),
+        listenFor: const Duration(seconds: 30),
       );
     } else {
       print("음성 인식을 시작할 수 없습니다.");
@@ -115,7 +117,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
                 onLongPress: _startListening,
                 onLongPressUp: _stopListening,
                 child: Container(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: lightBlue,
@@ -127,7 +129,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
                   child: Center(
                     child: Text(
                       _isListening ? '손 떼고 제출하기' : '꾹 누른채 말하기',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 25,
                         letterSpacing: 2,
@@ -145,11 +147,16 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
               child: ButtonWidget(
                 text: "신고하기",
                 backgroundColor: lightRed,
-                onPressed: () {
+                onPressed: () async {
+                  Provider.of<ReportData>(context, listen: false)
+                      .setReportText(_text);
+                  await Provider.of<ReportData>(context, listen: false)
+                      .sendReportToServer();
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReportCompleteScreen(),
+                      builder: (context) => const ReportCompleteScreen(),
                     ),
                   );
                 },

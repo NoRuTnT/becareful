@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
+import 'package:becarefulcrosswalk/service/my_location.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ReportPhotoScreen extends StatefulWidget {
   const ReportPhotoScreen({super.key});
@@ -19,6 +22,7 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
   Future<void>? _initializeControllerFuture;
   String _displayText = '사진 촬영 버튼을 눌러\n신고할 장소를 찍어주세요.';
   File? _image;
+  String? _roadAddress;
 
   @override
   void initState() {
@@ -136,7 +140,12 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
                           backgroundColor: lightPurple,
                           onPressed: () {
                             setState(() {
+                              Provider.of<ReportData>(context, listen: false)
+                                  .clearImageFile();
+                              Provider.of<ReportData>(context, listen: false)
+                                  .clearRoadAddress();
                               _image = null;
+                              _roadAddress = null;
                               _displayText = '사진 촬영 버튼을 눌러\n신고할 장소를 찍어주세요.';
                             });
                           },
@@ -149,7 +158,16 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
                         child: ButtonWidget(
                           text: "다음",
                           backgroundColor: lightRed,
-                          onPressed: () {
+                          onPressed: () async {
+                            _roadAddress = await MyLocation().getRoadAddress();
+                            if (_image != null) {
+                              Provider.of<ReportData>(context, listen: false)
+                                  .setImageFile(_image!);
+                            }
+                            if (_roadAddress != null) {
+                              Provider.of<ReportData>(context, listen: false)
+                                  .setRoadAddress(_roadAddress!);
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(

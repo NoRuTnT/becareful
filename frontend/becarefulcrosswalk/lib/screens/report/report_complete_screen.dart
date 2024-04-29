@@ -36,7 +36,7 @@ class _ReportCompleteScreenState extends State<ReportCompleteScreen> {
               Image.asset(
                 'images/checked.png',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               EasyRichText(
