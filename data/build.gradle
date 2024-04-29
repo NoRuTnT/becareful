@@ -24,6 +24,7 @@ dependencies {
 	implementation 'org.apache.kafka:connect-json:3.4.0'
 	implementation 'org.slf4j:slf4j-api'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
+	implementation 'org.apache.commons:commons-text:1.10.0'
 
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
