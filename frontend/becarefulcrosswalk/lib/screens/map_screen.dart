@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:becarefulcrosswalk/models/geofence_model.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:geofence_service/geofence_service.dart';
 
-import '../service/location.dart';
+import '../service/my_location.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -15,32 +17,50 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final _geofenceService = GeofenceService.instance.setup(
+      interval: 5000,
+      accuracy: 100,
+      loiteringDelayMs: 60000,
+      statusChangeDelayMs: 10000,
+      useActivityRecognition: true,
+      allowMockLocations: false,
+      printDevLog: false,
+      geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
   late final Completer<NaverMapController> mapControllerCompleter;
-  late double latitude; // = 37.500725285;
-  late double longitude; // = 127.036600396;
+  late final MyLocation myLocation;
   late Future<void> initializationFuture;
 
   @override
   void initState() {
     super.initState();
+    myLocation = MyLocation();
     initializationFuture = initializeEverything();
     mapControllerCompleter = Completer<NaverMapController>();
   }
 
   Future<void> initializeEverything() async {
-    await Future.wait([getLocationData(), initializeNaverMap()]);
+    await Future.wait([initializeNaverMap(), _initGeofenceService()]);
   }
 
-  Future<void> getLocationData() async {
-    Location location = Location();
+  Future<void> _initGeofenceService() async {
+    _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+    _geofenceService.addGeofenceList(GeofenceModel.geofences);
     try {
-      await location.getCurrentLocation();
-      setState(() {
-        latitude = location.latitude;
-        longitude = location.longitude;
-      });
+      await _geofenceService.start();
     } catch (e) {
-      log("Failed to initialize my location: $e");
+      print('Error starting geofence service: $e');
+    }
+  }
+
+  Future<void> _onGeofenceStatusChanged(
+      Geofence geofence,
+      GeofenceRadius geofenceRadius,
+      GeofenceStatus geofenceStatus,
+      Location location) async {
+    if (geofenceStatus == GeofenceStatus.ENTER) {
+      print('${geofence.id}에 들어옴');
+    } else if (geofenceStatus == GeofenceStatus.EXIT) {
+      print('${geofence.id}에 나감');
     }
   }
 
@@ -66,7 +86,7 @@ class _MapScreenState extends State<MapScreen> {
             return NaverMap(
               options: NaverMapViewOptions(
                 initialCameraPosition: NCameraPosition(
-                    target: NLatLng(latitude, longitude),
+                    target: NLatLng(myLocation.latitude, myLocation.longitude),
                     zoom: 17,
                     bearing: 0,
                     tilt: 0),
@@ -87,5 +107,11 @@ class _MapScreenState extends State<MapScreen> {
       ),
       bottomNavigationBar: const BottomBar(),
     );
+  }
+
+  @override
+  void dispose() {
+    _geofenceService.stop();
+    super.dispose();
   }
 }
