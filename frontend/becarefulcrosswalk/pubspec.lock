@@ -97,11 +97,51 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  fl_location:
+    dependency: transitive
+    description:
+      name: fl_location
+      sha256: "4d19ccfb73e7d15dd9199c4f0e24dc1b058891eb43427507886871889427c62b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  fl_location_platform_interface:
+    dependency: transitive
+    description:
+      name: fl_location_platform_interface
+      sha256: ffb84044f1791ec719477bf43a26b6d347af697dacf624a25f5c28721d3a0ce1
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  fl_location_web:
+    dependency: transitive
+    description:
+      name: fl_location_web
+      sha256: db4cecc6e120dff002339e350be6a9e59e311925802bfd8c648c8789ed2c1003
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_activity_recognition:
+    dependency: transitive
+    description:
+      name: flutter_activity_recognition
+      sha256: "8480bdae146a3f0a1f205ecdc223dfc22e7a0b9a4ac25a5da0469d6a5af46a27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
+  flutter_foreground_task:
+    dependency: transitive
+    description:
+      name: flutter_foreground_task
+      sha256: d40a1ddd5f275450d2e32055e7f884796c028a02ac26c751c20916576f79e132
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -128,6 +168,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  geofence_service:
+    dependency: "direct main"
+    description:
+      name: geofence_service
+      sha256: "44126fab9f072b08b7ff03774b570f34828b2d4ae5f500a4734337c5e9fc2d89"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   geolocator:
     dependency: "direct main"
     description:
