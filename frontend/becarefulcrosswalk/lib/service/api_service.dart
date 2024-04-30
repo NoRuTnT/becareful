@@ -8,7 +8,6 @@ class ApiService {
 
   static Future<void> sendReport(
       String roadAddress, String reportText, File imageFile) async {
-    print(imageFile.path.split('/').last);
     final url = Uri.parse('$baseUrl/report');
 
     var response = await http.post(
@@ -25,9 +24,28 @@ class ApiService {
 
     if (response.statusCode == 200) {
       print("성공적으로 데이터를 전송했습니다.");
-      print(response.body);
+      var data = json.decode(response.body);
+      String s3Url = data['result'];
+      await sendImageToS3(s3Url, imageFile);
     } else {
       print("데이터 전송 실패: ${response.statusCode}");
+    }
+  }
+
+  static Future<void> sendImageToS3(String url, File imageFile) async {
+    var imageBytes = await imageFile.readAsBytes();
+    var request = http.Request('PUT', Uri.parse(url))
+      ..headers.addAll({
+        'Content-Type': 'binary/octet-stream',
+      })
+      ..bodyBytes = imageBytes;
+
+    var streamedResponse = await request.send();
+
+    if (streamedResponse.statusCode == 200) {
+      print("이미지를 성공적으로 전송했습니다.");
+    } else {
+      print("이미지 전송 실패: ${streamedResponse.statusCode}");
     }
   }
 }
