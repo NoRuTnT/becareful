@@ -19,8 +19,8 @@ import java.util.List;
 public class IntersectionController {
     private final IntersectionService intersectionService;
 
-    @GetMapping(value = "/intersection")
-    public ResponseEntity<SuccessResponse> getIntersection(@RequestPart(value = "IntersectionId") Long intersectionId){
+    @GetMapping(value = "/intersection/{intersectionId}")
+    public ResponseEntity<SuccessResponse> getIntersection(@PathVariable Long intersectionId){
         List<Trafficlight> trafficlgihtresponse = intersectionService.getIntersection(intersectionId);
         SuccessResponse response = SuccessResponse.builder()
             .status(HttpStatus.OK)
