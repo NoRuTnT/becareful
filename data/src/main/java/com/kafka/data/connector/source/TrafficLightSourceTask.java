@@ -88,8 +88,8 @@ public class TrafficLightSourceTask extends SourceTask {
 			trafficLightSourcePartition.getIntersectionId());
 
 		for (TrafficSignalData signalData : data) {
-			trafficLightSourcePartition.setLastID(signalData.getId());
-			trafficLightSourcePartition.setLastTimeStamp(signalData.getTimestamp());
+			trafficLightSourcePartition.setLastID(signalData.getItstId());
+			trafficLightSourcePartition.setLastTimeStamp(signalData.getTrsmUtcTime());
 			sourceRecords.add(
 				new SourceRecord(
 					trafficLightSourcePartition.getSourcePartition(),
@@ -106,8 +106,8 @@ public class TrafficLightSourceTask extends SourceTask {
 	private List<TrafficSignalData> getLastData(TrafficLightSourcePartition trafficLightSourcePartition) throws IOException, InterruptedException {
 		List<TrafficSignalData> data = trafficLightSourcePartition.getDataService().getData();
 		int idx = IntStream.range(0, data.size())
-			.filter(i -> Objects.equals(data.get(i).getId(), trafficLightSourcePartition.getLastID())
-				&& Objects.equals(data.get(i).getTimestamp(), trafficLightSourcePartition.getLastTimeStamp()))
+			.filter(i -> Objects.equals(data.get(i).getItstId(), trafficLightSourcePartition.getLastID())
+				&& Objects.equals(data.get(i).getTrsmUtcTime(), trafficLightSourcePartition.getLastTimeStamp()))
 			.map(i -> i+1)
 			.findFirst()
 			.orElse(0);
