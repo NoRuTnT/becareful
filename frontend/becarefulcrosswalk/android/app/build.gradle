@@ -78,3 +78,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
     implementation("com.google.android.gms:play-services-location:21.0.1")
 }
+
+apply from: project(':flutter_config').projectDir.getPath() + "/dotenv.gradle"
