@@ -4,7 +4,7 @@ import 'package:becarefulcrosswalk/widgets/guide_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 
-import 'main_screen.dart';
+import '../main_screen.dart';
 
 class UserGuideScreen2 extends StatelessWidget {
   const UserGuideScreen2({super.key});
