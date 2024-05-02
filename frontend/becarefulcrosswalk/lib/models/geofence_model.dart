@@ -13,17 +13,17 @@ class GeofenceModel {
       ],
     ),
     Geofence(
-      id: 'yeoksam',
-      latitude: 37.5013796,
-      longitude: 127.0396029,
+      id: '2217',
+      latitude: 37.50081,
+      longitude: 127.0369,
       radius: [
         GeofenceRadius(id: 'radius_50m', length: 50),
       ],
     ),
     Geofence(
-      id: 'strange',
-      latitude: 39.50138,
-      longitude: 127.0396,
+      id: 'gangnam',
+      latitude: 37.49793,
+      longitude: 127.0276,
       radius: [
         GeofenceRadius(id: 'radius_50m', length: 50),
       ],
