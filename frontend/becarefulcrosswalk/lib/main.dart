@@ -2,12 +2,15 @@ import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/landing_screen.dart';
 import 'package:becarefulcrosswalk/screens/map_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_photo_screen.dart';
-import 'package:becarefulcrosswalk/screens/user_guide_screen.dart';
-import 'package:becarefulcrosswalk/screens/user_guide_screen2.dart';
+import 'package:becarefulcrosswalk/screens/userGuide/user_guide_screen.dart';
+import 'package:becarefulcrosswalk/screens/userGuide/user_guide_screen2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  await FlutterConfig.loadEnvVariables();
   runApp(const App());
 }
 

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geofence_service/geofence_service.dart';
 
+import '../env/env.dart';
 import '../service/my_location.dart';
 
 class MapScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> initializeNaverMap() async {
     try {
       await NaverMapSdk.instance.initialize(
-          clientId: '0uz4hsj9ul',
+          clientId: Env.naverApiKey,
           onAuthFailed: (e) => log("네이버맵 인증오류 : $e", name: "onAuthFailed"));
       log("Naver Map SDK initialized successfully.");
     } catch (e) {
