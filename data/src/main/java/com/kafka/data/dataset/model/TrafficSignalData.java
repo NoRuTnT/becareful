@@ -1,5 +1,6 @@
 package com.kafka.data.dataset.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -25,130 +26,107 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 public class TrafficSignalData {
 	private static final Logger logger = LoggerFactory.getLogger(TrafficSignalData.class);
 
-	public static class TrafficSignalDataValue {
-
-		private final long id;
-		private final int remainingSeconds;
-		private final String signalType;
-
-		public long getId() {
-			return id;
-		}
-
-		public int getRemainingSeconds() {
-			return remainingSeconds;
-		}
-
-		public String getSignalType() {
-			return signalType;
-		}
-
-		public static String ID_FIELD = "id";
-		public static String REMAINING_SECONDS_FIELD = "remainingSeconds";
-		public static String SIGNAL_TYPE_FIELD = "signalType";
-
-		public static Schema schema = SchemaBuilder.struct()
-			.field(ID_FIELD, Schema.INT64_SCHEMA)
-			.field(REMAINING_SECONDS_FIELD, Schema.INT32_SCHEMA)
-			.field(SIGNAL_TYPE_FIELD, Schema.STRING_SCHEMA)
-			.build();
-
-		@JsonCreator
-		public TrafficSignalDataValue(@JsonProperty("id") long id,
-			@JsonProperty("remainingSeconds") int remainingSeconds,
-			@JsonProperty("signalType") String signalType) {
-			this.id = id;
-			this.remainingSeconds = remainingSeconds;
-			this.signalType = signalType;
-		}
-
-		public Struct toStruct() {
-			return new Struct(schema)
-				.put(ID_FIELD, id)
-				.put(REMAINING_SECONDS_FIELD, remainingSeconds)
-				.put(SIGNAL_TYPE_FIELD, signalType);
-		}
-
-		public static TrafficSignalDataValue fromStruct(Struct struct) {
-			return new TrafficSignalDataValue(
-				struct.getInt64(ID_FIELD),
-				struct.getInt32(REMAINING_SECONDS_FIELD),
-				struct.getString(SIGNAL_TYPE_FIELD)
-			);
-		}
-
-		public String toString(){
-			return "{TrafficSignalId:" + getId() + ", RemainingSeconds: " + getRemainingSeconds() + ", SignalType: " + getSignalType() + "}";
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			TrafficSignalDataValue that = (TrafficSignalDataValue) o;
-			return Objects.equals(id, that.id) && remainingSeconds == that.remainingSeconds && Objects.equals(signalType, that.signalType);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(id, remainingSeconds, signalType);
-		}
-	}
-
-	private final long id;
-
 	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "UTC")
 	@JsonDeserialize(using= LocalDateTimeDeserializer.class)
 	@JsonSerialize(using= LocalDateTimeSerializer.class)
-	private final LocalDateTime timestamp;
+	private final LocalDateTime trsmUtcTime;
+	private final Long itstId;
 
-	private final List<TrafficSignalDataValue> trafficSignalDataValues;
+	private final BigDecimal ntPdsgRmdrCs;
+	private final BigDecimal etPdsgRmdrCs;
+	private final BigDecimal stPdsgRmdrCs;
+	private final BigDecimal wtPdsgRmdrCs;
+	private final BigDecimal nePdsgRmdrCs;
+	private final BigDecimal sePdsgRmdrCs;
+	private final BigDecimal swPdsgRmdrCs;
+	private final BigDecimal nwPdsgRmdrCs;
 
-	public static String ID_FIELD = "id";
-	public static String TIMESTAMP_FIELD = "timestamp";
-	public static String TRAFFIC_SIGNAL_DATA_VALUES_FIELD = "trafficSignalDataValues";
+	public static String trsmUtcTime_FIELD = "trsmUtcTime";
+
+	public static String itstId_FIELD = "itstId";
+	public static String ntPdsgRmdrCs_FIELD = "ntPdsgRmdrCs";
+	public static String etPdsgRmdrCs_FIELD = "etPdsgRmdrCs";
+	public static String stPdsgRmdrCs_FIELD = "stPdsgRmdrCs";
+	public static String wtPdsgRmdrCs_FIELD = "wtPdsgRmdrCs";
+	public static String nePdsgRmdrCs_FIELD = "nePdsgRmdrCs";
+	public static String sePdsgRmdrCs_FIELD = "sePdsgRmdrCs";
+	public static String swPdsgRmdrCs_FIELD = "swPdsgRmdrCs";
+	public static String nwPdsgRmdrCs_FIELD = "nwPdsgRmdrCs";
+
 
 	public static Schema schema = SchemaBuilder.struct()
 		.name("com.kafka.data.dataset.model;").version(1).doc("Schema for traffic signal data")
-		.field(ID_FIELD, Schema.INT64_SCHEMA)
-		.field(TIMESTAMP_FIELD, Schema.STRING_SCHEMA)
-		.field(TRAFFIC_SIGNAL_DATA_VALUES_FIELD, SchemaBuilder.array(TrafficSignalDataValue.schema))
+		.field(trsmUtcTime_FIELD, Schema.STRING_SCHEMA)
+		.field(itstId_FIELD, Schema.INT64_SCHEMA)
+		.field(ntPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(etPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(stPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(wtPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(nePdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(sePdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(swPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(nwPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
 		.build();
 
 	@JsonCreator
-	public TrafficSignalData(@JsonProperty("id") long id,
-		@JsonProperty("timestamp") LocalDateTime timestamp,
-		@JsonProperty("trafficSignalDataValues") List<TrafficSignalDataValue> trafficSignalDataValues) {
-		this.id = id;
-		this.timestamp = timestamp;
-		this.trafficSignalDataValues = trafficSignalDataValues;
+	public TrafficSignalData(
+		@JsonProperty("trsmUtcTime") LocalDateTime trsmUtcTime,
+		@JsonProperty("itstId") Long itstId,
+		@JsonProperty("ntPdsgRmdrCs") BigDecimal ntPdsgRmdrCs,
+		@JsonProperty("etPdsgRmdrCs") BigDecimal etPdsgRmdrCs,
+		@JsonProperty("stPdsgRmdrCs") BigDecimal stPdsgRmdrCs,
+		@JsonProperty("wtPdsgRmdrCs") BigDecimal wtPdsgRmdrCs,
+		@JsonProperty("nePdsgRmdrCs") BigDecimal nePdsgRmdrCs,
+		@JsonProperty("sePdsgRmdrCs") BigDecimal sePdsgRmdrCs,
+		@JsonProperty("swPdsgRmdrCs") BigDecimal swPdsgRmdrCs,
+		@JsonProperty("nwPdsgRmdrCs") BigDecimal nwPdsgRmdrCs
+		) {
+
+		this.trsmUtcTime = trsmUtcTime;
+		this.itstId = itstId;
+		this.ntPdsgRmdrCs = ntPdsgRmdrCs;
+		this.etPdsgRmdrCs = etPdsgRmdrCs;
+		this.stPdsgRmdrCs = stPdsgRmdrCs;
+		this.wtPdsgRmdrCs = wtPdsgRmdrCs;
+		this.nePdsgRmdrCs = nePdsgRmdrCs;
+		this.sePdsgRmdrCs = sePdsgRmdrCs;
+		this.swPdsgRmdrCs = swPdsgRmdrCs;
+		this.nwPdsgRmdrCs = nwPdsgRmdrCs;
+
+
+
 	}
 
-	public Long getId() {
-		return id;
+	public Long getItstId() {
+		return itstId;
 	}
 
-	public LocalDateTime getTimestamp() {
-		return timestamp.atOffset(ZoneOffset.UTC).toLocalDateTime();
+	public LocalDateTime getTrsmUtcTime() {
+		return trsmUtcTime.atOffset(ZoneOffset.UTC).toLocalDateTime();
 	}
 
 	public long getKey() {
-		return getTimestamp()
+		return getTrsmUtcTime()
 			.withMinute(0)
 			.withSecond(0)
 			.withNano(0)
 			.toEpochSecond(ZoneOffset.UTC);
 	}
 
-	public List<TrafficSignalDataValue> getTrafficSignalDataValues() {
-		return trafficSignalDataValues;
-	}
 
 	public Struct toStruct() {
 		return new Struct(schema)
-			.put(ID_FIELD, id)
-			.put(TIMESTAMP_FIELD, getTimestamp().toString())
-			.put(TRAFFIC_SIGNAL_DATA_VALUES_FIELD, trafficSignalDataValues.stream().map(TrafficSignalDataValue::toStruct).collect(Collectors.toList()));
+			.put(trsmUtcTime_FIELD, getTrsmUtcTime().toString())
+			.put(itstId_FIELD, itstId)
+			.put(ntPdsgRmdrCs_FIELD,ntPdsgRmdrCs)
+			.put(etPdsgRmdrCs_FIELD,etPdsgRmdrCs)
+			.put(stPdsgRmdrCs_FIELD,stPdsgRmdrCs)
+			.put(wtPdsgRmdrCs_FIELD,wtPdsgRmdrCs)
+			.put(nePdsgRmdrCs_FIELD,nePdsgRmdrCs)
+			.put(sePdsgRmdrCs_FIELD,sePdsgRmdrCs)
+			.put(swPdsgRmdrCs_FIELD,swPdsgRmdrCs)
+			.put(nwPdsgRmdrCs_FIELD,nwPdsgRmdrCs)
+			;
 	}
 
 	@Override
@@ -156,11 +134,13 @@ public class TrafficSignalData {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		TrafficSignalData that = (TrafficSignalData) o;
-		return id == that.id && timestamp.equals(that.timestamp) && trafficSignalDataValues.equals(that.trafficSignalDataValues);
+		return itstId == that.itstId && trsmUtcTime.equals(that.trsmUtcTime);
 	}
+
+
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, timestamp, trafficSignalDataValues);
+		return Objects.hash(trsmUtcTime, itstId, ntPdsgRmdrCs, etPdsgRmdrCs, stPdsgRmdrCs, wtPdsgRmdrCs, nePdsgRmdrCs, sePdsgRmdrCs, swPdsgRmdrCs, nwPdsgRmdrCs);
 	}
 }
