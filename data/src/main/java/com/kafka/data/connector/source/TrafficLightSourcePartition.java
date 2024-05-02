@@ -46,7 +46,6 @@ class TrafficLightSourcePartition {
 
 	public Map<String, String> getSourceOffset() {
 		final Map<String, String> sourceOffset = new HashMap<>();
-		// TODO: change keys
 		sourceOffset.put("LAST_ID", String.valueOf(lastID));
 		sourceOffset.put("LAST_TIMESTAMP", lastTimeStamp.toString());
 		return sourceOffset;
