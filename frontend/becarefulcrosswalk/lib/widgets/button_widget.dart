@@ -22,18 +22,18 @@ class ButtonWidget extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.black,
           backgroundColor: backgroundColor,
-          side: BorderSide(
+          side: const BorderSide(
             width: 2,
             color: Colors.black,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          minimumSize: Size(double.infinity, 20),
+          minimumSize: const Size(double.infinity, 20),
         ),
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 25,
             letterSpacing: 2,
