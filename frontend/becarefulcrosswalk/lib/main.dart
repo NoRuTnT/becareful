@@ -1,13 +1,20 @@
+import 'package:becarefulcrosswalk/firebase_options.dart';
 import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/landing_screen.dart';
 import 'package:becarefulcrosswalk/screens/map_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_photo_screen.dart';
 import 'package:becarefulcrosswalk/screens/user_guide_screen.dart';
 import 'package:becarefulcrosswalk/screens/user_guide_screen2.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const App());
 }
 

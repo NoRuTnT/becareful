@@ -1,94 +1,161 @@
-import 'package:becarefulcrosswalk/theme/colors.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class TrafficInfoScreen extends StatelessWidget {
-  const TrafficInfoScreen({super.key});
+import '../theme/colors.dart';
+import '../utils/bottom_bar.dart';
+
+class TrafficInfoScreen extends StatefulWidget {
+  final int id;
+
+  const TrafficInfoScreen({super.key, required this.id});
+
+  @override
+  State<TrafficInfoScreen> createState() => _TrafficInfoScreenState();
+}
+
+class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     const direction = "역삼역 1번 출구";
     const length = "200";
-    const lightColor = "초록불";
-    const remainingTime = "11";
 
     return Scaffold(
       backgroundColor: darkGray,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              direction + " 방향",
-              style: TextStyle(
-                color: lightGray,
-                fontSize: 35,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Text(
-              length + "미터 횡단보도",
-              style: TextStyle(
-                color: lightGray,
-                fontSize: 35,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Text(
-              lightColor + " " + remainingTime + "초",
-              style: TextStyle(
-                color: green2,
-                fontSize: 55,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            Stack(
-              children: [
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 50),
-                    child: Column(
-                      children: [
-                        crosswalk_box(),
-                        crosswalk_box(),
-                        crosswalk_box(),
-                        crosswalk_box(),
-                        crosswalk_box(),
-                        crosswalk_box(),
-                      ],
-                    ),
-                  ),
+      appBar: AppBar(
+        elevation: 2,
+        backgroundColor: Colors.white,
+        foregroundColor: black,
+        title: const Text(
+          "실시간 신호정보",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                direction + " 방향",
+                style: TextStyle(
+                  color: lightGray,
+                  fontSize: 35,
+                  fontWeight: FontWeight.w500,
                 ),
-                Positioned(
-                  bottom: 10,
-                  left: 80,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: 160,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue.shade100.withOpacity(0.6),
+              ),
+              const Text(
+                length + "미터 횡단보도",
+                style: TextStyle(
+                  color: lightGray,
+                  fontSize: 35,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              StreamBuilder(
+                stream: _dbRef.child('traffic-lights/${widget.id}').onValue,
+                builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (!snapshot.hasData ||
+                      snapshot.data?.snapshot.value == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  Map<dynamic, dynamic> trafficLightData =
+                      (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);
+
+                  String lightColor =
+                      trafficLightData['color'] == "green" ? "초록" : "빨간";
+                  Color textColor =
+                      trafficLightData['color'] == "green" ? green2 : red2;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "$lightColor불",
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 55,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue.shade600.withOpacity(0.8),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "${trafficLightData['remainingTime']}초",
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 55,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                     ],
+                  );
+                },
+              ),
+              Stack(
+                children: [
+                  const Center(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+                      child: Column(
+                        children: [
+                          crosswalk_box(),
+                          crosswalk_box(),
+                          crosswalk_box(),
+                          crosswalk_box(),
+                          crosswalk_box(),
+                          crosswalk_box(),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Positioned(
+                    bottom: 10,
+                    left: 80,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 160,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue.shade100.withOpacity(0.6),
+                          ),
+                        ),
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.blue.shade600.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }
