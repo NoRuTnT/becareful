@@ -132,6 +132,14 @@ public class TrafficSignalData {
 		return timestamp.atOffset(ZoneOffset.UTC).toLocalDateTime();
 	}
 
+	public long getKey() {
+		return getTimestamp()
+			.withMinute(0)
+			.withSecond(0)
+			.withNano(0)
+			.toEpochSecond(ZoneOffset.UTC);
+	}
+
 	public List<TrafficSignalDataValue> getTrafficSignalDataValues() {
 		return trafficSignalDataValues;
 	}
