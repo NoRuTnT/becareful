@@ -72,7 +72,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
         backgroundColor: Colors.white,
         foregroundColor: black,
         title: const Text(
-          "불편신고",
+          "불편신고(3/3)",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w600,
