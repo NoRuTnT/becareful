@@ -1,51 +1,43 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:becarefulcrosswalk/models/geofence_model.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geofence_service/geofence_service.dart';
+import 'package:poly_geofence_service/poly_geofence_service.dart';
 
-import '../env/env.dart';
+import '../models/intersection_model.dart';
+import '../service/api_service.dart';
 import '../service/my_location.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  final GeofenceService geofenceService;
+
+  const MapScreen({super.key, required this.geofenceService});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  final _geofenceService = GeofenceService.instance.setup(
-      interval: 5000,
-      accuracy: 100,
-      loiteringDelayMs: 60000,
-      statusChangeDelayMs: 10000,
-      useActivityRecognition: true,
-      allowMockLocations: false,
-      printDevLog: false,
-      geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
+  late final GeofenceService _geofenceService;
   late final Completer<NaverMapController> mapControllerCompleter;
   late final MyLocation myLocation;
   late Future<void> initializationFuture;
+  late final PolyGeofenceService _polyGeofenceService;
 
   @override
   void initState() {
     super.initState();
     myLocation = MyLocation();
-    initializationFuture = initializeEverything();
+    _geofenceService = widget.geofenceService;
     mapControllerCompleter = Completer<NaverMapController>();
-  }
-
-  Future<void> initializeEverything() async {
-    await Future.wait([initializeNaverMap(), _initGeofenceService()]);
   }
 
   Future<void> _initGeofenceService() async {
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-    _geofenceService.addGeofenceList(GeofenceModel.geofences);
+
     try {
       await _geofenceService.start();
     } catch (e) {
@@ -59,21 +51,64 @@ class _MapScreenState extends State<MapScreen> {
       GeofenceStatus geofenceStatus,
       Location location) async {
     if (geofenceStatus == GeofenceStatus.ENTER) {
-      print('${geofence.id}에 들어옴');
+      print('@@@@@@@@@@@@@@@@@@@@${geofence.id}에 들어옴@@@@@@@@@@@@@@@@@@@@@');
+
+      IntersectionModel intersection =
+          await ApiService.getIntersection(geofence.id as num);
+
+      await _initPolyGeofenceService(); // polygeofence 초기화
+
+      for (Crosswalk crosswalk in intersection.crosswalks) {
+        _polyGeofenceService.addPolyGeofence(
+          PolyGeofence(
+            id: crosswalk.crosswalkId,
+            data: {
+              "crosswalk": crosswalk,
+            },
+            polygon: <LatLng>[
+              LatLng(crosswalk.coordinate[0].latitude as double,
+                  crosswalk.coordinate[0].longitude as double),
+              LatLng(crosswalk.coordinate[1].latitude as double,
+                  crosswalk.coordinate[1].longitude as double),
+              LatLng(crosswalk.coordinate[2].latitude as double,
+                  crosswalk.coordinate[2].longitude as double),
+              LatLng(crosswalk.coordinate[3].latitude as double,
+                  crosswalk.coordinate[3].longitude as double),
+            ],
+          ),
+        );
+      }
     } else if (geofenceStatus == GeofenceStatus.EXIT) {
       print('${geofence.id}에 나감');
     }
   }
 
-  // 네이버 맵 SDK 초기화
-  Future<void> initializeNaverMap() async {
+  Future<void> _initPolyGeofenceService() async {
+    _polyGeofenceService = PolyGeofenceService.instance.setup(
+        interval: 5000,
+        accuracy: 100,
+        loiteringDelayMs: 60000,
+        statusChangeDelayMs: 10000,
+        allowMockLocations: false,
+        printDevLog: false);
+    _polyGeofenceService
+        .addPolyGeofenceStatusChangeListener(_onPolyGeofenceStatusChanged);
+
     try {
-      await NaverMapSdk.instance.initialize(
-          clientId: Env.naverApiKey,
-          onAuthFailed: (e) => log("네이버맵 인증오류 : $e", name: "onAuthFailed"));
-      log("Naver Map SDK initialized successfully.");
+      await _polyGeofenceService.start();
     } catch (e) {
-      log("Failed to initialize Naver Map SDK: $e", name: "onAuthFailed");
+      print('Error starting polygeofence service: $e');
+    }
+  }
+
+  Future<void> _onPolyGeofenceStatusChanged(PolyGeofence polyGeofence,
+      PolyGeofenceStatus polyGeofenceStatus, Location location) async {
+    if (polyGeofenceStatus == PolyGeofenceStatus.ENTER) {
+      // Navigator.of(context).push(
+      //     MaterialPageRoute(builder: (context) => TrafficInfoScreen(id: polyGeofence.num as int, crosswalk: polyGeofence.data.crosswalk))
+      // );
+    } else if (polyGeofenceStatus == PolyGeofenceStatus.EXIT) {
+      print('횡단보도 나감');
     }
   }
 
@@ -81,7 +116,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: initializationFuture,
+        future: _initGeofenceService(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return NaverMap(
