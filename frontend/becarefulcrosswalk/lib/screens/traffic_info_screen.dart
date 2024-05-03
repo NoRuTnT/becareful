@@ -32,11 +32,14 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: const Text(
-          "실시간 신호정보",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
+        title: Semantics(
+          label: '실시간 신호정보',
+          child: const Text(
+            "실시간 신호정보",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -46,20 +49,26 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                direction + " 방향",
-                style: TextStyle(
-                  color: lightGray,
-                  fontSize: 35,
-                  fontWeight: FontWeight.w500,
+              Semantics(
+                label: "$direction방향",
+                child: const Text(
+                  "$direction 방향",
+                  style: TextStyle(
+                    color: lightGray,
+                    fontSize: 35,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-              const Text(
-                length + "미터 횡단보도",
-                style: TextStyle(
-                  color: lightGray,
-                  fontSize: 35,
-                  fontWeight: FontWeight.w500,
+              Semantics(
+                label: '$length미터 횡단보도',
+                child: const Text(
+                  "$length미터 횡단보도",
+                  style: TextStyle(
+                    color: lightGray,
+                    fontSize: 35,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
               StreamBuilder(
@@ -82,24 +91,30 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "$lightColor불",
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: 55,
-                          fontWeight: FontWeight.w800,
+                    children: [
+                      Semantics(
+                        label: '$lightColor불',
+                        child: Text(
+                          "$lightColor불",
+                          style: TextStyle(
+                            color: textColor,
+                            fontSize: 55,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                       const SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        "${trafficLightData['remainingTime']}초",
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: 55,
-                          fontWeight: FontWeight.w800,
+                      Semantics(
+                        label: '${trafficLightData['remainingTime']}초',
+                        child: Text(
+                          "${trafficLightData['remainingTime']}초",
+                          style: TextStyle(
+                            color: textColor,
+                            fontSize: 55,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ],
@@ -108,45 +123,51 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
               ),
               Stack(
                 children: [
-                  const Center(
+                  Center(
                     child: Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-                      child: Column(
-                        children: [
-                          crosswalk_box(),
-                          crosswalk_box(),
-                          crosswalk_box(),
-                          crosswalk_box(),
-                          crosswalk_box(),
-                          crosswalk_box(),
-                        ],
+                      child: Semantics(
+                        label: '횡단보도 이미지',
+                        child: const Column(
+                          children: [
+                            crosswalk_box(),
+                            crosswalk_box(),
+                            crosswalk_box(),
+                            crosswalk_box(),
+                            crosswalk_box(),
+                            crosswalk_box(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Positioned(
                     bottom: 10,
                     left: 80,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          width: 160,
-                          height: 160,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue.shade100.withOpacity(0.6),
+                    child: Semantics(
+                      label: '내 위치 아이콘',
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 160,
+                            height: 160,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue.shade100.withOpacity(0.6),
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue.shade600.withOpacity(0.8),
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue.shade600.withOpacity(0.8),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
