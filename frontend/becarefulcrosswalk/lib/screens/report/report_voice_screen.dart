@@ -71,11 +71,14 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: const Text(
-          "불편신고(3/3)",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
+        title: Semantics(
+          label: '불편신고 마지막 단계',
+          child: const Text(
+            "불편신고(3/3)",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -84,27 +87,30 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
         child: Column(
           children: [
             Center(
-              child: EasyRichText(
-                '말하기 버튼을 누른 상태에서\n불편사항을 말씀해주세요.\n없다면, 바로 신고하기 버튼을\n눌러주세요.',
-                textAlign: TextAlign.center,
-                patternList: [
-                  EasyRichTextPattern(
-                    targetString: '누른 상태',
-                    style: const TextStyle(
-                      color: Colors.blue,
+              child: Semantics(
+                label: '말하기 버튼을 누른 상태에서 불편사항을 말씀해주세요 없다면, 바로 신고하기 버튼을 눌러주세요',
+                child: EasyRichText(
+                  '말하기 버튼을 누른 상태에서\n불편사항을 말씀해주세요.\n없다면, 바로 신고하기 버튼을\n눌러주세요.',
+                  textAlign: TextAlign.center,
+                  patternList: [
+                    EasyRichTextPattern(
+                      targetString: '누른 상태',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                      ),
                     ),
-                  ),
-                  EasyRichTextPattern(
-                    targetString: '불편사항',
-                    style: const TextStyle(
-                      color: Colors.red,
+                    EasyRichTextPattern(
+                      targetString: '불편사항',
+                      style: const TextStyle(
+                        color: Colors.red,
+                      ),
                     ),
+                  ],
+                  defaultStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-                defaultStyle: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -126,13 +132,17 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
                       width: 2,
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      _isListening ? '손 떼고 제출하기' : '꾹 누른채 말하기',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 25,
-                        letterSpacing: 2,
+                  child: Semantics(
+                    button: true,
+                    label: _isListening ? '손 떼고 제출하기' : '꾹 누른채 말하기',
+                    child: Center(
+                      child: Text(
+                        _isListening ? '손 떼고 제출하기' : '꾹 누른채 말하기',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25,
+                          letterSpacing: 2,
+                        ),
                       ),
                     ),
                   ),

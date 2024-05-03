@@ -1,8 +1,8 @@
 import 'package:becarefulcrosswalk/firebase_options.dart';
 import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/landing_screen.dart';
-import 'package:becarefulcrosswalk/screens/map_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_photo_screen.dart';
+import 'package:becarefulcrosswalk/screens/traffic_info_screen.dart';
 import 'package:becarefulcrosswalk/screens/userGuide/user_guide_screen.dart';
 import 'package:becarefulcrosswalk/screens/userGuide/user_guide_screen2.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,7 +30,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         routes: {
           '/': (context) => const LandingScreen(),
-          '/map': (context) => const MapScreen(),
+          // '/map': (context) => const MapScreen(),
+          '/map': (context) => const TrafficInfoScreen(id: 1),
           '/report': (context) => const ReportPhotoScreen(),
           '/userGuide': (context) => const UserGuideScreen(),
           '/userGuide2': (context) => const UserGuideScreen2(),

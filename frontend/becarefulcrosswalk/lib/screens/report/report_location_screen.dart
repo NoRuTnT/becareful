@@ -57,11 +57,14 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: const Text(
-          "불편신고(2/3)",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
+        title: Semantics(
+          label: '불편신고 3단계중 2단계',
+          child: const Text(
+            "불편신고(2/3)",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -76,21 +79,24 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    EasyRichText(
-                      '현재 위치를 조회 중입니다\n잠시만 기다려주세요',
-                      textAlign: TextAlign.center,
-                      patternList: [
-                        EasyRichTextPattern(
-                          targetString: '조회 중',
-                          style: const TextStyle(
-                            color: Colors.red,
+                    Semantics(
+                      label: '현재 위치를 조회 중입니다 잠시만 기다려주세요',
+                      child: EasyRichText(
+                        '현재 위치를 조회 중입니다\n잠시만 기다려주세요',
+                        textAlign: TextAlign.center,
+                        patternList: [
+                          EasyRichTextPattern(
+                            targetString: '조회 중',
+                            style: const TextStyle(
+                              color: Colors.red,
+                            ),
                           ),
+                        ],
+                        defaultStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                      defaultStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -104,30 +110,36 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    EasyRichText(
-                      '현재 위치 조회 완료',
-                      textAlign: TextAlign.center,
-                      patternList: [
-                        EasyRichTextPattern(
-                          targetString: '조회 완료',
-                          style: const TextStyle(
-                            color: Colors.red,
+                    Semantics(
+                      label: '현재 위치 조회 완료',
+                      child: EasyRichText(
+                        '현재 위치 조회 완료',
+                        textAlign: TextAlign.center,
+                        patternList: [
+                          EasyRichTextPattern(
+                            targetString: '조회 완료',
+                            style: const TextStyle(
+                              color: Colors.red,
+                            ),
                           ),
+                        ],
+                        defaultStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                      defaultStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
-                      _roadAddress!,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: navy,
+                    Semantics(
+                      label: _roadAddress,
+                      child: Text(
+                        _roadAddress!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: navy,
+                        ),
                       ),
                     ),
                   ],

@@ -47,31 +47,37 @@ class LandingScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Image.asset('images/traffic-lights.png',
-                              width: 128, height: 128),
+                          Semantics(
+                            label: '교통 신호등 이미지',
+                            child: Image.asset('images/traffic-lights.png',
+                                width: 128, height: 128),
+                          ),
                           const SizedBox(
                             height: 20,
                           ),
-                          const Column(
-                            children: [
-                              Text(
-                                "시각 장애인을 위한",
-                                style: TextStyle(
-                                  color: navy,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text("안전 보행 서비스",
+                          Semantics(
+                            label: '시각 장애인을 위한 안전 보행 서비스',
+                            child: const Column(
+                              children: [
+                                Text(
+                                  "시각 장애인을 위한",
                                   style: TextStyle(
                                     color: navy,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                            ],
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text("안전 보행 서비스",
+                                    style: TextStyle(
+                                      color: navy,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -82,40 +88,43 @@ class LandingScreen extends StatelessWidget {
                 const SizedBox(
                   height: 80,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "시작하려면 ",
-                      style: TextStyle(
-                        color: black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 2,
-                            offset: const Offset(1, 1),
-                          ),
-                        ],
+                Semantics(
+                  label: "시작하려면 터치하세요",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "시작하려면 ",
+                        style: TextStyle(
+                          color: black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w300,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(0.5),
+                              blurRadius: 2,
+                              offset: const Offset(1, 1),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Text(
-                      "터치",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 2,
-                            offset: const Offset(1, 1),
-                          ),
-                        ],
+                      Text(
+                        "터치",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w300,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withOpacity(0.5),
+                              blurRadius: 2,
+                              offset: const Offset(1, 1),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
