@@ -6,35 +6,39 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import com.kafka.data.connector.sink.config.FirebaseConfig;
 import java.io.FileInputStream;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 class FirebaseAdmin {
 
   private DatabaseReference databaseReference;
-  private String Url = "${firebase.url}";
-  private String Path = "${firebase.path}";
 
-  FirebaseAdmin(String databaseRef) {
+  @Autowired
+  private FirebaseConfig firebaseConfig;
+
+  public FirebaseAdmin() {
+    initializeFirebase();
+  }
+
+  private void initializeFirebase() {
     FirebaseOptions options = null;
-    try {
-      FileInputStream serviceAccount =
-          new FileInputStream(Path);
-
+    try (FileInputStream serviceAccount = new FileInputStream(firebaseConfig.getFirebasePath())) {
       options = new FirebaseOptions.Builder()
           .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-          .setDatabaseUrl(Url)
+          .setDatabaseUrl(firebaseConfig.getFirebaseUrl())
           .build();
 
       FirebaseApp.initializeApp(options);
-
-
     } catch (IOException e) {
       e.printStackTrace();
     }
-    FirebaseApp.initializeApp(options);
+
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    databaseReference = database.getReference(databaseRef);
+    databaseReference = database.getReference();
   }
 
   void saveData(String path, String id, Object object) {
