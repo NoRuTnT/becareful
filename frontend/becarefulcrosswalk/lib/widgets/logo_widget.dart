@@ -8,40 +8,43 @@ class LogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "조",
-          style: TextStyle(
-            color: red,
-            fontSize: 80,
-            fontWeight: FontWeight.w800,
+    return Semantics(
+      label: "조심횡",
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "조",
+            style: TextStyle(
+              color: red,
+              fontSize: 80,
+              fontWeight: FontWeight.w800,
+            ),
           ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text(
-          "심",
-          style: TextStyle(
-            color: yellow,
-            fontSize: 80,
-            fontWeight: FontWeight.w800,
+          SizedBox(
+            width: 20,
           ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text(
-          "횡",
-          style: TextStyle(
-            color: green,
-            fontSize: 80,
-            fontWeight: FontWeight.w800,
+          Text(
+            "심",
+            style: TextStyle(
+              color: yellow,
+              fontSize: 80,
+              fontWeight: FontWeight.w800,
+            ),
           ),
-        ),
-      ],
+          SizedBox(
+            width: 20,
+          ),
+          Text(
+            "횡",
+            style: TextStyle(
+              color: green,
+              fontSize: 80,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

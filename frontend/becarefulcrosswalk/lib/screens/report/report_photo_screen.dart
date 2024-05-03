@@ -64,11 +64,14 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: const Text(
-          "불편신고(1/3)",
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
+        title: Semantics(
+          label: '불편신고 3단계중 1단계',
+          child: const Text(
+            "불편신고(1/3)",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -76,14 +79,17 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              _displayText,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: black,
-                fontSize: 25,
-                fontWeight: FontWeight.w600,
+          children: [
+            Semantics(
+              label: _displayText,
+              child: Text(
+                _displayText,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const SizedBox(
@@ -99,16 +105,25 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (_image == null) {
-                        return CameraPreview(_controller!);
+                        return Semantics(
+                          label: '후면 카메라 작동 중',
+                          child: CameraPreview(_controller!),
+                        );
                       } else {
-                        return Image.file(
-                          _image!,
-                          fit: BoxFit.cover,
+                        return Semantics(
+                          label: '촬영된 이미지',
+                          child: Image.file(
+                            _image!,
+                            fit: BoxFit.cover,
+                          ),
                         );
                       }
                     } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Semantics(
+                        label: '카메라 준비중',
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       );
                     }
                   },

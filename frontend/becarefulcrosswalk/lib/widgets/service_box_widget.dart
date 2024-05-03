@@ -30,13 +30,17 @@ class ServiceBoxWidget extends StatelessWidget {
           ),
           color: color,
         ),
-        child: Text(
-          textAlign: TextAlign.center,
-          '$serviceName',
-          style: const TextStyle(
-            fontSize: 40,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 8.0, // 글자 사이 간격
+        child: Semantics(
+          button: true,
+          label: '$serviceName',
+          child: Text(
+            textAlign: TextAlign.center,
+            '$serviceName',
+            style: const TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 8.0, // 글자 사이 간격
+            ),
           ),
         ),
       ),

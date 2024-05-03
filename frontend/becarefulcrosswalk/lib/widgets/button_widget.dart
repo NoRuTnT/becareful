@@ -31,12 +31,16 @@ class ButtonWidget extends StatelessWidget {
           ),
           minimumSize: const Size(double.infinity, 20),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 25,
-            letterSpacing: 2,
+        child: Semantics(
+          button: true,
+          label: text,
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 25,
+              letterSpacing: 2,
+            ),
           ),
         ),
       ),
