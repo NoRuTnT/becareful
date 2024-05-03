@@ -1,6 +1,6 @@
 package com.kafka.data.connector.sink;
 
-import com.kafka.data.connector.source.TrafficLightSourceTask;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -10,21 +10,18 @@ import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TrafficLightSinkTask extends SinkTask {
 
-  private static final Logger logger = LoggerFactory.getLogger(TrafficLightSourceTask.class);
+  private static final Logger logger = LoggerFactory.getLogger(TrafficLightSinkTask.class);
+  @Autowired
   private FirebaseAdmin firebaseAdmin;
-  private String databaseRef;
 
   @Override
   public void start(Map<String, String> props) {
-    this.databaseRef = props.get("firebase.ref");
-    try {
-      this.firebaseAdmin = new FirebaseAdmin(databaseRef);
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to authenticate Firebase", e);
-    }
   }
 
   @Override
@@ -38,7 +35,6 @@ public class TrafficLightSinkTask extends SinkTask {
         String id = resource.get("id").toString();
         if (id != null) {
           firebaseAdmin.saveData(record.topic(), id, resource);
-
         }
       } catch (IOException e) {
         logger.error("Error processing JSON message", e);
