@@ -1,3 +1,4 @@
+import 'package:becarefulcrosswalk/models/intersection_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -5,9 +6,14 @@ import '../theme/colors.dart';
 import '../utils/bottom_bar.dart';
 
 class TrafficInfoScreen extends StatefulWidget {
-  final int id;
+  final num intersectionId;
+  final Crosswalk crosswalk;
 
-  const TrafficInfoScreen({super.key, required this.id});
+  const TrafficInfoScreen({
+    super.key,
+    required this.intersectionId,
+    required this.crosswalk,
+  });
 
   @override
   State<TrafficInfoScreen> createState() => _TrafficInfoScreenState();
@@ -23,9 +29,6 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const direction = "역삼역 1번 출구";
-    const length = "200";
-
     return Scaffold(
       backgroundColor: darkGray,
       appBar: AppBar(
@@ -50,29 +53,31 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Semantics(
-                label: "$direction방향",
-                child: const Text(
-                  "$direction 방향",
-                  style: TextStyle(
+                label: "${widget.crosswalk.crosswalkDirection}",
+                child: Text(
+                  "${widget.crosswalk.crosswalkDirection}",
+                  style: const TextStyle(
                     color: lightGray,
-                    fontSize: 35,
+                    fontSize: 30,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
               Semantics(
-                label: '$length미터 횡단보도',
-                child: const Text(
-                  "$length미터 횡단보도",
-                  style: TextStyle(
+                label: '${widget.crosswalk.length} 미터 횡단보도',
+                child: Text(
+                  "${widget.crosswalk.length} 미터 횡단보도",
+                  style: const TextStyle(
                     color: lightGray,
-                    fontSize: 35,
+                    fontSize: 30,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
               StreamBuilder(
-                stream: _dbRef.child('traffic-lights/${widget.id}').onValue,
+                stream: _dbRef
+                    .child('traffic-lights/${widget.intersectionId}')
+                    .onValue,
                 builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -98,7 +103,7 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
                           "$lightColor불",
                           style: TextStyle(
                             color: textColor,
-                            fontSize: 55,
+                            fontSize: 50,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -112,7 +117,7 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
                           "${trafficLightData['remainingTime']}초",
                           style: TextStyle(
                             color: textColor,
-                            fontSize: 55,
+                            fontSize: 50,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
@@ -125,12 +130,13 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
                 children: [
                   Center(
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 50),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 50),
                       child: Semantics(
                         label: '횡단보도 이미지',
                         child: const Column(
                           children: [
+                            crosswalk_box(),
                             crosswalk_box(),
                             crosswalk_box(),
                             crosswalk_box(),
@@ -143,16 +149,17 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
-                    left: 80,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     child: Semantics(
                       label: '내 위치 아이콘',
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
                           Container(
-                            width: 160,
-                            height: 160,
+                            width: 150,
+                            height: 150,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.blue.shade100.withOpacity(0.6),
@@ -176,7 +183,7 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
@@ -194,7 +201,7 @@ class crosswalk_box extends StatelessWidget {
         elevation: 5,
         child: Container(
           width: 300,
-          height: 30,
+          height: 25,
           color: white,
         ),
       ),
