@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+
+import '../models/intersection_model.dart';
 
 class ApiService {
   static const String baseUrl = "https://k10a207.p.ssafy.io/api";
@@ -47,5 +50,20 @@ class ApiService {
     } else {
       print("이미지 전송 실패: ${streamedResponse.statusCode}");
     }
+  }
+
+  static Future<IntersectionModel> getIntersection(num intersectionId) async {
+    final url = Uri.parse('$baseUrl/intersection/$intersectionId');
+    IntersectionModel intersection;
+
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      final intersection = jsonDecode(response.body);
+      return IntersectionModel(
+          intersectionId: intersection.intersectionId,
+          crosswalks: intersection.crosswalks);
+    }
+    log("교차로 정보 받아오지 못했음");
+    throw Error();
   }
 }
