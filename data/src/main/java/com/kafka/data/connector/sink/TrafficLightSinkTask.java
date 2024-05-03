@@ -1,8 +1,8 @@
 package com.kafka.data.connector.sink;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kafka.data.dataset.model.TrafficSignalData;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -17,27 +17,21 @@ import org.springframework.stereotype.Component;
 public class TrafficLightSinkTask extends SinkTask {
 
   private static final Logger logger = LoggerFactory.getLogger(TrafficLightSinkTask.class);
+
   @Autowired
   private FirebaseAdmin firebaseAdmin;
 
   @Override
   public void start(Map<String, String> props) {
   }
-
   @Override
   public void put(Collection<SinkRecord> records) {
     ObjectMapper mapper = new ObjectMapper();
     for (SinkRecord record : records) {
-      JsonNode jsonNode = (JsonNode) record.value();
-      Map<String, Object> resource;
-      try {
-        resource = mapper.treeToValue(jsonNode, Map.class);
-        String id = resource.get("id").toString();
-        if (id != null) {
-          firebaseAdmin.saveData(record.topic(), id, resource);
-        }
-      } catch (IOException e) {
-        logger.error("Error processing JSON message", e);
+      TrafficSignalData trafficSignalData = (TrafficSignalData) record.value();
+      String id = String.valueOf(trafficSignalData.getItstId());
+      if (id != null) {
+        firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
       }
     }
   }
