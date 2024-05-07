@@ -5,4 +5,4 @@ spring:
 
 firebase:
   url: ${FIREBASE_URL}
-  path: ${FIREBASE_PATH}
+  config: ${FIREBASE_CONFIG}
