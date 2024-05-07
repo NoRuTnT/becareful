@@ -1,0 +1,28 @@
+plugins {
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+dependencies {
+
+}
+
+tasks.named('bootJar') {
+	enabled = false
+}
+
+tasks.named('jar') {
+	enabled = false
+}
+tasks.named('shadowJar') {
+	enabled = true
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+shadowJar {
+	archiveClassifier.set('')
+	mergeServiceFiles() // SPI 로더 파일 병합
+}
+
