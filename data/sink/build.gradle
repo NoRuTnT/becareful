@@ -1,0 +1,32 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.17'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.kafka'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+	targetCompatibility = '11'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'com.google.firebase:firebase-admin:8.0.1'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+shadowJar {
+	archiveClassifier.set('')
+	mergeServiceFiles() // SPI 로더 파일 병합
+}
