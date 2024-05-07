@@ -1,8 +1,0 @@
-spring:
-  config:
-    import:
-      - optional:file:env/firebase.env[.properties]
-
-firebase:
-  url: ${FIREBASE_URL}
-  config: ${FIREBASE_CONFIG}
