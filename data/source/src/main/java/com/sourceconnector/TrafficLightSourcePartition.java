@@ -1,6 +1,6 @@
-package com.kafka.data.connector.source;
+package com.sourceconnector;
 
-import com.kafka.data.dataset.DataService;
+import com.sourceconnector.dataset.DataService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.kafka.data.connector.sink;
+package com.sinkconnector;
 
 
 import org.apache.kafka.common.config.ConfigDef;
@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 public class TrafficLightSinkConnector extends SinkConnector {
   private Map<String, String> config;

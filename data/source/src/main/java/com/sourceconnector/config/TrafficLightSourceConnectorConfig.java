@@ -1,4 +1,4 @@
-package com.kafka.data.connector.source.config;
+package com.sourceconnector.config;
 
 import java.util.Map;
 
