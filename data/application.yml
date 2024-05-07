@@ -1,0 +1,12 @@
+spring:
+  config:
+    import:
+      - optional:file:env/kafkasecurity.env[.properties]
+firebase:
+  config: ${FIREBASE_CONFIG}
+  url: ${FIREBASE_URL}
+
+api:
+  key: ${API_KEY}
+  base_URL: ${BASE_URL}
+  query: ${QUERY}

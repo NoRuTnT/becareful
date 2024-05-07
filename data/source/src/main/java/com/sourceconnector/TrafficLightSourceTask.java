@@ -1,4 +1,4 @@
-package com.kafka.data.connector.source;
+package com.sourceconnector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
 
-import com.kafka.data.connector.source.config.TrafficLightSourceConnectorConfig;
-import com.kafka.data.dataset.DataService;
-import com.kafka.data.dataset.model.TrafficSignalData;
+import com.sourceconnector.config.TrafficLightSourceConnectorConfig;
+import com.sourceconnector.dataset.DataService;
+import com.sourceconnector.dataset.model.TrafficSignalData;
 
 public class TrafficLightSourceTask extends SourceTask {
 
