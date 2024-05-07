@@ -5,42 +5,45 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import com.kafka.data.connector.sink.config.FirebaseConfig;
-import java.io.FileInputStream;
-import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 @Component
-class FirebaseAdmin {
+public class FirebaseAdmin {
 
   private DatabaseReference databaseReference;
 
-  @Autowired
-  private FirebaseConfig firebaseConfig;
+  @Value("${firebase.url}")
+  private String firebaseUrl;
 
-  public FirebaseAdmin() {
-    initializeFirebase();
-  }
+  @Value("${firebase.config}")
+  private String firebaseConfig;
 
-  private void initializeFirebase() {
-    FirebaseOptions options = null;
-    try (FileInputStream serviceAccount = new FileInputStream(firebaseConfig.getFirebasePath())) {
-      options = new FirebaseOptions.Builder()
+  @PostConstruct
+  public void initializeFirebase() {
+    try {
+      ByteArrayInputStream serviceAccount = new ByteArrayInputStream(firebaseConfig.getBytes(StandardCharsets.UTF_8));
+      FirebaseOptions options = new FirebaseOptions.Builder()
           .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-          .setDatabaseUrl(firebaseConfig.getFirebaseUrl())
+          .setDatabaseUrl(firebaseUrl)
           .build();
 
-      FirebaseApp.initializeApp(options);
+      if (FirebaseApp.getApps().isEmpty()) {
+        FirebaseApp.initializeApp(options);
+      }
     } catch (IOException e) {
-      e.printStackTrace();
+      System.out.println("Failed to initialize Firebase with error: " + e.getMessage());
+      throw new IllegalStateException("Failed to initialize Firebase", e);
     }
 
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     databaseReference = database.getReference();
   }
-
   void saveData(String path, String id, Object object) {
     DatabaseReference childRef = databaseReference.child(path);
     childRef.child(id).setValueAsync(object);
