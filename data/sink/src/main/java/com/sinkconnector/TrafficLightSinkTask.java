@@ -1,11 +1,13 @@
-package com.kafka.data.connector.sink;
+package com.sinkconnector;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kafka.data.dataset.model.TrafficSignalData;
+import com.sinkconnector.dataset.model.TrafficSignalData;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ public class TrafficLightSinkTask extends SinkTask {
   private static final Logger logger = LoggerFactory.getLogger(TrafficLightSinkTask.class);
 
   @Autowired
-  private FirebaseAdmin firebaseAdmin;
+  private com.sinkconnector.FirebaseAdmin firebaseAdmin;
 
   @Override
   public void start(Map<String, String> props) {

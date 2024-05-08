@@ -1,4 +1,4 @@
-package com.kafka.data.dataset;
+package com.sourceconnector.dataset;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -15,10 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.text.StringSubstitutor;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kafka.data.dataset.model.TrafficSignalData;
-import org.apache.commons.text.StringSubstitutor;
+import com.sourceconnector.dataset.model.TrafficSignalData;
 
 public class DataService {
 	private final URI uri;
@@ -79,12 +81,14 @@ public class DataService {
 
 	public static class DataServiceBuilder {
 
-		private String apiKey = "bd30bf3b-df36-4c38-9e4e-8dd8b5e94ddc";
+		@Value("${api.key}")
+		private String apiKey;
 
+		@Value("${api.base_URL}")
+		private String baseURL;
 
-		private String baseURL = "http://t-data.seoul.go.kr/apig/apiman-gateway/tapi/v2xSignalPhaseTimingInformation/1.0?";
-
-		private final String query = "apiKey=bd30bf3b-df36-4c38-9e4e-8dd8b5e94ddc&type=json&pageNo=1&numOfRows=2&itstId=${intersectionId}";
+		@Value("${api.query}")
+		private String query;
 
 		private final Map<String, Integer> values;
 
