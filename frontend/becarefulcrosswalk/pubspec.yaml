@@ -65,6 +65,8 @@ dependencies:
 
   flutter_compass: ^0.7.0
 
+  vibration: ^1.8.4
+
   poly_geofence_service: ^3.0.0
 
 
