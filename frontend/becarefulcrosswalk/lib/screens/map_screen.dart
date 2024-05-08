@@ -115,6 +115,26 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.grey,
+            width: 1,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        title: Semantics(
+          label: '실시간 신호정보',
+          child: const Text(
+            '실시간 신호정보',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
       body: FutureBuilder(
         future: _initGeofenceService(),
         builder: (context, snapshot) {

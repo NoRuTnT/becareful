@@ -58,9 +58,14 @@ dependencies:
   flutter_config: ^2.0.2
 
   envied: ^0.5.3
+
   firebase_core: ^2.30.1
 
   firebase_database: ^10.5.4
+
+  flutter_compass: ^0.7.0
+
+  vibration: ^1.8.4
 
   poly_geofence_service: ^3.0.0
 
