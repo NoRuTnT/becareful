@@ -8,8 +8,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
@@ -22,7 +21,7 @@ import com.sourceconnector.dataset.model.TrafficSignalData;
 
 public class TrafficLightSourceTask extends SourceTask {
 
-	private static final Logger logger = LoggerFactory.getLogger(TrafficLightSourceTask.class);
+
 
 	private final Function<Integer, DataService> dataServiceSupplier;
 	private String topic;
@@ -52,8 +51,7 @@ public class TrafficLightSourceTask extends SourceTask {
 	}
 	@Override
 	public void start(Map<String, String> props) {
-		logger.info("Start source connector task");
-		logger.info(String.valueOf(props));
+
 
 		config = new TrafficLightSourceConnectorConfig(props);
 		topic = config.getTopic();
@@ -64,17 +62,17 @@ public class TrafficLightSourceTask extends SourceTask {
 		trafficLightSourcePartitions = createTrafficLightPartition(intersectionId, offsetStorageReader);
 
 
-		logger.info("Source connector started");
+
 	}
 
 	@Override
 	public List<SourceRecord> poll() throws InterruptedException {
 		// 데이터 추출 로직 구현
 		try {
-			logger.info("Start poll");
+
 			List<SourceRecord> sourceRecords = new ArrayList<>();
 			pollSourcePartition(trafficLightSourcePartitions, sourceRecords);
-			logger.info("Poll Done - {} total rows were written to topic", sourceRecords.size());
+
 			return sourceRecords;
 		} catch (IOException e) {
 			throw new ConnectException(e);
@@ -84,8 +82,7 @@ public class TrafficLightSourceTask extends SourceTask {
 	private void pollSourcePartition(TrafficLightSourcePartition trafficLightSourcePartition, List<SourceRecord> sourceRecords)
 		throws IOException, InterruptedException {
 		List<TrafficSignalData> data = getLastData(trafficLightSourcePartition);
-		logger.info("{} rows were fetched by poll for Bounding Box {}", data.size(),
-			trafficLightSourcePartition.getIntersectionId());
+
 
 		for (TrafficSignalData signalData : data) {
 			trafficLightSourcePartition.setLastID(signalData.getItstId());
@@ -120,7 +117,7 @@ public class TrafficLightSourceTask extends SourceTask {
 
 	@Override
 	public void stop() {
-		logger.warn("Stopping source task");
+
 	}
 
 	//config 추가예정

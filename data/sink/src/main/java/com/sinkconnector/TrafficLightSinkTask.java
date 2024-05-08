@@ -10,15 +10,14 @@ import java.util.Map;
 
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrafficLightSinkTask extends SinkTask {
 
-  private static final Logger logger = LoggerFactory.getLogger(TrafficLightSinkTask.class);
+
 
   @Autowired
   private com.sinkconnector.FirebaseAdmin firebaseAdmin;
