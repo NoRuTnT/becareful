@@ -22,12 +22,8 @@ public class IntersectionController {
 
     @GetMapping(value = "/intersection/{intersectionId}")
     public ResponseEntity<SuccessResponse> getIntersection(@PathVariable Long intersectionId){
-        List<crosswalk> crosswalkresponse = intersectionService.getIntersection(intersectionId);
 
-        IntersectionResponseDto intersectionResponseDto = IntersectionResponseDto.builder()
-                .intersectionId(intersectionId)
-                .crosswalkList(crosswalkresponse)
-                .build();
+        IntersectionResponseDto intersectionResponseDto = intersectionService.getIntersectionResponseDto(intersectionId);
 
         SuccessResponse response = SuccessResponse.builder()
             .status(HttpStatus.OK)
