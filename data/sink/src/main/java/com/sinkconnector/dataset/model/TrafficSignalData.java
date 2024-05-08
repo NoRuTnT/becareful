@@ -8,8 +8,7 @@ import java.util.Objects;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -22,7 +21,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class TrafficSignalData {
-	private static final Logger logger = LoggerFactory.getLogger(TrafficSignalData.class);
+
 
 	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "UTC")
 	@JsonDeserialize(using= LocalDateTimeDeserializer.class)

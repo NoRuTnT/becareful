@@ -10,20 +10,19 @@ import java.util.stream.Collectors;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.source.SourceConnector;
 import org.apache.kafka.connect.util.ConnectorUtils;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+
 
 import com.sourceconnector.config.TrafficLightSourceConnectorConfig;
 
 public class TrafficLightSourceConnector extends SourceConnector {
 
-	private static final Logger logger = LoggerFactory.getLogger(TrafficLightSourceConnector.class);
+
 
 	private TrafficLightSourceConnectorConfig config;
 
 	@Override
 	public void start(Map<String, String> props) {
-		logger.info("Connector has started");
+
 		config = new TrafficLightSourceConnectorConfig(props);
 	}
 
