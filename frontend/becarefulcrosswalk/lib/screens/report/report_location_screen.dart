@@ -1,0 +1,152 @@
+import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
+import 'package:becarefulcrosswalk/service/my_location.dart';
+import 'package:becarefulcrosswalk/theme/colors.dart';
+import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
+import 'package:easy_rich_text/easy_rich_text.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/report_data.dart';
+
+class ReportLocationScreen extends StatefulWidget {
+  const ReportLocationScreen({super.key});
+
+  @override
+  State<ReportLocationScreen> createState() => _ReportLocationScreenState();
+}
+
+class _ReportLocationScreenState extends State<ReportLocationScreen> {
+  String? _roadAddress;
+
+  @override
+  void initState() {
+    super.initState();
+    _retrieveRoadAddress();
+  }
+
+  Future<void> _retrieveRoadAddress() async {
+    try {
+      final address = await MyLocation().getRoadAddress();
+
+      setState(() {
+        _roadAddress = address;
+        if (_roadAddress != null) {
+          Provider.of<ReportData>(context, listen: false)
+              .setRoadAddress(_roadAddress!);
+        }
+      });
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ReportVoiceScreen(),
+        ),
+      );
+    } catch (e) {
+      print('Error getting road address: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 2,
+        backgroundColor: Colors.white,
+        foregroundColor: black,
+        title: Semantics(
+          label: '불편신고 3단계중 2단계',
+          child: const Text(
+            "불편신고(2/3)",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+        child: Center(
+          child: _roadAddress == null
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Semantics(
+                      label: '현재 위치를 조회 중입니다 잠시만 기다려주세요',
+                      child: EasyRichText(
+                        '현재 위치를 조회 중입니다\n잠시만 기다려주세요',
+                        textAlign: TextAlign.center,
+                        patternList: [
+                          EasyRichTextPattern(
+                            targetString: '조회 중',
+                            style: const TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                        defaultStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'images/checked.png',
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Semantics(
+                      label: '현재 위치 조회 완료',
+                      child: EasyRichText(
+                        '현재 위치 조회 완료',
+                        textAlign: TextAlign.center,
+                        patternList: [
+                          EasyRichTextPattern(
+                            targetString: '조회 완료',
+                            style: const TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                        defaultStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Semantics(
+                      label: _roadAddress,
+                      child: Text(
+                        _roadAddress!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: navy,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+      bottomNavigationBar: const BottomBar(),
+    );
+  }
+}
