@@ -1,4 +1,4 @@
-package com.kafka.data.connector.source;
+package com.sourceconnector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import org.apache.kafka.connect.util.ConnectorUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import com.kafka.data.connector.source.config.TrafficLightSourceConnectorConfig;
+import com.sourceconnector.config.TrafficLightSourceConnectorConfig;
 
 public class TrafficLightSourceConnector extends SourceConnector {
 
