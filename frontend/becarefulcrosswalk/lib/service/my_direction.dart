@@ -6,44 +6,37 @@ import 'package:geolocator/geolocator.dart';
 import 'package:vibration/vibration.dart';
 
 class MyDirection {
-  // 디바이스의 현재 방위각을 리스닝하기 위한 StreamSubscription 인스턴스
   StreamSubscription<CompassEvent>? _compassSubscription;
+  StreamSubscription<Position>? _positionSubscription;
 
-  // 디바이스의 현재 방위각
-  double? _currentHeading;
+  double? _headingAngle; // 디바이스가 바라보고 있는 방위각
+  double? _destAngle1; // 목적지 한쪽 끝 방위각
+  double? _destAngle2; // 목적지 다른 한쪽끝 방위각
 
-  // 디바이스의 현재 방위각 리스닝 시작
-  void startListening() {
+  late bool isSafe;
+
+  void startAngleListening(double leftDestLat, double leftDestLng,
+      double rightDestLat, double rightDestLng) {
     _compassSubscription = FlutterCompass.events!.listen((CompassEvent event) {
-      _currentHeading = event.heading;
+      _headingAngle = event.heading;
+    });
+    _positionSubscription =
+        Geolocator.getPositionStream().listen((Position myLocation) {
+      _destAngle1 = calculateAngle(
+          myLocation.latitude, myLocation.longitude, leftDestLat, leftDestLng);
+      _destAngle2 = calculateAngle(myLocation.latitude, myLocation.longitude,
+          rightDestLat, rightDestLng);
     });
   }
 
-  // 디바이스의 현재 방위각 리스닝 중지
-  void stopListening() {
+  void stopAngleListening() {
     _compassSubscription?.cancel();
-  }
-
-  // 디바이스의 현재 방위각 가져오기
-  double? getCurrentHeading() {
-    return _currentHeading;
-  }
-
-  // 현재 위치에서 목적지 방향의 방위각
-  double? _azimuthDestination;
-
-  // 현재 위치에서 목적지 방향의 방위각 리스닝 시작
-  void startLocationUpdates(double destLat, double destLng) {
-    Geolocator.getPositionStream().listen((Position myLocation) {
-      _azimuthDestination = calculateBearing(
-          myLocation.latitude, myLocation.longitude, destLat, destLng);
-    });
+    _positionSubscription?.cancel();
   }
 
   // 두 지점 사이의 방위각 계산
-  double calculateBearing(
+  double calculateAngle(
       double startLat, double startLng, double endLat, double endLng) {
-    // 라디안으로 변환
     var startLatRad = radians(startLat);
     var startLngRad = radians(startLng);
     var endLatRad = radians(endLat);
@@ -57,7 +50,6 @@ class MyDirection {
           sin(startLatRad) * cos(endLatRad) * cos(dLng),
     );
 
-    // 라디안에서 도(degree)로 변환
     return (degrees(bearing) + 360) % 360;
   }
 
@@ -69,42 +61,27 @@ class MyDirection {
     return radian * 180.0 / pi;
   }
 
-  void guideWithVibration(double destLat, double destLng) async {
-    if (_currentHeading == null || _azimuthDestination == null) return;
-
-    void safeVibration() {
-      Vibration.vibrate(pattern: [100, 400, 100, 400]); // 짧고 반복적인 패턴
+  void checkSafe() {
+    if (_headingAngle == null || _destAngle1 == null || _destAngle2 == null) {
+      return;
     }
 
-    void warningVibration() {
-      Vibration.vibrate(pattern: [500, 1000, 500, 2000]); // 길고 강한 패턴
-    }
+    double maxAngle = max(_destAngle1!, _destAngle2!);
+    double minAngle = min(_destAngle1!, _destAngle2!);
 
-    if (_azimuthDestination! - 20 < 0) {
-      if ((_azimuthDestination! - 20 + 360 <= _currentHeading! &&
-              _currentHeading! <= 360) ||
-          (0 <= _currentHeading! &&
-              _currentHeading! <= _azimuthDestination! + 20)) {
-        safeVibration();
-      } else {
-        warningVibration();
-      }
-    } else if (_azimuthDestination! + 20 >= 360) {
-      if ((_azimuthDestination! - 20 <= _currentHeading! &&
-              _currentHeading! <= 360) ||
-          (0 <= _currentHeading! &&
-              _currentHeading! <= _azimuthDestination! + 20 - 360)) {
-        safeVibration();
-      } else {
-        warningVibration();
-      }
+    if (maxAngle - minAngle >= 180) {
+      isSafe = ((maxAngle < _headingAngle! && _headingAngle! <= 360) ||
+          (0 <= _headingAngle! && _headingAngle! <= minAngle));
     } else {
-      if (_azimuthDestination! - 20 <= _currentHeading! &&
-          _currentHeading! <= _azimuthDestination! + 20) {
-        safeVibration();
-      } else {
-        warningVibration();
-      }
+      isSafe = (minAngle <= _headingAngle! && _headingAngle! <= maxAngle);
+    }
+  }
+
+  void guideWithVibration(double destLat, double destLng) {
+    if (isSafe) {
+      Vibration.vibrate(pattern: [100, 400, 100, 400]); // 짧고 반복적인 패턴
+    } else {
+      Vibration.vibrate(pattern: [500, 1000, 500, 2000]); // 길고 강한 패턴
     }
   }
 }
