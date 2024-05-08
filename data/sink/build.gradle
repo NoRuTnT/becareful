@@ -6,7 +6,10 @@ plugins {
 
 
 dependencies {
-	implementation 'com.google.firebase:firebase-admin:8.0.1'
+	implementation('com.google.firebase:firebase-admin') {
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+		exclude group: 'org.slf4j', module: 'slf4j-simple'
+	}
 
 }
 
