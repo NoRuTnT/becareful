@@ -60,7 +60,12 @@ subprojects {
 	}
 
 
+
 	configurations {
+		all {
+			exclude group: "org.slf4j", module: "jul-to-slf4j"
+			exclude group: "org.slf4j", module: "log4j-to-slf4j"
+		}
 		compileOnly {
 			extendsFrom annotationProcessor
 		}
