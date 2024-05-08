@@ -1,49 +1,52 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:vibration/vibration.dart';
 
 class MyDirection {
-  // 디바이스의 현재 방위각을 리스닝하기 위한 StreamSubscription 인스턴스
   StreamSubscription<CompassEvent>? _compassSubscription;
+  StreamSubscription<Position>? _positionSubscription;
 
-  // 디바이스의 현재 방위각
-  double? _currentHeading;
+  double? _headingAngle; // 디바이스가 바라보고 있는 방위각
+  double? _destAngle1; // 목적지 한쪽 끝 방위각
+  double? _destAngle2; // 목적지 다른 한쪽끝 방위각
+  late bool _isSafeAngle; // 안전 범위를 바라보고 있는지 여부
+  double? _remainingDistance; // 목적지 중간점까지 남은 거리
+  bool _isPassHalf = false; // 횡단보도의 절반 지점을 지났는지 여부
 
-  // 디바이스의 현재 방위각 리스닝 시작
-  void startListening() {
+  void startListening(double destLat1, double destLng1, double destLat2,
+      double destLng2, double midLat, double midLng, double length) {
     _compassSubscription = FlutterCompass.events!.listen((CompassEvent event) {
-      _currentHeading = event.heading;
+      _headingAngle = event.heading;
+      checkSafeAngle();
+    });
+    _positionSubscription =
+        Geolocator.getPositionStream().listen((Position myLocation) {
+      _destAngle1 = calculateAngle(
+          myLocation.latitude, myLocation.longitude, destLat1, destLng1);
+      _destAngle2 = calculateAngle(
+          myLocation.latitude, myLocation.longitude, destLat2, destLng2);
+      checkSafeAngle();
+
+      _remainingDistance = calculateDistance(
+          myLocation.latitude, myLocation.longitude, midLat, midLng);
+      if (!_isPassHalf) {
+        checkHalfWalk(length);
+      }
     });
   }
 
-  // 디바이스의 현재 방위각 리스닝 중지
   void stopListening() {
     _compassSubscription?.cancel();
-  }
-
-  // 디바이스의 현재 방위각 가져오기
-  double? getCurrentHeading() {
-    return _currentHeading;
-  }
-
-  // 현재 위치에서 목적지 방향의 방위각
-  double? _azimuthDestination;
-
-  // 현재 위치에서 목적지 방향의 방위각 리스닝 시작
-  void startLocationUpdates(double destLat, double destLng) {
-    Geolocator.getPositionStream().listen((Position myLocation) {
-      _azimuthDestination = calculateBearing(
-          myLocation.latitude, myLocation.longitude, destLat, destLng);
-    });
+    _positionSubscription?.cancel();
   }
 
   // 두 지점 사이의 방위각 계산
-  double calculateBearing(
+  double calculateAngle(
       double startLat, double startLng, double endLat, double endLng) {
-    // 라디안으로 변환
     var startLatRad = radians(startLat);
     var startLngRad = radians(startLng);
     var endLatRad = radians(endLat);
@@ -57,7 +60,6 @@ class MyDirection {
           sin(startLatRad) * cos(endLatRad) * cos(dLng),
     );
 
-    // 라디안에서 도(degree)로 변환
     return (degrees(bearing) + 360) % 360;
   }
 
@@ -69,42 +71,48 @@ class MyDirection {
     return radian * 180.0 / pi;
   }
 
-  void guideWithVibration(double destLat, double destLng) async {
-    if (_currentHeading == null || _azimuthDestination == null) return;
-
-    void safeVibration() {
-      Vibration.vibrate(pattern: [100, 400, 100, 400]); // 짧고 반복적인 패턴
+  void checkSafeAngle() {
+    if (_headingAngle == null || _destAngle1 == null || _destAngle2 == null) {
+      return;
     }
 
-    void warningVibration() {
+    double maxAngle = max(_destAngle1!, _destAngle2!);
+    double minAngle = min(_destAngle1!, _destAngle2!);
+
+    if (maxAngle - minAngle >= 180) {
+      _isSafeAngle = ((maxAngle < _headingAngle! && _headingAngle! <= 360) ||
+          (0 <= _headingAngle! && _headingAngle! <= minAngle));
+    } else {
+      _isSafeAngle = (minAngle <= _headingAngle! && _headingAngle! <= maxAngle);
+    }
+    guideWithVibration();
+  }
+
+  void guideWithVibration() {
+    if (_isSafeAngle) {
+      Vibration.vibrate(pattern: [100, 400, 100, 400]); // 짧고 반복적인 패턴
+    } else {
       Vibration.vibrate(pattern: [500, 1000, 500, 2000]); // 길고 강한 패턴
     }
+  }
 
-    if (_azimuthDestination! - 20 < 0) {
-      if ((_azimuthDestination! - 20 + 360 <= _currentHeading! &&
-              _currentHeading! <= 360) ||
-          (0 <= _currentHeading! &&
-              _currentHeading! <= _azimuthDestination! + 20)) {
-        safeVibration();
-      } else {
-        warningVibration();
-      }
-    } else if (_azimuthDestination! + 20 >= 360) {
-      if ((_azimuthDestination! - 20 <= _currentHeading! &&
-              _currentHeading! <= 360) ||
-          (0 <= _currentHeading! &&
-              _currentHeading! <= _azimuthDestination! + 20 - 360)) {
-        safeVibration();
-      } else {
-        warningVibration();
-      }
-    } else {
-      if (_azimuthDestination! - 20 <= _currentHeading! &&
-          _currentHeading! <= _azimuthDestination! + 20) {
-        safeVibration();
-      } else {
-        warningVibration();
-      }
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    var p = pi / 180;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a)); // 2 * R; R = 6371 km
+  }
+
+  void checkHalfWalk(double length) {
+    if (_remainingDistance == null) {
+      return;
+    }
+    if (_remainingDistance! <= length / 2) {
+      _isPassHalf = true;
+      final player = AudioPlayer();
+      player.play(AssetSource('audio/half-pass.mp3'));
     }
   }
 }
