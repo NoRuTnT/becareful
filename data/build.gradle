@@ -26,7 +26,10 @@ subprojects {
 
 
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter'
+		implementation ('org.springframework.boot:spring-boot-starter') {
+			exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+			exclude group: 'org.slf4j', module: 'slf4j-simple'
+		}
 		implementation ('org.apache.kafka:connect-api:3.4.0') {
 			exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 			exclude group: 'org.slf4j', module: 'slf4j-simple'
@@ -45,8 +48,7 @@ subprojects {
 		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
 		testImplementation 'org.mockito:mockito-core:4.3.1'
 		testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
-		testImplementation 'org.testcontainers:kafka:1.16.3'
-		testImplementation 'org.sourcelab:kafka-connect-client:4.0.0'
+
 
 		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
