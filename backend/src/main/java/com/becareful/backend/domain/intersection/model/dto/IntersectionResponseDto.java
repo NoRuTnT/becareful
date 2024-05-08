@@ -1,6 +1,5 @@
 package com.becareful.backend.domain.intersection.model.dto;
 
-import com.becareful.backend.domain.intersection.model.entity.crosswalk;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,9 +10,9 @@ import java.util.List;
 public class IntersectionResponseDto {
 
     Long intersectionId;
-    List<crosswalk> crosswalkList;
+    List<CrosswalkResponseDto> crosswalkList;
 
-    public IntersectionResponseDto(Long intersectionId, List<crosswalk> crosswalkList) {
+    public IntersectionResponseDto(Long intersectionId, List<CrosswalkResponseDto> crosswalkList) {
         this.intersectionId = intersectionId;
         this.crosswalkList = crosswalkList;
     }
