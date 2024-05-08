@@ -20,7 +20,4 @@ public class Intersection {
     @Column(name = "intersection_name")
     private String intersectionName;
 
-    @Column(name = "intersectio_location")
-    private String intersectionLocation;
-
 }

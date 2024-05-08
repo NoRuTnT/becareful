@@ -1,7 +1,8 @@
 package com.becareful.backend.domain.intersection.controller;
 
 import com.becareful.backend.common.model.dto.SuccessResponse;
-import com.becareful.backend.domain.intersection.model.entity.Trafficlight;
+import com.becareful.backend.domain.intersection.model.dto.IntersectionResponseDto;
+import com.becareful.backend.domain.intersection.model.entity.crosswalk;
 import com.becareful.backend.domain.intersection.service.IntersectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +22,17 @@ public class IntersectionController {
 
     @GetMapping(value = "/intersection/{intersectionId}")
     public ResponseEntity<SuccessResponse> getIntersection(@PathVariable Long intersectionId){
-        List<Trafficlight> trafficlgihtresponse = intersectionService.getIntersection(intersectionId);
+        List<crosswalk> crosswalkresponse = intersectionService.getIntersection(intersectionId);
+
+        IntersectionResponseDto intersectionResponseDto = IntersectionResponseDto.builder()
+                .intersectionId(intersectionId)
+                .crosswalkList(crosswalkresponse)
+                .build();
+
         SuccessResponse response = SuccessResponse.builder()
             .status(HttpStatus.OK)
             .message("성공적으로 신호등이 조회되었습니다")
-            .result(trafficlgihtresponse)
+            .result(intersectionResponseDto)
             .build();
 
         return ResponseEntity.ok(response);
