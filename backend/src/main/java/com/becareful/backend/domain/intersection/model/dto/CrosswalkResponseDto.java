@@ -16,12 +16,21 @@ public class CrosswalkResponseDto {
 
     String length;
 
+    String sideOne;
+
+    String sideTwo;
+
     List<CoordinateDto> coordinateList;
 
-    public CrosswalkResponseDto(Long crosswalkId, String direction , String length , List<CoordinateDto> coordinateList) {
+    List<CoordinateDto> midpointList;
+
+    public CrosswalkResponseDto(Long crosswalkId, String direction, String length, String sideOne,  String sideTwo, List<CoordinateDto> coordinateList, List<CoordinateDto> midpointList) {
         this.crosswalkId = crosswalkId;
         this.direction = direction;
         this.length = length;
+        this.sideOne = sideOne;
+        this.sideTwo = sideTwo;
         this.coordinateList = coordinateList;
+        this.midpointList = midpointList;
     }
 }
