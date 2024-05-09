@@ -8,6 +8,7 @@ import '../models/intersection_model.dart';
 
 class ApiService {
   static const String baseUrl = "https://k10a207.p.ssafy.io/api";
+  final headers = {'Content-Type': 'application/json; charset=utf-8'};
 
   static Future<void> sendReport(
       String roadAddress, String reportText, File imageFile) async {
@@ -52,16 +53,25 @@ class ApiService {
     }
   }
 
-  static Future<IntersectionModel> getIntersection(num intersectionId) async {
+  static Future<IntersectionModel> getIntersection(int intersectionId) async {
     final url = Uri.parse('$baseUrl/intersection/$intersectionId');
-    IntersectionModel intersection;
-
     var response = await http.get(url);
     if (response.statusCode == 200) {
-      final intersection = jsonDecode(response.body);
-      return IntersectionModel(
-          intersectionId: intersection.intersectionId,
-          crosswalks: intersection.crosswalks);
+      final utf8DecodedBody = utf8.decode(response.bodyBytes);
+      log(utf8DecodedBody);
+
+      final Map<String, dynamic> jsonMap = jsonDecode(utf8DecodedBody);
+      final resultJson = jsonMap['result'];
+      final intersection = IntersectionModel.fromJson(resultJson);
+
+      print('Intersection ID: ${intersection.intersectionId}');
+      print('Crosswalk Count: ${intersection.crosswalkList.length}');
+      for (final crosswalk in intersection.crosswalkList) {
+        print(
+            'Crosswalk ID: ${crosswalk.crosswalkId}, Side One: ${crosswalk.sideOne}, Side Two: ${crosswalk.sideTwo}');
+      }
+
+      return intersection;
     }
     log("교차로 정보 받아오지 못했음");
     throw Error();
