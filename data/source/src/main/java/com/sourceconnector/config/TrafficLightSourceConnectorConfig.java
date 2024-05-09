@@ -9,11 +9,10 @@ import org.apache.kafka.common.config.ConfigException;
 public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 	public static final String INTERSECTIONID_CONFIG = "intersection.id";
 
-	public static final String INTERSECTIONID_DOC = "Intersection identifier";
+	public static final String TOPIC_CONFIG = "topic";
+	public static final String POLL_INTERVAL_CONFIG = "poll.interval.ms";
 
-	public static final String TOPIC_CONFIG = "topics";
 
-	public static final String TOPIC_DOC = "Topic where the data shall be written";
 
 	public int getintersectionId() {
 		return this.getInt(INTERSECTIONID_CONFIG);
@@ -36,14 +35,22 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 				ConfigDef.NO_DEFAULT_VALUE,
 				new IntegersectionIdValidator(),
 				ConfigDef.Importance.HIGH,
-				INTERSECTIONID_DOC
+				"intersection id"
 			)
 			.define(
 				TOPIC_CONFIG,
 				ConfigDef.Type.STRING,
 				ConfigDef.Importance.HIGH,
-				TOPIC_DOC
-			);
+				"topic name"
+			)
+			.define(
+				POLL_INTERVAL_CONFIG,
+				ConfigDef.Type.LONG,
+				5000,
+				ConfigDef.Importance.HIGH,
+				"api call interval (ms)"
+			)
+			;
 	}
 
 
