@@ -7,6 +7,7 @@ import com.becareful.backend.domain.intersection.model.entity.Intersection;
 import com.becareful.backend.domain.intersection.model.entity.crosswalk;
 import com.becareful.backend.domain.intersection.repository.CrosswalkRepository;
 import com.becareful.backend.domain.intersection.repository.IntersectionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,10 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class IntersectionService {
-    private static IntersectionRepository intersectionRepository;
-    private static CrosswalkRepository crosswalkRepository;
+    private final  IntersectionRepository intersectionRepository;
+    private final CrosswalkRepository crosswalkRepository;
 
     public IntersectionResponseDto getIntersectionResponseDto(Long intersectionId){
         List<crosswalk> crosswalkresponse = getIntersection(intersectionId);
