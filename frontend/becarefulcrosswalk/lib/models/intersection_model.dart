@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class IntersectionModel {
   final num intersectionId;
   final List<Crosswalk> crosswalks;
@@ -15,18 +17,18 @@ class IntersectionModel {
 }
 
 class Crosswalk {
-  final String crosswalkId;
+  final Long crosswalkId;
   final String crosswalkDirection;
   final String direction;
   final String length;
-  final List<Coordinate> coordinate;
+  final List<Coordinate> coordinateList;
 
   Crosswalk({
     required this.crosswalkId,
     required this.crosswalkDirection,
     required this.direction,
     required this.length,
-    required this.coordinate,
+    required this.coordinateList,
   });
 
   factory Crosswalk.fromJson(Map<String, dynamic> json) {
@@ -35,7 +37,7 @@ class Crosswalk {
       crosswalkDirection: json['crosswalkDirection'],
       direction: json['direction'],
       length: json['length'],
-      coordinate: (json['coordinate'] as List)
+      coordinateList: (json['coordinateList'] as List)
           .map((coordinateJson) => Coordinate.fromJson(coordinateJson))
           .toList(),
     );
@@ -65,8 +67,16 @@ class Coordinate {
       "crosswalkDirection": "역삼역 방향",
       "direction" : "north",
       "length" : "15",
-      "coordinate" :
+      "coordinateList" :
       [
+        {
+          "longitude" : "367.1231",
+          "latitude" : " 153125.125125",
+        },
+        {
+          "longitude" : "367.1231",
+          "latitude" : " 153125.125125",
+        },
         {
           "longitude" : "367.1231",
           "latitude" : " 153125.125125",
@@ -90,8 +100,16 @@ class Coordinate {
       "crosswalkDirection": "강남역 방향",
       "direction" : "south",
       "length" : "15",
-      "coordinate" :
+      "coordinateList" :
       [
+        {
+          "longitude" : "367.1231",
+          "latitude" : " 153125.125125",
+        },
+        {
+          "longitude" : "367.1231",
+          "latitude" : " 153125.125125",
+        },
         {
           "longitude" : "367.1231",
           "latitude" : " 153125.125125",
