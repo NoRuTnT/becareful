@@ -42,6 +42,13 @@ class _MapScreenState extends State<MapScreen> {
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
 
     try {
+      if (Provider.of<MyLocationState>(context, listen: false)
+              .myLocationState ==
+          1) {
+        var geoId =
+            Provider.of<MyLocationState>(context, listen: false).geofenceId;
+        log('나 이미 들어와있어!!!!!!!!!!@@@@@@@@@@@@@@@');
+      }
       await _geofenceService.start();
     } catch (e) {
       print('Error starting geofence service: $e');
@@ -58,14 +65,18 @@ class _MapScreenState extends State<MapScreen> {
         print('@@@@@@@@@@@@@@@@@@@@${geofence.id}에 들어옴@@@@@@@@@@@@@@@@@@@@@');
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(1); // 내 위치상태 원 안
+        Provider.of<MyLocationState>(context, listen: false)
+            .setGeofenceId(geofence.id);
       } else if (geofenceStatus == GeofenceStatus.EXIT) {
         print('${geofence.id}에 나감');
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(0); // 내 위치상태 원 밖
+        Provider.of<MyLocationState>(context, listen: false).setGeofenceId('0');
       }
     });
 
     if (Provider.of<MyLocationState>(context).myLocationState == 1) {
+      // 원안에 들어오면
       IntersectionModel intersection =
           await ApiService.getIntersection(geofence.id as num);
 
@@ -74,17 +85,17 @@ class _MapScreenState extends State<MapScreen> {
       for (Crosswalk crosswalk in intersection.crosswalks) {
         _polyGeofenceService.addPolyGeofence(
           PolyGeofence(
-            id: crosswalk.crosswalkId,
-            data: {"crosswalk": crosswalk},
+            id: '${crosswalk.crosswalkId}',
+            data: {"crosswalk": crosswalk, "geofenceId": geofence.id},
             polygon: <LatLng>[
-              LatLng(crosswalk.coordinate[0].latitude as double,
-                  crosswalk.coordinate[0].longitude as double),
-              LatLng(crosswalk.coordinate[1].latitude as double,
-                  crosswalk.coordinate[1].longitude as double),
-              LatLng(crosswalk.coordinate[2].latitude as double,
-                  crosswalk.coordinate[2].longitude as double),
-              LatLng(crosswalk.coordinate[3].latitude as double,
-                  crosswalk.coordinate[3].longitude as double),
+              LatLng(crosswalk.coordinateList[0].latitude as double,
+                  crosswalk.coordinateList[0].longitude as double),
+              LatLng(crosswalk.coordinateList[1].latitude as double,
+                  crosswalk.coordinateList[1].longitude as double),
+              LatLng(crosswalk.coordinateList[2].latitude as double,
+                  crosswalk.coordinateList[2].longitude as double),
+              LatLng(crosswalk.coordinateList[3].latitude as double,
+                  crosswalk.coordinateList[3].longitude as double),
             ],
           ),
         );
@@ -117,10 +128,14 @@ class _MapScreenState extends State<MapScreen> {
       if (polyGeofenceStatus == PolyGeofenceStatus.ENTER) {
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(2); // 위치상태 횡단보도 안
+        Provider.of<MyLocationState>(context, listen: false)
+            .setGeofenceId(polyGeofence.id);
         if (Provider.of<MyLocationState>(context).myLocationState == 2) {}
       } else if (polyGeofenceStatus == PolyGeofenceStatus.EXIT) {
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(1); // 원 안
+        Provider.of<MyLocationState>(context, listen: false)
+            .setGeofenceId(polyGeofence.data.geofenceId);
         print('횡단보도 나감');
       }
     });
