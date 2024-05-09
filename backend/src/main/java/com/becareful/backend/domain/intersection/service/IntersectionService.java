@@ -27,9 +27,10 @@ public class IntersectionService {
                             getCoordinateDto(crosswalk.getPointOne()),
                             getCoordinateDto(crosswalk.getPointTwo()),
                             getCoordinateDto(crosswalk.getPointThree()),
-                            getCoordinateDto(crosswalk.getPointFour()),
-                            getCoordinateDto(crosswalk.getSideOne()),
-                            getCoordinateDto(crosswalk.getSideTwo()),
+                            getCoordinateDto(crosswalk.getPointFour())
+                    );
+
+                    List<CoordinateDto> midpoints = List.of(
                             getCoordinateDto(crosswalk.getMidpointOne()),
                             getCoordinateDto(crosswalk.getMidpointTwo())
                     );
@@ -38,7 +39,10 @@ public class IntersectionService {
                             .crosswalkId(crosswalk.getCrosswalkId())
                             .direction(crosswalk.getDirection())
                             .length(crosswalk.getLength())
+                            .sideOne(crosswalk.getSideOne())
+                            .sideTwo(crosswalk.getSideTwo())
                             .coordinateList(coordinates)
+                            .midpointList(midpoints)
                             .build();
                 })
                 .collect(Collectors.toList());
