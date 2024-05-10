@@ -33,7 +33,9 @@ public class DataService {
 
 	private DataService(final URI uri, final HttpClient client, final long pollIntervalMs) {
 		this.uri = uri;
-		this.client = client;
+		this.client = HttpClient.newBuilder()
+			.followRedirects(HttpClient.Redirect.ALWAYS) // 리다이렉션을 자동으로 따름
+			.build();
 		this.secondsBetweenCalls = pollIntervalMs;
 	}
 
