@@ -33,7 +33,6 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 				INTERSECTIONID_CONFIG,
 				ConfigDef.Type.INT,
 				ConfigDef.NO_DEFAULT_VALUE,
-				new IntegersectionIdValidator(),
 				ConfigDef.Importance.HIGH,
 				"intersection id"
 			)
@@ -45,8 +44,8 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 			)
 			.define(
 				POLL_INTERVAL_CONFIG,
-				ConfigDef.Type.STRING,
-				"5000",
+				ConfigDef.Type.LONG,
+				5000,
 				ConfigDef.Importance.HIGH,
 				"api call interval (ms)"
 			)
@@ -54,25 +53,25 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 	}
 
 
-	private static class IntegersectionIdValidator implements ConfigDef.Validator {
-
-		@Override
-		@SuppressWarnings("unchecked")
-		public void ensureValid(String name, Object value) {
-			if (value instanceof String) {
-				try {
-					int intersectionId = Integer.parseInt((String) value);
-					if (intersectionId <= 0) {
-						throw new ConfigException(name, value, "IntersectionId는 0보다 커야합니다.");
-					}
-				} catch (NumberFormatException e) {
-					throw new ConfigException(name, value, "IntersectionId는 정수여야합니다.");
-				}
-			} else {
-				throw new ConfigException(name, value, "IntersectionId는 숫자형식 string입니다.");
-			}
-		}
-	}
+	// private static class IntegersectionIdValidator implements ConfigDef.Validator {
+	//
+	// 	@Override
+	// 	@SuppressWarnings("unchecked")
+	// 	public void ensureValid(String name, Object value) {
+	// 		if (value instanceof String) {
+	// 			try {
+	// 				int intersectionId = Integer.parseInt((String) value);
+	// 				if (intersectionId <= 0) {
+	// 					throw new ConfigException(name, value, "IntersectionId는 0보다 커야합니다.");
+	// 				}
+	// 			} catch (NumberFormatException e) {
+	// 				throw new ConfigException(name, value, "IntersectionId는 정수여야합니다.");
+	// 			}
+	// 		} else {
+	// 			throw new ConfigException(name, value, "IntersectionId는 숫자형식string입니다.");
+	// 		}
+	// 	}
+	// }
 
 
 }
