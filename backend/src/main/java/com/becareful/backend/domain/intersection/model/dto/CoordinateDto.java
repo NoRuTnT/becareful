@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CoordinateDto {
-    String longitude;
     String latitude;
+    String longitude;
 
-    public CoordinateDto(String longitude , String latitude){
-        this.longitude = longitude;
+    public CoordinateDto(String latitude ,String longitude){
         this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
