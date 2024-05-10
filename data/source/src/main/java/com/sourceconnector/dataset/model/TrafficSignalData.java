@@ -1,6 +1,5 @@
 package com.sourceconnector.dataset.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
@@ -28,14 +27,14 @@ public class TrafficSignalData {
 	private final LocalDateTime regDt;
 	private final Long itstId;
 
-	private final BigDecimal ntPdsgRmdrCs;
-	private final BigDecimal etPdsgRmdrCs;
-	private final BigDecimal stPdsgRmdrCs;
-	private final BigDecimal wtPdsgRmdrCs;
-	private final BigDecimal nePdsgRmdrCs;
-	private final BigDecimal sePdsgRmdrCs;
-	private final BigDecimal swPdsgRmdrCs;
-	private final BigDecimal nwPdsgRmdrCs;
+	private final Double ntPdsgRmdrCs;
+	private final Double etPdsgRmdrCs;
+	private final Double stPdsgRmdrCs;
+	private final Double wtPdsgRmdrCs;
+	private final Double nePdsgRmdrCs;
+	private final Double sePdsgRmdrCs;
+	private final Double swPdsgRmdrCs;
+	private final Double nwPdsgRmdrCs;
 
 	public static String regDt_FIELD = "regDt";
 
@@ -68,14 +67,14 @@ public class TrafficSignalData {
 	public TrafficSignalData(
 		@JsonProperty("regDtTime") LocalDateTime regDt,
 		@JsonProperty("itstId") Long itstId,
-		@JsonProperty("ntPdsgRmdrCs") BigDecimal ntPdsgRmdrCs,
-		@JsonProperty("etPdsgRmdrCs") BigDecimal etPdsgRmdrCs,
-		@JsonProperty("stPdsgRmdrCs") BigDecimal stPdsgRmdrCs,
-		@JsonProperty("wtPdsgRmdrCs") BigDecimal wtPdsgRmdrCs,
-		@JsonProperty("nePdsgRmdrCs") BigDecimal nePdsgRmdrCs,
-		@JsonProperty("sePdsgRmdrCs") BigDecimal sePdsgRmdrCs,
-		@JsonProperty("swPdsgRmdrCs") BigDecimal swPdsgRmdrCs,
-		@JsonProperty("nwPdsgRmdrCs") BigDecimal nwPdsgRmdrCs
+		@JsonProperty("ntPdsgRmdrCs") Double ntPdsgRmdrCs,
+		@JsonProperty("etPdsgRmdrCs") Double etPdsgRmdrCs,
+		@JsonProperty("stPdsgRmdrCs") Double stPdsgRmdrCs,
+		@JsonProperty("wtPdsgRmdrCs") Double wtPdsgRmdrCs,
+		@JsonProperty("nePdsgRmdrCs") Double nePdsgRmdrCs,
+		@JsonProperty("sePdsgRmdrCs") Double sePdsgRmdrCs,
+		@JsonProperty("swPdsgRmdrCs") Double swPdsgRmdrCs,
+		@JsonProperty("nwPdsgRmdrCs") Double nwPdsgRmdrCs
 		) {
 
 		this.regDt = regDt;
