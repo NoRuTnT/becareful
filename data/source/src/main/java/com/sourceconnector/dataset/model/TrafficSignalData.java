@@ -53,14 +53,14 @@ public class TrafficSignalData {
 		.name("com.sourceconnector.dataset.model").version(1).doc("Schema for traffic signal data")
 		.field(regDt_FIELD, Schema.STRING_SCHEMA)
 		.field(itstId_FIELD, Schema.INT64_SCHEMA)
-		.field(ntPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(etPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(stPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(wtPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(nePdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(sePdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(swPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
-		.field(nwPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
+		.field(ntPdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(etPdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(stPdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(wtPdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(nePdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(sePdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(swPdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
+		.field(nwPdsgRmdrCs_FIELD, Schema.OPTIONAL_FLOAT64_SCHEMA)
 		.build();
 
 	@JsonCreator
