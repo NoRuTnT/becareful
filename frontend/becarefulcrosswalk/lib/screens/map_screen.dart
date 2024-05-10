@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/prompt_widget.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geofence_service/geofence_service.dart';
@@ -29,6 +30,8 @@ class _MapScreenState extends State<MapScreen> {
   late final MyLocation myLocation;
   late Future<void> initializationFuture;
   late final PolyGeofenceService _polyGeofenceService;
+  late Crosswalk crosswalkInfo;
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
 
   @override
   void initState() {
@@ -137,6 +140,7 @@ class _MapScreenState extends State<MapScreen> {
             .setMyLocationState(2); // 위치상태 횡단보도 안
         Provider.of<MyLocationState>(context, listen: false)
             .setGeofenceId(polyGeofence.id);
+        crosswalkInfo = polyGeofence.data.crosswalk;
         if (Provider.of<MyLocationState>(context).myLocationState == 2) {}
       } else if (polyGeofenceStatus == PolyGeofenceStatus.EXIT) {
         Provider.of<MyLocationState>(context, listen: false)
@@ -156,7 +160,7 @@ class _MapScreenState extends State<MapScreen> {
       case 2:
         return '직사각형 안에 보행자 신호가 있습니다.';
       case 3:
-        return '신호등 건너는 중입니다.';
+        return "${crosswalkInfo.direction} ${crosswalkInfo.length}미터 횡단보도";
       default:
         return '반경 20미터 이내에 보행자 신호등이 없습니다.';
     }
@@ -210,6 +214,67 @@ class _MapScreenState extends State<MapScreen> {
               // 회전 제스처 비활성화
               tiltGesturesEnable: false,
               // 기울기 제스처 비활성화
+            ),
+          ),
+          if (Provider.of<MyLocationState>(context, listen: false)
+                  .myLocationState ==
+              2)
+            SizedBox(
+              height: 55,
+              child: ElevatedButton(
+                onPressed: () {
+                  Provider.of<MyLocationState>(context, listen: false)
+                      .setMyLocationState(3);
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFFFCA41),
+                  side: const BorderSide(
+                    width: 2,
+                    color: Colors.black,
+                  ),
+                  shape: const RoundedRectangleBorder(),
+                  minimumSize: const Size(double.infinity, 20),
+                ),
+                child: const Text(
+                  "안내 시작",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 25,
+                    letterSpacing: 5,
+                  ),
+                ),
+              ),
+            ),
+          if (Provider.of<MyLocationState>(context, listen: false)
+                  .myLocationState ==
+              3)
+            StreamBuilder(
+              stream: _dbRef
+                  .child('traffic-lights/${crosswalkInfo.crosswalkId}')
+                  .onValue,
+              builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData ||
+                    snapshot.data?.snapshot.value == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                Map<dynamic, dynamic> trafficLightData =
+                    (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);
+
+                String lightColor =
+                    trafficLightData['color'] == "green" ? "초록" : "빨간";
+                Color backgroundColor = trafficLightData['color'] == "green"
+                    ? const Color(0xFF7EC25E)
+                    : const Color(0xFFFD7559);
+
+                return PromptWidget(
+                  message: "$lightColor불 ${trafficLightData['remainingTime']}초",
+                  backgroundColor: backgroundColor,
+                );
+              },
             ),
             onMapReady: (controller) {
               mapControllerCompleter.complete(controller);
