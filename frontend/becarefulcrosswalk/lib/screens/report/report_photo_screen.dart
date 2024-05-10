@@ -74,6 +74,12 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
             ),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
