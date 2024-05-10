@@ -81,8 +81,8 @@ class _MapScreenState extends State<MapScreen> {
       // 원안에 들어오면
       IntersectionModel intersection =
           await ApiService.getIntersection(int.parse(geofence.id));
-      await _initPolyGeofenceService(); // PolyGeofence 초기화
       log("api요청 완료했어");
+      await _initPolyGeofenceService(); // PolyGeofence 초기화
 
       for (Crosswalk crosswalk in intersection.crosswalkList) {
         log('교차로 아이디: ${crosswalk.crosswalkId}');
@@ -91,14 +91,14 @@ class _MapScreenState extends State<MapScreen> {
             id: '${crosswalk.crosswalkId}',
             data: {"crosswalk": crosswalk, "geofenceId": geofence.id},
             polygon: <LatLng>[
-              LatLng(crosswalk.coordinateList[0].latitude as double,
-                  crosswalk.coordinateList[0].longitude as double),
-              LatLng(crosswalk.coordinateList[1].latitude as double,
-                  crosswalk.coordinateList[1].longitude as double),
-              LatLng(crosswalk.coordinateList[2].latitude as double,
-                  crosswalk.coordinateList[2].longitude as double),
-              LatLng(crosswalk.coordinateList[3].latitude as double,
-                  crosswalk.coordinateList[3].longitude as double),
+              LatLng(double.parse(crosswalk.coordinateList[0].latitude),
+                  double.parse(crosswalk.coordinateList[0].longitude)),
+              LatLng(double.parse(crosswalk.coordinateList[1].latitude),
+                  double.parse(crosswalk.coordinateList[1].longitude)),
+              LatLng(double.parse(crosswalk.coordinateList[2].latitude),
+                  double.parse(crosswalk.coordinateList[2].longitude)),
+              LatLng(double.parse(crosswalk.coordinateList[3].latitude),
+                  double.parse(crosswalk.coordinateList[3].longitude)),
             ],
           ),
         );
@@ -120,6 +120,7 @@ class _MapScreenState extends State<MapScreen> {
 
     try {
       await _polyGeofenceService.start();
+      log("poly만들어짐");
     } catch (e) {
       print('Error starting polygeofence service: $e');
     }
@@ -130,6 +131,7 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       // 횡단보도 직사각형 지오펜스에 들어왔을때
       if (polyGeofenceStatus == PolyGeofenceStatus.ENTER) {
+        log("@@@@@@@@@@@@@@@횡단보도에 들어왔어@@@@@@@@@@@");
         polyGeofence.data.crosswalk.Provider
             .of<MyLocationState>(context, listen: false)
             .setMyLocationState(2); // 위치상태 횡단보도 안
