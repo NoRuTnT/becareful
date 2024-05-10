@@ -30,6 +30,12 @@ class UserGuideScreen extends StatelessWidget {
             ),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
