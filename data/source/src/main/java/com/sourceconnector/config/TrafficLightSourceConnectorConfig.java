@@ -48,8 +48,7 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 				5000,
 				ConfigDef.Importance.HIGH,
 				"api call interval (ms)"
-			)
-			;
+			);
 	}
 
 
