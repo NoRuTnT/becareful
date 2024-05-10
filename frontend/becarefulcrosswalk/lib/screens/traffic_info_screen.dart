@@ -53,9 +53,9 @@ class _TrafficInfoScreenState extends State<TrafficInfoScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Semantics(
-                label: "${widget.crosswalk.crosswalkDirection}",
+                label: "${widget.crosswalk.sideOne}", // 여기 고쳐야해
                 child: Text(
-                  "${widget.crosswalk.crosswalkDirection}",
+                  "${widget.crosswalk.sideOne}",
                   style: const TextStyle(
                     color: lightGray,
                     fontSize: 30,
