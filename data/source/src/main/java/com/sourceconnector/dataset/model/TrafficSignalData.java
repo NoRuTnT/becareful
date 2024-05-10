@@ -52,7 +52,7 @@ public class TrafficSignalData {
 
 
 	public static Schema schema = SchemaBuilder.struct()
-		.name("com.kafka.sourceconnector.dataset.model;").version(1).doc("Schema for traffic signal data")
+		.name("com.sourceconnector.dataset.model").version(1).doc("Schema for traffic signal data")
 		.field(trsmUtcTime_FIELD, Schema.STRING_SCHEMA)
 		.field(itstId_FIELD, Schema.INT64_SCHEMA)
 		.field(ntPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
