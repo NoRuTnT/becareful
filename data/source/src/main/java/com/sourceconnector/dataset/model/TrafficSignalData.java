@@ -26,7 +26,7 @@ public class TrafficSignalData {
 	@JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone = "UTC")
 	@JsonDeserialize(using= LocalDateTimeDeserializer.class)
 	@JsonSerialize(using= LocalDateTimeSerializer.class)
-	private final LocalDateTime trsmUtcTime;
+	private final LocalDateTime regDt;
 	private final Long itstId;
 
 	private final BigDecimal ntPdsgRmdrCs;
@@ -38,7 +38,7 @@ public class TrafficSignalData {
 	private final BigDecimal swPdsgRmdrCs;
 	private final BigDecimal nwPdsgRmdrCs;
 
-	public static String trsmUtcTime_FIELD = "trsmUtcTime";
+	public static String regDt_FIELD = "regDt";
 
 	public static String itstId_FIELD = "itstId";
 	public static String ntPdsgRmdrCs_FIELD = "ntPdsgRmdrCs";
@@ -53,7 +53,7 @@ public class TrafficSignalData {
 
 	public static Schema schema = SchemaBuilder.struct()
 		.name("com.sourceconnector.dataset.model").version(1).doc("Schema for traffic signal data")
-		.field(trsmUtcTime_FIELD, Schema.STRING_SCHEMA)
+		.field(regDt_FIELD, Schema.STRING_SCHEMA)
 		.field(itstId_FIELD, Schema.INT64_SCHEMA)
 		.field(ntPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
 		.field(etPdsgRmdrCs_FIELD, Schema.FLOAT64_SCHEMA)
@@ -67,7 +67,7 @@ public class TrafficSignalData {
 
 	@JsonCreator
 	public TrafficSignalData(
-		@JsonProperty("trsmUtcTime") LocalDateTime trsmUtcTime,
+		@JsonProperty("regDtTime") LocalDateTime regDt,
 		@JsonProperty("itstId") Long itstId,
 		@JsonProperty("ntPdsgRmdrCs") BigDecimal ntPdsgRmdrCs,
 		@JsonProperty("etPdsgRmdrCs") BigDecimal etPdsgRmdrCs,
@@ -79,7 +79,7 @@ public class TrafficSignalData {
 		@JsonProperty("nwPdsgRmdrCs") BigDecimal nwPdsgRmdrCs
 		) {
 
-		this.trsmUtcTime = trsmUtcTime;
+		this.regDt = regDt;
 		this.itstId = itstId;
 		this.ntPdsgRmdrCs = ntPdsgRmdrCs;
 		this.etPdsgRmdrCs = etPdsgRmdrCs;
@@ -98,12 +98,12 @@ public class TrafficSignalData {
 		return itstId;
 	}
 
-	public LocalDateTime getTrsmUtcTime() {
-		return trsmUtcTime.atOffset(ZoneOffset.UTC).toLocalDateTime();
+	public LocalDateTime getRegDt() {
+		return regDt.atOffset(ZoneOffset.UTC).toLocalDateTime();
 	}
 
 	public long getKey() {
-		return getTrsmUtcTime()
+		return getRegDt()
 			.withMinute(0)
 			.withSecond(0)
 			.withNano(0)
@@ -113,7 +113,7 @@ public class TrafficSignalData {
 
 	public Struct toStruct() {
 		return new Struct(schema)
-			.put(trsmUtcTime_FIELD, getTrsmUtcTime().toString())
+			.put(regDt_FIELD, getRegDt().toString())
 			.put(itstId_FIELD, itstId)
 			.put(ntPdsgRmdrCs_FIELD,ntPdsgRmdrCs)
 			.put(etPdsgRmdrCs_FIELD,etPdsgRmdrCs)
@@ -131,13 +131,13 @@ public class TrafficSignalData {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		TrafficSignalData that = (TrafficSignalData) o;
-		return itstId == that.itstId && trsmUtcTime.equals(that.trsmUtcTime);
+		return itstId == that.itstId && regDt.equals(that.regDt);
 	}
 
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(trsmUtcTime, itstId, ntPdsgRmdrCs, etPdsgRmdrCs, stPdsgRmdrCs, wtPdsgRmdrCs, nePdsgRmdrCs, sePdsgRmdrCs, swPdsgRmdrCs, nwPdsgRmdrCs);
+		return Objects.hash(regDt, itstId, ntPdsgRmdrCs, etPdsgRmdrCs, stPdsgRmdrCs, wtPdsgRmdrCs, nePdsgRmdrCs, sePdsgRmdrCs, swPdsgRmdrCs, nwPdsgRmdrCs);
 	}
 }

@@ -91,7 +91,7 @@ public class TrafficLightSourceTask extends SourceTask {
 
 		for (TrafficSignalData signalData : data) {
 			trafficLightSourcePartition.setLastID(signalData.getItstId());
-			trafficLightSourcePartition.setLastTimeStamp(signalData.getTrsmUtcTime());
+			trafficLightSourcePartition.setLastTimeStamp(signalData.getRegDt());
 			sourceRecords.add(
 				new SourceRecord(
 					trafficLightSourcePartition.getSourcePartition(),
@@ -109,7 +109,7 @@ public class TrafficLightSourceTask extends SourceTask {
 		List<TrafficSignalData> data = trafficLightSourcePartition.getDataService().getData();
 		int idx = IntStream.range(0, data.size())
 			.filter(i -> Objects.equals(data.get(i).getItstId(), trafficLightSourcePartition.getLastID())
-				&& Objects.equals(data.get(i).getTrsmUtcTime(), trafficLightSourcePartition.getLastTimeStamp()))
+				&& Objects.equals(data.get(i).getRegDt(), trafficLightSourcePartition.getLastTimeStamp()))
 			.map(i -> i+1)
 			.findFirst()
 			.orElse(0);
