@@ -9,7 +9,7 @@ import org.apache.kafka.common.config.ConfigException;
 public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 	public static final String INTERSECTIONID_CONFIG = "intersection.id";
 
-	public static final String TOPIC_CONFIG = "topic";
+	public static final String TOPIC_CONFIG = "topics";
 	public static final String POLL_INTERVAL_CONFIG = "poll.interval.ms";
 
 
@@ -45,8 +45,8 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 			)
 			.define(
 				POLL_INTERVAL_CONFIG,
-				ConfigDef.Type.LONG,
-				5000,
+				ConfigDef.Type.STRING,
+				"5000",
 				ConfigDef.Importance.HIGH,
 				"api call interval (ms)"
 			)
@@ -69,7 +69,7 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 					throw new ConfigException(name, value, "IntersectionId는 정수여야합니다.");
 				}
 			} else {
-				throw new ConfigException(name, value, "IntersectionId는 숫자형식입니다.");
+				throw new ConfigException(name, value, "IntersectionId는 숫자형식 string입니다.");
 			}
 		}
 	}
