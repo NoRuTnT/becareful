@@ -31,10 +31,10 @@ public class DataService {
 
 	private final long secondsBetweenCalls;
 
-	private DataService(final URI uri, final HttpClient client, final long secondsBetweenCalls) {
+	private DataService(final URI uri, final HttpClient client, final long pollIntervalMs) {
 		this.uri = uri;
 		this.client = client;
-		this.secondsBetweenCalls = secondsBetweenCalls;
+		this.secondsBetweenCalls = pollIntervalMs;
 	}
 
 	private long getTimeToWait() {
@@ -81,9 +81,6 @@ public class DataService {
 
 	public static class DataServiceBuilder {
 
-		@Value("${api.key}")
-		private String apiKey;
-
 		@Value("${api.base_URL}")
 		private String baseURL;
 
@@ -94,7 +91,12 @@ public class DataService {
 
 		private final HttpClient client = HttpClient.newHttpClient();
 
-		private long secondsBetweenCalls = 3L;
+		private long pollIntervalMs;  // 필요한 경우 기본값
+
+		public DataServiceBuilder pollIntervalMs(long pollIntervalMs) {
+			this.pollIntervalMs = pollIntervalMs;
+			return this;
+		}
 
 		private DataServiceBuilder() {
 			this.values = new HashMap<>();
@@ -111,16 +113,16 @@ public class DataService {
 			return this;
 		}
 
-		public DataServiceBuilder secondsBetweenCalls(final long seconds) {
-			this.secondsBetweenCalls = seconds;
-			return this;
-		}
+		// public DataServiceBuilder secondsBetweenCalls(final long seconds) {
+		// 	this.secondsBetweenCalls = seconds;
+		// 	return this;
+		// }
 
 		public DataService build() throws URISyntaxException {
 			final StringSubstitutor substitutor = new StringSubstitutor(values);
 			URI uri = new URI(substitutor.replace(baseURL + query));
-
-			return new DataService(uri, client, secondsBetweenCalls);
+			System.out.println("Constructed URI: " + uri);
+			return new DataService(uri, client, pollIntervalMs);
 		}
 	}
 }
