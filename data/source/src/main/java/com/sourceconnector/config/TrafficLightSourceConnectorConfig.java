@@ -22,6 +22,10 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 		return this.getString(TOPIC_CONFIG);
 	}
 
+	public long getPollIntervalMs() {
+		return this.getLong(POLL_INTERVAL_CONFIG);
+	}
+
 	public TrafficLightSourceConnectorConfig(Map<?, ?> originals) {
 		super(conf(), originals);
 	}
@@ -45,7 +49,7 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 			.define(
 				POLL_INTERVAL_CONFIG,
 				ConfigDef.Type.LONG,
-				5000,
+				5000L,
 				ConfigDef.Importance.HIGH,
 				"api call interval (ms)"
 			);

@@ -24,6 +24,7 @@ public class TrafficLightSourceConnector extends SourceConnector {
 	public void start(Map<String, String> props) {
 
 		config = new TrafficLightSourceConnectorConfig(props);
+
 	}
 
 	@Override
@@ -31,13 +32,7 @@ public class TrafficLightSourceConnector extends SourceConnector {
 		return TrafficLightSourceTask.class;
 	}
 
-	/**
-	 * Creates the configs for the connector tasks.
-	 * It distributes all configured locations evenly among a maximum of maxTasks.
-	 *
-	 * @param maxTasks the maximum number of tasks
-	 * @return the configs for the connector tasks
-	 */
+
 	@Override
 	public List<Map<String, String>> taskConfigs(int maxTasks) {
 		// 단일 Integer 값을 얻기 위한 코드
@@ -55,6 +50,7 @@ public class TrafficLightSourceConnector extends SourceConnector {
 	private Map<String, String> createTaskConfig(Integer intersectionId) {
 		HashMap<String, String> taskConfig = new HashMap<>(config.originalsStrings());
 		taskConfig.put("intersectionId", intersectionId.toString());
+		taskConfig.put("poll.interval.ms", String.valueOf(config.getPollIntervalMs()));
 		return taskConfig;
 	}
 
