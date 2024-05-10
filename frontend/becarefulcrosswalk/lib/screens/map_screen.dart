@@ -41,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
     mapControllerCompleter = Completer<NaverMapController>();
     _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
     _geofenceService.start();
+    _initPolyGeofenceService();
   }
 
   // Future<void> _initGeofenceService() async {
@@ -85,7 +86,7 @@ class _MapScreenState extends State<MapScreen> {
       IntersectionModel intersection =
           await ApiService.getIntersection(int.parse(geofence.id));
       log("api요청 완료했어");
-      await _initPolyGeofenceService(); // PolyGeofence 초기화
+      // await _initPolyGeofenceService(); // PolyGeofence 초기화
 
       for (Crosswalk crosswalk in intersection.crosswalkList) {
         log('교차로 아이디: ${crosswalk.crosswalkId}');
@@ -105,8 +106,8 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         );
-        log("끝~!!@");
       }
+      log("끝~!!@");
     }
   }
 
@@ -123,7 +124,7 @@ class _MapScreenState extends State<MapScreen> {
 
     try {
       await _polyGeofenceService.start();
-      log("poly만들어짐");
+      log("poly시작");
     } catch (e) {
       print('Error starting polygeofence service: $e');
     }
@@ -135,12 +136,12 @@ class _MapScreenState extends State<MapScreen> {
       // 횡단보도 직사각형 지오펜스에 들어왔을때
       if (polyGeofenceStatus == PolyGeofenceStatus.ENTER) {
         log("@@@@@@@@@@@@@@@횡단보도에 들어왔어@@@@@@@@@@@");
-        polyGeofence.data.crosswalk.Provider
-            .of<MyLocationState>(context, listen: false)
+        log(polyGeofence.data.toString());
+        Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(2); // 위치상태 횡단보도 안
         Provider.of<MyLocationState>(context, listen: false)
             .setGeofenceId(polyGeofence.id);
-        crosswalkInfo = polyGeofence.data.crosswalk;
+        crosswalkInfo = polyGeofence.data["crosswalk"];
         if (Provider.of<MyLocationState>(context).myLocationState == 2) {}
       } else if (polyGeofenceStatus == PolyGeofenceStatus.EXIT) {
         Provider.of<MyLocationState>(context, listen: false)
@@ -160,7 +161,7 @@ class _MapScreenState extends State<MapScreen> {
       case 2:
         return '직사각형 안에 보행자 신호가 있습니다.';
       case 3:
-        return "${crosswalkInfo.direction} ${crosswalkInfo.length}미터 횡단보도";
+        return "${crosswalkInfo.sideTwo} ${crosswalkInfo.length}미터 횡단보도";
       default:
         return '반경 20미터 이내에 보행자 신호등이 없습니다.';
     }
@@ -193,27 +194,33 @@ class _MapScreenState extends State<MapScreen> {
         children: [
           PromptWidget(message: getPromptMessage()),
           Expanded(
-              child: NaverMap(
-            options: NaverMapViewOptions(
-              initialCameraPosition: NCameraPosition(
-                  target: NLatLng(myLocation.latitude, myLocation.longitude),
-                  zoom: 17,
-                  bearing: 0,
-                  tilt: 0),
-              indoorEnable: true,
-              // 실내 맵 사용 가능 여부
-              locationButtonEnable: true,
-              // 위치 버튼 표시 여부
-              consumeSymbolTapEvents: true,
-              // 심볼 탭 이벤트 소비 여부
-              scrollGesturesEnable: false,
-              // 스크롤 제스처 비활성화
-              zoomGesturesEnable: false,
-              // 확대/축소 제스처 비활성화
-              rotationGesturesEnable: false,
-              // 회전 제스처 비활성화
-              tiltGesturesEnable: false,
-              // 기울기 제스처 비활성화
+            child: NaverMap(
+              options: NaverMapViewOptions(
+                initialCameraPosition: NCameraPosition(
+                    target: NLatLng(myLocation.latitude, myLocation.longitude),
+                    zoom: 17,
+                    bearing: 0,
+                    tilt: 0),
+                indoorEnable: true,
+                // 실내 맵 사용 가능 여부
+                locationButtonEnable: true,
+                // 위치 버튼 표시 여부
+                consumeSymbolTapEvents: true,
+                // 심볼 탭 이벤트 소비 여부
+                scrollGesturesEnable: false,
+                // 스크롤 제스처 비활성화
+                zoomGesturesEnable: false,
+                // 확대/축소 제스처 비활성화
+                rotationGesturesEnable: false,
+                // 회전 제스처 비활성화
+                tiltGesturesEnable: false,
+                // 기울기 제스처 비활성화
+              ),
+              onMapReady: (controller) {
+                mapControllerCompleter.complete(controller);
+                controller.setLocationTrackingMode(NLocationTrackingMode.face);
+                log("onMapReady", name: "onMapReady");
+              },
             ),
           ),
           if (Provider.of<MyLocationState>(context, listen: false)
@@ -276,12 +283,6 @@ class _MapScreenState extends State<MapScreen> {
                 );
               },
             ),
-            onMapReady: (controller) {
-              mapControllerCompleter.complete(controller);
-              controller.setLocationTrackingMode(NLocationTrackingMode.face);
-              log("onMapReady", name: "onMapReady");
-            },
-          )),
         ],
       ),
       bottomNavigationBar: const BottomBar(),
