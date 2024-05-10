@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 
 class PromptWidget extends StatelessWidget {
   final String message;
+  final Color backgroundColor;
 
   const PromptWidget({
     super.key,
     required this.message,
+    this.backgroundColor = const Color(0xFF48A3F7),
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       width: double.infinity,
-      color: Colors.blue.withOpacity(0.9),
+      color: backgroundColor,
       child: Text(
         message,
         style: const TextStyle(
