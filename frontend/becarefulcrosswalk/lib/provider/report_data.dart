@@ -38,11 +38,13 @@ class ReportData with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendReportToServer() async {
+  Future<bool> sendReportToServer() async {
     if (_imageFile == null || _roadAddress == null || _reportText == null) {
       print("Data is incomplete.");
-      return;
+      return false;
     }
-    ApiService.sendReport(_roadAddress!, _reportText!, _imageFile!);
+
+    return await ApiService.sendReport(
+        _roadAddress!, _reportText!, _imageFile!);
   }
 }
