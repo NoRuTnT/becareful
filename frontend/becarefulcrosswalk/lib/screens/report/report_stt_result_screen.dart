@@ -3,6 +3,7 @@ import 'package:becarefulcrosswalk/screens/report/report_complete_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
+import 'package:becarefulcrosswalk/widgets/alert_dialog_widget.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +13,12 @@ class ReportSttResultScreen extends StatelessWidget {
   final String text;
 
   const ReportSttResultScreen({
-    Key? key,
+    super.key,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    const content = "역삼역 횡단보도로 가는 길에 있는 점자블록이 파손되어있어서 넘어질 뻔 했어요. 빠른수리 부탁드립니다.";
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -35,6 +34,17 @@ class ReportSttResultScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AlertDialogWidget();
+              },
+            );
+          },
         ),
       ),
       body: Padding(
@@ -68,7 +78,7 @@ class ReportSttResultScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   // color: Colors.grey[100],
@@ -80,14 +90,25 @@ class ReportSttResultScreen extends StatelessWidget {
                 child: Center(
                   child: Semantics(
                     label: text,
-                    child: Text(
-                      text,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 22,
-                        letterSpacing: 1,
-                      ),
-                    ),
+                    child: text == ''
+                        ? const Text(
+                            "인식된 텍스트가 없습니다\n큰소리로 말씀해주세요",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 22,
+                              letterSpacing: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : Text(
+                            text,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 22,
+                              letterSpacing: 1,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -102,10 +123,10 @@ class ReportSttResultScreen extends StatelessWidget {
                     text: "다시 말하기",
                     backgroundColor: lightBlue,
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ReportVoiceScreen(),
+                          builder: (context) => const ReportVoiceScreen(),
                         ),
                       );
                     },
@@ -127,10 +148,10 @@ class ReportSttResultScreen extends StatelessWidget {
                           .setReportText(text);
                       await Provider.of<ReportData>(context, listen: false)
                           .sendReportToServer();
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ReportCompleteScreen(),
+                          builder: (context) => const ReportCompleteScreen(),
                         ),
                       );
                     },
