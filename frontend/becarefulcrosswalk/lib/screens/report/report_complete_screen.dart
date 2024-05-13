@@ -70,11 +70,11 @@ class _ReportCompleteScreenState extends State<ReportCompleteScreen> {
                 ButtonWidget(
                   text: "홈으로",
                   backgroundColor: white,
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MainScreen(),
+                        builder: (context) => const MainScreen(),
                       ),
                     );
                   },

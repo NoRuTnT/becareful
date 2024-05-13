@@ -189,6 +189,12 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -236,10 +242,6 @@ class _MapScreenState extends State<MapScreen> {
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,
                   backgroundColor: const Color(0xFFFFCA41),
-                  side: const BorderSide(
-                    width: 2,
-                    color: Colors.black,
-                  ),
                   shape: const RoundedRectangleBorder(),
                   minimumSize: const Size(double.infinity, 20),
                 ),
@@ -280,6 +282,8 @@ class _MapScreenState extends State<MapScreen> {
                 return PromptWidget(
                   message: "$lightColor불 ${trafficLightData['remainingTime']}초",
                   backgroundColor: backgroundColor,
+                  fontSize: 35,
+                  fontWeight: FontWeight.w800,
                 );
               },
             ),

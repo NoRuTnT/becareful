@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/report_data.dart';
+import '../../widgets/alert_dialog_widget.dart';
 
 class ReportLocationScreen extends StatefulWidget {
   const ReportLocationScreen({super.key});
@@ -38,7 +39,7 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const ReportVoiceScreen(),
@@ -66,6 +67,17 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AlertDialogWidget();
+              },
+            );
+          },
         ),
       ),
       body: Padding(
