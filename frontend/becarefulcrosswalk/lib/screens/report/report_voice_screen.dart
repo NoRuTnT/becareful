@@ -3,6 +3,7 @@ import 'package:becarefulcrosswalk/screens/report/report_complete_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_stt_result_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
+import 'package:becarefulcrosswalk/widgets/alert_dialog_widget.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,12 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
-            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AlertDialogWidget();
+              },
+            );
           },
         ),
       ),
