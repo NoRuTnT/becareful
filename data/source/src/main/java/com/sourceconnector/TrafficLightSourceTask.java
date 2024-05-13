@@ -9,18 +9,21 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
 
+
 import com.sourceconnector.config.TrafficLightSourceConnectorConfig;
 import com.sourceconnector.dataset.DataService;
 import com.sourceconnector.dataset.model.TrafficSignalData;
 
 public class TrafficLightSourceTask extends SourceTask {
-
+	private static final Logger log = LoggerFactory.getLogger(TrafficLightSourceTask.class);
 
 
 	private final Function<Integer, DataService> dataServiceSupplier;
@@ -72,14 +75,15 @@ public class TrafficLightSourceTask extends SourceTask {
 
 	@Override
 	public List<SourceRecord> poll() throws InterruptedException {
+		log.info("Starting poll method.");
 		// 데이터 추출 로직 구현
 		try {
-
 			List<SourceRecord> sourceRecords = new ArrayList<>();
 			pollSourcePartition(trafficLightSourcePartitions, sourceRecords);
-
+			log.info("Poll method completed with {} records.", sourceRecords.size());
 			return sourceRecords;
 		} catch (IOException e) {
+			log.error("Error during poll: {}", e.getMessage(), e);
 			throw new ConnectException(e);
 		}
 	}

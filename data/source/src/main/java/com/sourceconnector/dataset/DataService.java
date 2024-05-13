@@ -92,7 +92,7 @@ public class DataService {
 
 		private final HttpClient client = HttpClient.newHttpClient();
 
-		private long pollIntervalMs;  // 필요한 경우 기본값
+		private long pollIntervalMs;
 
 		public DataServiceBuilder pollIntervalMs(long pollIntervalMs) {
 			this.pollIntervalMs = pollIntervalMs;
