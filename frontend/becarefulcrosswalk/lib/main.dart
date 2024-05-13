@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:becarefulcrosswalk/firebase_options.dart';
+import 'package:becarefulcrosswalk/provider/current_page.dart';
 import 'package:becarefulcrosswalk/provider/my_location_state.dart';
 import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/landing_screen.dart';
@@ -71,6 +72,9 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<MyLocationState>(
           create: (context) => MyLocationState(),
+        ),
+        ChangeNotifierProvider<CurrentPage>(
+          create: (context) => CurrentPage(),
         ),
       ],
       child: MaterialApp(
