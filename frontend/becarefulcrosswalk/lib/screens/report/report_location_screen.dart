@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/report_data.dart';
+import '../../widgets/alert_dialog_widget.dart';
 
 class ReportLocationScreen extends StatefulWidget {
   const ReportLocationScreen({super.key});
@@ -70,7 +71,12 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
-            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AlertDialogWidget();
+              },
+            );
           },
         ),
       ),
