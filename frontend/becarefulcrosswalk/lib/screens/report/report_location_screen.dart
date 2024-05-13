@@ -38,7 +38,7 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const ReportVoiceScreen(),
@@ -66,6 +66,12 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(

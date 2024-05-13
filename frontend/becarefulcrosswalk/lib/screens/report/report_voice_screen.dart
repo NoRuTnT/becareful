@@ -17,7 +17,7 @@ class ReportVoiceScreen extends StatefulWidget {
 }
 
 class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
-  stt.SpeechToText _speech = stt.SpeechToText();
+  final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
   String _text = '';
 
@@ -55,7 +55,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
       setState(() => _isListening = false);
       _speech.stop();
       print("최종 인식된 텍스트: $_text");
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => ReportSttResultScreen(text: _text),
         ),
@@ -80,6 +80,12 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Padding(
@@ -163,7 +169,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
                   await Provider.of<ReportData>(context, listen: false)
                       .sendReportToServer();
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const ReportCompleteScreen(),
