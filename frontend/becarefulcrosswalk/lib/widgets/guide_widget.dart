@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:vibration/vibration.dart';
 
 import '../theme/colors.dart';
@@ -39,54 +40,37 @@ class GuideWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _onGuidePressed(context),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 30),
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-              color: colorMap[index],
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: colorMap[index + 5] ?? Colors.black,
-                width: 1,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                guide,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w200,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Positioned(
-            top: -15,
-            left: MediaQuery.of(context).size.width / 2 - 40,
-            child: Container(
-              width: 40,
-              height: 40,
+      onTap: () => _onGuidePressed(),
+      child: Focus(
+        focusNode: _focusNode,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 30),
+              width: MediaQuery.of(context).size.width * 0.9,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                color: colorMap[widget.index],
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                    color: colorMap[index + 5] ?? Colors.black, width: 2.5),
-                color: colorMap[index],
+                  color: colorMap[widget.index + 5] ?? Colors.black,
+                  width: 1,
+                ),
               ),
-              child: Center(
-                child: Text(
-                  '${index + 1}',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: colorMap[index + 5] ?? Colors.black,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Semantics(
+                  sortKey: const OrdinalSortKey(1),
+                  label: widget.guide,
+                  child: Text(
+                    widget.guide,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w200,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),
