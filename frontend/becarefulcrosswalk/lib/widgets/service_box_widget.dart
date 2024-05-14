@@ -8,11 +8,13 @@ class ServiceBoxWidget extends StatelessWidget {
     required this.color,
     required this.serviceName,
     required this.serviceScreen,
+    required this.imageName,
   });
 
   final Color color;
   final String serviceName;
   final String serviceScreen;
+  final String imageName;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +39,22 @@ class ServiceBoxWidget extends StatelessWidget {
         child: Semantics(
           button: true,
           label: serviceName,
-          child: Text(
-            textAlign: TextAlign.center,
-            serviceName,
-            style: const TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 8.0, // 글자 사이 간격
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('images/$imageName.png',
+                  width: 70, height: 70, fit: BoxFit.cover),
+              SizedBox(width: 30),
+              Text(
+                textAlign: TextAlign.center,
+                serviceName,
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 8.0,
+                ),
+              ),
+            ],
           ),
         ),
       ),

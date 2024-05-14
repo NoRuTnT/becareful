@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:becarefulcrosswalk/service/my_direction.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/prompt_widget.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,6 +12,7 @@ import 'package:poly_geofence_service/poly_geofence_service.dart';
 import 'package:provider/provider.dart';
 
 import '../models/intersection_model.dart';
+import '../provider/crosswalk_info.dart';
 import '../provider/my_location_state.dart';
 import '../service/api_service.dart';
 import '../service/my_location.dart';
@@ -30,7 +32,6 @@ class _MapScreenState extends State<MapScreen> {
   late final MyLocation myLocation;
   late Future<void> initializationFuture;
   late final PolyGeofenceService _polyGeofenceService;
-  late Crosswalk crosswalkInfo;
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
 
   @override
@@ -141,14 +142,17 @@ class _MapScreenState extends State<MapScreen> {
             .setMyLocationState(2); // 위치상태 횡단보도 안
         Provider.of<MyLocationState>(context, listen: false)
             .setGeofenceId(polyGeofence.id);
-        crosswalkInfo = polyGeofence.data["crosswalk"];
-        if (Provider.of<MyLocationState>(context).myLocationState == 2) {}
+        Provider.of<CrosswalkInfo>(context, listen: false)
+            .setCrosswalkInfo(polyGeofence.data["crosswalk"]);
       } else if (polyGeofenceStatus == PolyGeofenceStatus.EXIT) {
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(1); // 원 안
         Provider.of<MyLocationState>(context, listen: false)
             .setGeofenceId(polyGeofence.data.geofenceId);
+
         print('횡단보도 나감');
+
+        MyDirection().stopListening();
       }
     });
   }
@@ -157,14 +161,70 @@ class _MapScreenState extends State<MapScreen> {
   String getPromptMessage() {
     switch (Provider.of<MyLocationState>(context).myLocationState) {
       case 1:
-        return '반경 20미터 이내에 보행자 신호등이 있습니다.';
+        return '근방에 보행자 신호등이 있습니다. 점자블록을 따라 건너시려는 횡단보도 앞으로 가주세요.';
       case 2:
-        return '직사각형 안에 보행자 신호가 있습니다.';
+        return '보행자 신호 반경에 들어왔습니다. 신호 정보를 받으시려면 안내 시작 버튼을 눌러주세요.';
       case 3:
-        return "${crosswalkInfo.sideTwo} ${crosswalkInfo.length}미터 횡단보도";
+        if (getClosestLocationIndex(
+                myLocation,
+                Provider.of<CrosswalkInfo>(context)
+                    .crosswalkInfo!
+                    .midpointList[0],
+                Provider.of<CrosswalkInfo>(context)
+                    .crosswalkInfo!
+                    .midpointList[1]) ==
+            0) {
+          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideOne} ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
+        } else {
+          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideTwo} ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
+        }
       default:
-        return '반경 20미터 이내에 보행자 신호등이 없습니다.';
+        return '근방에 보행자 신호등이 없습니다.';
     }
+  }
+
+  void setMyLocationState3() {
+    Provider.of<MyLocationState>(context, listen: false).setMyLocationState(3);
+
+    Crosswalk? temp =
+        Provider.of<CrosswalkInfo>(context, listen: false).crosswalkInfo;
+    if (getClosestLocationIndex(
+            myLocation, temp!.midpointList[0], temp!.midpointList[1]) ==
+        0) {
+      MyDirection().startListening(
+          double.parse(temp.coordinateList[2].latitude),
+          double.parse(temp.coordinateList[2].longitude),
+          double.parse(temp.coordinateList[3].latitude),
+          double.parse(temp.coordinateList[3].longitude),
+          double.parse(temp.midpointList[1].latitude),
+          double.parse(temp.midpointList[1].longitude),
+          double.parse(temp.length));
+    } else {
+      MyDirection().startListening(
+          double.parse(temp.coordinateList[0].latitude),
+          double.parse(temp.coordinateList[0].longitude),
+          double.parse(temp.coordinateList[1].latitude),
+          double.parse(temp.coordinateList[1].longitude),
+          double.parse(temp.midpointList[0].latitude),
+          double.parse(temp.midpointList[0].longitude),
+          double.parse(temp.length));
+    }
+  }
+
+  int getClosestLocationIndex(
+      MyLocation myLocation, Coordinate a, Coordinate b) {
+    double distanceToA = MyDirection().calculateDistance(
+        myLocation.latitude,
+        myLocation.longitude,
+        double.parse(a.latitude),
+        double.parse(a.longitude));
+    double distanceToB = MyDirection().calculateDistance(
+        myLocation.latitude,
+        myLocation.longitude,
+        double.parse(b.latitude),
+        double.parse(b.longitude));
+
+    return (distanceToA < distanceToB) ? 0 : 1;
   }
 
   @override
@@ -236,8 +296,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 55,
               child: ElevatedButton(
                 onPressed: () {
-                  Provider.of<MyLocationState>(context, listen: false)
-                      .setMyLocationState(3);
+                  setMyLocationState3();
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,
@@ -260,7 +319,8 @@ class _MapScreenState extends State<MapScreen> {
               3)
             StreamBuilder(
               stream: _dbRef
-                  .child('traffic-lights/${crosswalkInfo.crosswalkId}')
+                  .child(
+                      'traffic-lights/${Provider.of<CrosswalkInfo>(context, listen: false).crosswalkInfo?.crosswalkId}')
                   .onValue,
               builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
                 if (snapshot.hasError) {
