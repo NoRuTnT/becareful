@@ -17,7 +17,7 @@ class GeofenceModel {
       latitude: 37.50081,
       longitude: 127.0369,
       radius: [
-        GeofenceRadius(id: 'radius_50m', length: 50),
+        GeofenceRadius(id: 'radius_60m', length: 60),
       ],
     ),
     Geofence(
