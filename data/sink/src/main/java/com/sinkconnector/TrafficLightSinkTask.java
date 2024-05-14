@@ -31,18 +31,24 @@ public class TrafficLightSinkTask extends SinkTask {
   }
   @Override
   public void put(Collection<SinkRecord> records) {
-    log.info("put 메소드 실행 Received {} records",records.size());
+    log.info("put 메소드 실행 Received {} records", records.size());
     for (SinkRecord record : records) {
       try {
-        String value = (String) record.value(); // 문자열로 읽어오기
-        log.info("Record value: {}", value); // 레코드 값을 로그로 출력
-        TrafficSignalData trafficSignalData = objectMapper.readValue(value, TrafficSignalData.class); // JSON 파싱
-        String id = String.valueOf(trafficSignalData.getItstId());
-        log.info("Parsed TrafficSignalData: {}", trafficSignalData);
-        if (id != null) {
-          log.info("Saving data to Firebase: Topic = {}, ID = {}, Data = {}", record.topic(), id, trafficSignalData);
-          firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
-          log.info("Data saved successfully to Firebase");
+        Object value = record.value();
+        log.info("Record value: {}", value);
+        if (value instanceof Map) {
+          Map<String, Object> mapValue = (Map<String, Object>) value;
+          String jsonString = objectMapper.writeValueAsString(mapValue);
+          TrafficSignalData trafficSignalData = objectMapper.readValue(jsonString, TrafficSignalData.class);
+          log.info("Parsed TrafficSignalData: {}", trafficSignalData);
+          String id = String.valueOf(trafficSignalData.getItstId());
+          if (id != null) {
+            log.info("Saving data to Firebase: Topic = {}, ID = {}, Data = {}", record.topic(), id, trafficSignalData);
+            firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
+            log.info("Data saved successfully to Firebase");
+          }
+        } else {
+          log.warn("Record value is not a Map: {}", value.getClass());
         }
       } catch (Exception e) {
         log.error("Error processing record: {}", record, e);
