@@ -66,13 +66,11 @@ class UserGuideScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              GuideWidget(guide: '주변 50미터 이내에 신호등이 있다면 알림을 보내드려요', index: 0),
+              GuideWidget(guide: '주변 60미터 이내에 보행자 신호가 있다면 안내가 나와요.', index: 0),
               GuideWidget(guide: '건너고자 하는 횡단보도 앞에 서주세요.', index: 1),
-              GuideWidget(guide: '핸드폰 방향과 횡단보도 방향이 일치하면 진동이 울려요.', index: 2),
-              GuideWidget(guide: '핸드폰 방향과 횡단보도 방향이 일치하면 진동이 울려요.', index: 3),
-              GuideWidget(
-                  guide: '횡단보도 중간 지점에 도달하면 1차 효과음이 울리고 완전히 건너면 2차 효과음이 울립니다.',
-                  index: 4),
+              GuideWidget(guide: '안내 시작 버튼을 누르면 신호정보가 나와요.', index: 2),
+              GuideWidget(guide: '횡단보도를 50%, 100% 건널때 효과음이 들려요.', index: 3),
+              GuideWidget(guide: '횡단보도를 벗어나는 방향이면 진동이 울려요.', index: 4),
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, '/userGuide2');
