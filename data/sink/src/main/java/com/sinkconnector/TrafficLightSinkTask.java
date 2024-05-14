@@ -1,6 +1,5 @@
 package com.sinkconnector;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinkconnector.dataset.model.TrafficSignalData;
 
@@ -14,7 +13,6 @@ import org.apache.kafka.connect.sink.SinkTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,12 +21,22 @@ public class TrafficLightSinkTask extends SinkTask {
   private ObjectMapper objectMapper = new ObjectMapper(); // JSON 파서
 
 
-  @Autowired
   private com.sinkconnector.FirebaseAdmin firebaseAdmin;
 
   @Override
   public void start(Map<String, String> props) {
+    String firebaseUrl = props.get("firebase.url");
+    String firebaseConfig = props.get("firebase.config");
+
+    try {
+      firebaseAdmin = new FirebaseAdmin(firebaseUrl, firebaseConfig);
+      firebaseAdmin.initializeFirebase();
+    } catch (IOException e) {
+      log.error("Failed to initialize Firebase", e);
+      throw new RuntimeException(e);
+    }
   }
+
   @Override
   public void put(Collection<SinkRecord> records) {
     log.info("put 메소드 실행 Received {} records", records.size());
