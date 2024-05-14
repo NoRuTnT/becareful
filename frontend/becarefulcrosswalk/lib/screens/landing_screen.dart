@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/widgets/logo_widget.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +8,27 @@ import 'main_screen.dart';
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
 
+  void navigateToMain(BuildContext context) async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/half-pass.mp3'));
+    player.onPlayerComplete.listen((event) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+          fullscreenDialog: true,
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MainScreen(),
-              fullscreenDialog: true,
-            ),
-          );
-        },
+        onTap: () => navigateToMain(context),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
