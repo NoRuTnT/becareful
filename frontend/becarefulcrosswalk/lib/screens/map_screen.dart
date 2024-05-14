@@ -240,14 +240,11 @@ class _MapScreenState extends State<MapScreen> {
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: Semantics(
-          label: '실시간 신호정보',
-          child: const Text(
-            '실시간 신호정보',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+        title: const Text(
+          '실시간 신호정보',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
         leading: IconButton(
@@ -329,7 +326,10 @@ class _MapScreenState extends State<MapScreen> {
                 }
                 if (!snapshot.hasData ||
                     snapshot.data?.snapshot.value == null) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 }
                 Map<dynamic, dynamic> trafficLightData =
                     (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);

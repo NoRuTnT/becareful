@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:becarefulcrosswalk/env/env.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -54,8 +55,8 @@ class MyLocation {
   }
 
   Future<String> convertCoordinatesToAddress(double lat, double lng) async {
-    final String clientId = "0uz4hsj9ul";
-    final String clientSecret = "RS348kA1sPzDoTDjgE59PnCkRBD2qEYvU4heAGSx";
+    final String clientId = Env.naverApiKey;
+    final String clientSecret = Env.naverClientSecret;
     final response = await http.get(
       Uri.parse(
           'https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=$lng,$lat&output=json'),

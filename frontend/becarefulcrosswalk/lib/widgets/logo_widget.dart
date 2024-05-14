@@ -1,5 +1,6 @@
 import 'package:becarefulcrosswalk/theme/colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:easy_rich_text/easy_rich_text.dart';
+import 'package:flutter/material.dart';
 
 class LogoWidget extends StatelessWidget {
   const LogoWidget({
@@ -8,43 +9,39 @@ class LogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: "조심횡",
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "조",
-            style: TextStyle(
-              color: red,
-              fontSize: 80,
-              fontWeight: FontWeight.w800,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        EasyRichText(
+          textAlign: TextAlign.center,
+          '조심횡',
+          defaultStyle: const TextStyle(
+            fontSize: 80,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 20,
+          ),
+          patternList: [
+            EasyRichTextPattern(
+              targetString: '조',
+              style: const TextStyle(
+                color: red,
+              ),
             ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            "심",
-            style: TextStyle(
-              color: yellow,
-              fontSize: 80,
-              fontWeight: FontWeight.w800,
+            EasyRichTextPattern(
+              targetString: '심',
+              style: const TextStyle(
+                color: yellow,
+              ),
             ),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            "횡",
-            style: TextStyle(
-              color: green,
-              fontSize: 80,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
+            EasyRichTextPattern(
+              targetString: '횡',
+              style: const TextStyle(
+                color: green,
+              ),
+            )
+          ],
+        ),
+      ],
     );
   }
 }

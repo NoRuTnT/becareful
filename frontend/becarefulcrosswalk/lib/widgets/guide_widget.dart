@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:vibration/vibration.dart';
 
 import '../theme/colors.dart';
@@ -57,17 +56,13 @@ class GuideWidget extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Semantics(
-                sortKey: const OrdinalSortKey(1),
-                label: guide,
-                child: Text(
-                  guide,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w200,
-                  ),
-                  textAlign: TextAlign.center,
+              child: Text(
+                guide,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w200,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
@@ -84,18 +79,14 @@ class GuideWidget extends StatelessWidget {
                 color: colorMap[index],
               ),
               child: Center(
-                child: Semantics(
-                  sortKey: const OrdinalSortKey(0),
-                  label: '${index + 1}단계',
-                  child: Text(
-                    '${index + 1}',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: colorMap[index + 5] ?? Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
+                child: Text(
+                  '${index + 1}',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: colorMap[index + 5] ?? Colors.black,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

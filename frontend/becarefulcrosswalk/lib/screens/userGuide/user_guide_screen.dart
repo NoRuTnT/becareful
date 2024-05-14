@@ -20,14 +20,11 @@ class UserGuideScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: Semantics(
-          label: '이용방법',
-          child: const Text(
-            '이용방법',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+        title: const Text(
+          '이용방법',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
         leading: IconButton(
@@ -46,24 +43,21 @@ class UserGuideScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   vertical: 20,
                 ),
-                child: Semantics(
-                  label: '보행자 신호등의 실시간 신호정보 받는 방법',
-                  child: EasyRichText(
-                    textAlign: TextAlign.center,
-                    '보행자 신호등의\n실시간 신호정보 받는 방법',
-                    defaultStyle: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    patternList: [
-                      EasyRichTextPattern(
-                        targetString: '실시간 신호정보',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
-                      )
-                    ],
+                child: EasyRichText(
+                  textAlign: TextAlign.center,
+                  '보행자 신호등의\n실시간 신호정보 받는 방법',
+                  defaultStyle: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
                   ),
+                  patternList: [
+                    EasyRichTextPattern(
+                      targetString: '실시간 신호정보',
+                      style: const TextStyle(
+                        color: Colors.red,
+                      ),
+                    )
+                  ],
                 ),
               ),
               GuideWidget(guide: '주변 60미터 이내에 보행자 신호가 있다면 안내가 나와요.', index: 0),
@@ -87,18 +81,14 @@ class UserGuideScreen extends StatelessWidget {
                         width: 2,
                       ),
                     ),
-                    child: Semantics(
-                      button: true,
-                      label: '다음',
-                      child: const Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          '다음',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 5,
-                          ),
+                    child: const Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        '다음',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 5,
                         ),
                       ),
                     ),
