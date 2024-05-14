@@ -10,7 +10,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,14 +25,21 @@ public class DataService {
 
 	private final HttpClient client;
 
+	private LocalDateTime lastCall;
+
+
 
 	private DataService(final URI uri, final HttpClient client) {
 		this.uri = uri;
-		this.client = client;
+		this.client = HttpClient.newBuilder()
+			.followRedirects(HttpClient.Redirect.ALWAYS) // 리다이렉션을 자동으로 따름
+			.build();
+
 	}
 
 
 	public List<TrafficSignalData> getData() throws IOException, InterruptedException {
+		lastCall = LocalDateTime.now();
 
 		final HttpRequest request = HttpRequest.newBuilder(uri)
 			.GET()
@@ -64,16 +70,16 @@ public class DataService {
 
 	public static class DataServiceBuilder {
 
-		private String apiKey = "bd30bf3b-df36-4c38-9e4e-8dd8b5e94ddc";
-
-
 		private String baseURL = "http://t-data.seoul.go.kr/apig/apiman-gateway/tapi/v2xSignalPhaseTimingInformation/1.0?";
 
-		private final String query = "apiKey=bd30bf3b-df36-4c38-9e4e-8dd8b5e94ddc&type=json&pageNo=1&numOfRows=2&itstId=${intersectionId}";
+		private final String query = "apiKey=ff9d3b2d-bd93-4f8d-a91e-5602af57840e&type=json&pageNo=1&numOfRows=1&itstId=${intersectionId}";
+
 
 		private final Map<String, Integer> values;
 
 		private final HttpClient client = HttpClient.newHttpClient();
+
+
 
 		private DataServiceBuilder() {
 			this.values = new HashMap<>();
@@ -94,7 +100,7 @@ public class DataService {
 		public DataService build() throws URISyntaxException {
 			final StringSubstitutor substitutor = new StringSubstitutor(values);
 			URI uri = new URI(substitutor.replace(baseURL + query));
-
+			System.out.println("Constructed URI: " + uri);
 			return new DataService(uri, client);
 		}
 	}
