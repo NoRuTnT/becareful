@@ -1,4 +1,3 @@
-import 'package:becarefulcrosswalk/screens/main_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
@@ -76,12 +75,7 @@ class _ReportCompleteScreenState extends State<ReportSuccessScreen> {
                   text: "홈으로",
                   backgroundColor: white,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen(),
-                      ),
-                    );
+                    Navigator.pop(context);
                   },
                 ),
               ],
