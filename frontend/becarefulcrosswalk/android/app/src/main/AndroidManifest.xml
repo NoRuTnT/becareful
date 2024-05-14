@@ -13,9 +13,9 @@
   <uses-permission android:name="android.permission.INTERNET" />
 
   <application
-    android:label="becarefulcrosswalk"
+    android:label="조심횡"
     android:name="${applicationName}"
-    android:icon="@mipmap/ic_launcher">
+    android:icon="@mipmap/traffic_lights">
     <service
       android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
       android:foregroundServiceType="location"
