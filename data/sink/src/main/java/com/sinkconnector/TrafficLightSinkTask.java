@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sinkconnector.dataset.model.TrafficSignalData;
 
 public class TrafficLightSinkTask extends SinkTask {
@@ -23,6 +25,9 @@ public class TrafficLightSinkTask extends SinkTask {
 		String firebaseUrl = props.get("firebase.url");
 		String firebaseConfig = props.get("firebase.config");
 		firebaseAdmin = new FirebaseAdmin(firebaseUrl, firebaseConfig);
+
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 
 	@Override
