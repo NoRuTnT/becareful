@@ -48,24 +48,21 @@ class _ReportCompleteScreenState extends State<ReportSuccessScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Semantics(
-                  label: '신고가 정상적으로 접수되었습니다',
-                  child: EasyRichText(
-                    '신고가 정상적으로\n접수되었습니다',
-                    textAlign: TextAlign.center,
-                    patternList: [
-                      EasyRichTextPattern(
-                        targetString: '접수',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
+                EasyRichText(
+                  '신고가 정상적으로\n접수되었습니다',
+                  textAlign: TextAlign.center,
+                  patternList: [
+                    EasyRichTextPattern(
+                      targetString: '접수',
+                      style: const TextStyle(
+                        color: Colors.red,
                       ),
-                    ],
-                    defaultStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
                     ),
+                  ],
+                  defaultStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(
