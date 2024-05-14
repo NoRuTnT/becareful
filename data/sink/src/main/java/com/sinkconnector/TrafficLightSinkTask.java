@@ -31,7 +31,7 @@ public class TrafficLightSinkTask extends SinkTask {
   }
   @Override
   public void put(Collection<SinkRecord> records) {
-    log.info("put 메소드 실행");
+    log.info("put 메소드 실행 Received {} records",records.size());
     for (SinkRecord record : records) {
       try {
         String value = (String) record.value(); // 문자열로 읽어오기

@@ -10,7 +10,7 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 	public static final String INTERSECTIONID_CONFIG = "intersection.id";
 
 	public static final String TOPIC_CONFIG = "topics";
-	// public static final String POLL_INTERVAL_CONFIG = "poll.interval.ms";
+	public static final String POLL_INTERVAL_CONFIG = "poll.interval.ms";
 
 
 
@@ -22,9 +22,9 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 		return this.getString(TOPIC_CONFIG);
 	}
 
-	// public long getPollIntervalMs() {
-	// 	return this.getLong(POLL_INTERVAL_CONFIG);
-	// }
+	public long getPollIntervalMs() {
+		return this.getLong(POLL_INTERVAL_CONFIG);
+	}
 
 	public TrafficLightSourceConnectorConfig(Map<?, ?> originals) {
 		super(conf(), originals);
@@ -39,6 +39,13 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 				ConfigDef.NO_DEFAULT_VALUE,
 				ConfigDef.Importance.HIGH,
 				"intersection id"
+			)
+			.define(
+				POLL_INTERVAL_CONFIG,
+				ConfigDef.Type.LONG,
+				5000L,
+				ConfigDef.Importance.HIGH,
+				"poll.interval"
 			)
 			.define(
 				TOPIC_CONFIG,

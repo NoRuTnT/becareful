@@ -31,6 +31,7 @@ public class TrafficLightSourceTask extends SourceTask {
 	private TrafficLightSourceConnectorConfig config;
 
 	private TrafficLightSourcePartition trafficLightSourcePartitions;
+	private long pollIntervalMs;
 
 	public TrafficLightSourceTask() {
 		super();
@@ -58,6 +59,7 @@ public class TrafficLightSourceTask extends SourceTask {
 	public void start(Map<String, String> props) {
 		config = new TrafficLightSourceConnectorConfig(props);
 		topic = config.getTopic();
+		pollIntervalMs = Long.parseLong(props.get("poll.interval.ms"));
 		OffsetStorageReader offsetStorageReader = context.offsetStorageReader();
 
 
@@ -71,6 +73,7 @@ public class TrafficLightSourceTask extends SourceTask {
 	@Override
 	public List<SourceRecord> poll() throws InterruptedException {
 		log.info("Starting poll method.");
+		Thread.sleep(pollIntervalMs);
 		// 데이터 추출 로직 구현
 		try {
 			List<SourceRecord> sourceRecords = new ArrayList<>();
