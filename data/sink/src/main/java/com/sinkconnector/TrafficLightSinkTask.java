@@ -35,14 +35,17 @@ public class TrafficLightSinkTask extends SinkTask {
     for (SinkRecord record : records) {
       try {
         String value = (String) record.value(); // 문자열로 읽어오기
+        log.info("Record value: {}", value); // 레코드 값을 로그로 출력
         TrafficSignalData trafficSignalData = objectMapper.readValue(value, TrafficSignalData.class); // JSON 파싱
         String id = String.valueOf(trafficSignalData.getItstId());
+        log.info("Parsed TrafficSignalData: {}", trafficSignalData);
         if (id != null) {
-          log.info("firebase save data");
+          log.info("Saving data to Firebase: Topic = {}, ID = {}, Data = {}", record.topic(), id, trafficSignalData);
           firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
+          log.info("Data saved successfully to Firebase");
         }
       } catch (Exception e) {
-
+        log.error("Error processing record: {}", record, e);
       }
     }
   }
