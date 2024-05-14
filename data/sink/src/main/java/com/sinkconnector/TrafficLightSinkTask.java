@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TrafficLightSinkTask extends SinkTask {
-
+  private ObjectMapper objectMapper = new ObjectMapper(); // JSON 파서
 
 
   @Autowired
@@ -27,12 +27,16 @@ public class TrafficLightSinkTask extends SinkTask {
   }
   @Override
   public void put(Collection<SinkRecord> records) {
-    ObjectMapper mapper = new ObjectMapper();
     for (SinkRecord record : records) {
-      TrafficSignalData trafficSignalData = (TrafficSignalData) record.value();
-      String id = String.valueOf(trafficSignalData.getItstId());
-      if (id != null) {
-        firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
+      try {
+        String value = (String) record.value(); // 문자열로 읽어오기
+        TrafficSignalData trafficSignalData = objectMapper.readValue(value, TrafficSignalData.class); // JSON 파싱
+        String id = String.valueOf(trafficSignalData.getItstId());
+        if (id != null) {
+          firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
+        }
+      } catch (Exception e) {
+
       }
     }
   }
