@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	@Override
 	public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
