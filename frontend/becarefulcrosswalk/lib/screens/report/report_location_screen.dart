@@ -1,3 +1,4 @@
+import 'package:becarefulcrosswalk/screens/report/report_fail_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
 import 'package:becarefulcrosswalk/service/my_location.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
@@ -47,6 +48,14 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
       );
     } catch (e) {
       print('Error getting road address: $e');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              const ReportFailScreen(errorMessage: '위치 정보 조회 중\n오류가 발생했습니다'),
+        ),
+      );
     }
   }
 
