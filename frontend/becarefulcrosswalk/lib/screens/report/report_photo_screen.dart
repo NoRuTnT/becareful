@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/report/report_location_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
@@ -41,6 +42,9 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
       print('Error: select a camera first.');
       return;
     }
+
+    final player = AudioPlayer();
+    await player.play(AssetSource('sounds/cameraFlash.mp3'));
 
     await _controller!.takePicture().then((XFile file) {
       setState(() {
