@@ -165,6 +165,7 @@ class _MapScreenState extends State<MapScreen> {
       case 2:
         return '보행자 신호 반경에 들어왔습니다. 신호 정보를 받으시려면 안내 시작 버튼을 눌러주세요.';
       case 3:
+        myLocation.getCurrentLocation();
         if (getClosestLocationIndex(
                 myLocation,
                 Provider.of<CrosswalkInfo>(context)
@@ -174,9 +175,9 @@ class _MapScreenState extends State<MapScreen> {
                     .crosswalkInfo!
                     .midpointList[1]) ==
             0) {
-          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideOne} ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
+          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideOne}방면 ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
         } else {
-          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideTwo} ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
+          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideTwo}방면 ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
         }
       default:
         return '근방에 보행자 신호등이 없습니다.';
