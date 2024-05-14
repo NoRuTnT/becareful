@@ -112,7 +112,7 @@ class MyDirection {
     if (_remainingDistance! <= length / 2) {
       _isPassHalf = true;
       final player = AudioPlayer();
-      player.play(AssetSource('audio/half-pass.mp3'));
+      player.play(AssetSource('sounds/half-pass.mp3'));
     }
   }
 }
