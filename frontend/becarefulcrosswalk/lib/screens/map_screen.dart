@@ -249,6 +249,12 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -336,6 +342,8 @@ class _MapScreenState extends State<MapScreen> {
                 return PromptWidget(
                   message: "$lightColor불 ${trafficLightData['remainingTime']}초",
                   backgroundColor: backgroundColor,
+                  fontSize: 35,
+                  fontWeight: FontWeight.w800,
                 );
               },
             ),

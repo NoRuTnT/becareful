@@ -1,8 +1,10 @@
 import 'package:becarefulcrosswalk/provider/report_data.dart';
-import 'package:becarefulcrosswalk/screens/report/report_complete_screen.dart';
+import 'package:becarefulcrosswalk/screens/report/report_fail_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_stt_result_screen.dart';
+import 'package:becarefulcrosswalk/screens/report/report_success_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
+import 'package:becarefulcrosswalk/widgets/alert_dialog_widget.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class ReportVoiceScreen extends StatefulWidget {
 }
 
 class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
-  stt.SpeechToText _speech = stt.SpeechToText();
+  final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
   String _text = '';
 
@@ -55,7 +57,7 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
       setState(() => _isListening = false);
       _speech.stop();
       print("최종 인식된 텍스트: $_text");
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => ReportSttResultScreen(text: _text),
         ),
@@ -80,6 +82,17 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AlertDialogWidget();
+              },
+            );
+          },
         ),
       ),
       body: Padding(
@@ -160,15 +173,24 @@ class _ReportVoiceScreenState extends State<ReportVoiceScreen> {
                 onPressed: () async {
                   Provider.of<ReportData>(context, listen: false)
                       .setReportText(_text);
-                  await Provider.of<ReportData>(context, listen: false)
-                      .sendReportToServer();
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ReportCompleteScreen(),
-                    ),
-                  );
+                  bool result =
+                      await Provider.of<ReportData>(context, listen: false)
+                          .sendReportToServer();
+                  if (result) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReportSuccessScreen(),
+                      ),
+                    );
+                  } else {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReportFailScreen(),
+                      ),
+                    );
+                  }
                 },
               ),
             ),

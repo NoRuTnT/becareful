@@ -1,12 +1,16 @@
+import 'package:becarefulcrosswalk/provider/current_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    String currentRoute = Provider.of<CurrentPage>(context).currentPage;
+
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(color: Colors.grey, width: 1.0),
         ),
@@ -17,13 +21,25 @@ class BottomBar extends StatelessWidget {
         onTap: (int index) {
           switch (index) {
             case 0:
-              Navigator.popAndPushNamed(context, '/userGuide');
+              if (currentRoute != '/userGuide') {
+                Provider.of<CurrentPage>(context, listen: false)
+                    .setCurrentPage('/userGuide');
+                Navigator.pushReplacementNamed(context, '/userGuide');
+              }
               break;
             case 1:
-              Navigator.popAndPushNamed(context, '/map');
+              if (currentRoute != '/map') {
+                Provider.of<CurrentPage>(context, listen: false)
+                    .setCurrentPage('/map');
+                Navigator.pushReplacementNamed(context, '/map');
+              }
               break;
             case 2:
-              Navigator.popAndPushNamed(context, '/report');
+              if (currentRoute != '/report') {
+                Provider.of<CurrentPage>(context, listen: false)
+                    .setCurrentPage('/report');
+                Navigator.pushReplacementNamed(context, '/report');
+              }
               break;
             default:
           }

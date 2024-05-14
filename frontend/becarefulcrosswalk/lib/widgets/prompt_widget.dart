@@ -3,12 +3,16 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 class PromptWidget extends StatefulWidget {
   final String message;
-  final Color? backgroundColor;
+  final Color backgroundColor;
+  final double fontSize;
+  final FontWeight fontWeight;
 
   const PromptWidget({
     Key? key,
     required this.message,
     this.backgroundColor = const Color(0xFF48A3F7),
+    this.fontSize = 20,
+    this.fontWeight = FontWeight.w500,
   }) : super(key: key);
 
   @override
@@ -49,9 +53,10 @@ class _PromptWidgetState extends State<PromptWidget> {
       color: widget.backgroundColor,
       child: Text(
         widget.message,
-        style: const TextStyle(
-          fontSize: 20,
+        style: TextStyle(
+          fontSize: widget.fontSize,
           color: Colors.white,
+          fontWeight: widget.fontWeight,
         ),
         textAlign: TextAlign.center,
       ),

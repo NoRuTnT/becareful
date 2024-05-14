@@ -1,4 +1,6 @@
+import 'package:becarefulcrosswalk/provider/current_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ServiceBoxWidget extends StatelessWidget {
   const ServiceBoxWidget({
@@ -18,7 +20,9 @@ class ServiceBoxWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '$serviceScreen');
+        Provider.of<CurrentPage>(context, listen: false)
+            .setCurrentPage(serviceScreen);
+        Navigator.pushNamed(context, serviceScreen);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
@@ -34,7 +38,7 @@ class ServiceBoxWidget extends StatelessWidget {
         ),
         child: Semantics(
           button: true,
-          label: '$serviceName',
+          label: serviceName,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -43,11 +47,11 @@ class ServiceBoxWidget extends StatelessWidget {
               SizedBox(width: 30),
               Text(
                 textAlign: TextAlign.center,
-                '$serviceName',
+                serviceName,
                 style: const TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 8.0, // 글자 사이 간격
+                  letterSpacing: 8.0,
                 ),
               ),
             ],
