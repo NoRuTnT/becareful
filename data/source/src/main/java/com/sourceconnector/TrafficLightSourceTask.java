@@ -28,19 +28,16 @@ public class TrafficLightSourceTask extends SourceTask {
 
 	private final Function<Integer, DataService> dataServiceSupplier;
 	private String topic;
-	private long pollIntervalMs;
 	private TrafficLightSourceConnectorConfig config;
 
 	private TrafficLightSourcePartition trafficLightSourcePartitions;
 
 	public TrafficLightSourceTask() {
 		super();
-		this.pollIntervalMs = pollIntervalMs;
 		this.dataServiceSupplier = (intersectionId) -> {
 			try {
 				return DataService.builder()
 					.intersectionId(intersectionId)
-					.pollIntervalMs(pollIntervalMs) // poll 간격 설정 추가
 					.build();
 			} catch (URISyntaxException e) {
 				throw new ConnectException(e);
@@ -59,8 +56,6 @@ public class TrafficLightSourceTask extends SourceTask {
 	}
 	@Override
 	public void start(Map<String, String> props) {
-
-		this.pollIntervalMs = Long.parseLong(props.get("poll.interval.ms"));
 		config = new TrafficLightSourceConnectorConfig(props);
 		topic = config.getTopic();
 		OffsetStorageReader offsetStorageReader = context.offsetStorageReader();
