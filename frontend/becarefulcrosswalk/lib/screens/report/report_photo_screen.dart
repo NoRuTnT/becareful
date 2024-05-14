@@ -69,14 +69,11 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: Semantics(
-          label: '불편신고 3단계중 1단계',
-          child: const Text(
-            "불편신고(1/3)",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+        title: const Text(
+          "불편신고(1/3)",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
         leading: IconButton(
@@ -96,16 +93,13 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Semantics(
-              label: _displayText,
-              child: Text(
-                _displayText,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: black,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                ),
+            Text(
+              _displayText,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: black,
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(
@@ -127,7 +121,7 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
                         );
                       } else {
                         return Semantics(
-                          label: '촬영된 이미지',
+                          label: '촬영된 사진',
                           child: Image.file(
                             _image!,
                             fit: BoxFit.cover,
