@@ -22,14 +22,11 @@ class UserGuideScreen2 extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: Semantics(
-          label: '이용방법',
-          child: const Text(
-            '이용방법',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+        title: const Text(
+          '이용방법',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -42,30 +39,27 @@ class UserGuideScreen2 extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   vertical: 20,
                 ),
-                child: Semantics(
-                  label: '시각장애인 편의시설\n불편사항 신고 방법',
-                  child: EasyRichText(
-                    textAlign: TextAlign.center,
-                    '시각장애인 편의시설\n불편사항 신고 방법',
-                    defaultStyle: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    patternList: [
-                      EasyRichTextPattern(
-                        targetString: '불편',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                      EasyRichTextPattern(
-                        targetString: '신고',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
+                child: EasyRichText(
+                  textAlign: TextAlign.center,
+                  '시각장애인 편의시설\n불편사항 신고 방법',
+                  defaultStyle: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
                   ),
+                  patternList: [
+                    EasyRichTextPattern(
+                      targetString: '불편',
+                      style: const TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                    EasyRichTextPattern(
+                      targetString: '신고',
+                      style: const TextStyle(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               GuideWidget(guide: '불편사항이 있는 장소를 촬영해주세요.', index: 0),
@@ -94,18 +88,14 @@ class UserGuideScreen2 extends StatelessWidget {
                         width: 2,
                       ),
                     ),
-                    child: Semantics(
-                      button: true,
-                      label: '홈으로',
-                      child: const Center(
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          '홈으로',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 5,
-                          ),
+                    child: const Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        '홈으로',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 5,
                         ),
                       ),
                     ),
