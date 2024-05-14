@@ -7,23 +7,22 @@ import org.apache.kafka.connect.sink.SinkRecord;
 import org.apache.kafka.connect.sink.SinkTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinkconnector.dataset.model.TrafficSignalData;
 
-@Component
 public class TrafficLightSinkTask extends SinkTask {
 	private static final Logger log = LoggerFactory.getLogger(TrafficLightSinkTask.class);
 	private ObjectMapper objectMapper = new ObjectMapper(); // JSON 파서
 
-	@Autowired
 	private FirebaseAdmin firebaseAdmin;
 
 	@Override
 	public void start(Map<String, String> props) {
-		firebaseAdmin = new FirebaseAdmin();
+
+		String firebaseUrl = props.get("firebase.url");
+		String firebaseConfig = props.get("firebase.config");
+		firebaseAdmin = new FirebaseAdmin(firebaseUrl, firebaseConfig);
 	}
 
 	@Override
