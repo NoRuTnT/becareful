@@ -94,6 +94,38 @@ public class TrafficSignalData {
 		return regDt.atOffset(ZoneOffset.UTC).toLocalDateTime();
 	}
 
+	public Double getNtPdsgRmdrCs() {
+		return ntPdsgRmdrCs;
+	}
+
+	public Double getEtPdsgRmdrCs() {
+		return etPdsgRmdrCs;
+	}
+
+	public Double getStPdsgRmdrCs() {
+		return stPdsgRmdrCs;
+	}
+
+	public Double getWtPdsgRmdrCs() {
+		return wtPdsgRmdrCs;
+	}
+
+	public Double getNePdsgRmdrCs() {
+		return nePdsgRmdrCs;
+	}
+
+	public Double getSePdsgRmdrCs() {
+		return sePdsgRmdrCs;
+	}
+
+	public Double getSwPdsgRmdrCs() {
+		return swPdsgRmdrCs;
+	}
+
+	public Double getNwPdsgRmdrCs() {
+		return nwPdsgRmdrCs;
+	}
+
 	public long getKey() {
 		return getRegDt()
 			.withMinute(0)

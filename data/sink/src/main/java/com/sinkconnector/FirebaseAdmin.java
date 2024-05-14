@@ -45,7 +45,7 @@ public class FirebaseAdmin {
 	}
 
 	public void saveData(String path, String id, Object object) {
-		DatabaseReference childRef = databaseReference.child(path);
-		childRef.child(id).setValueAsync(object);
+		DatabaseReference childRef = databaseReference.child(path).child(id);
+		childRef.setValueAsync(object);
 	}
 }
