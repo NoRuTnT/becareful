@@ -54,24 +54,21 @@ class _ReportCompleteScreenState extends State<ReportFailScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Semantics(
-                  label: '신고 내용 접수 중 오류가 발생했습니다',
-                  child: EasyRichText(
-                    widget.errorMessage,
-                    textAlign: TextAlign.center,
-                    patternList: [
-                      EasyRichTextPattern(
-                        targetString: '오류',
-                        style: const TextStyle(
-                          color: Colors.red,
-                        ),
+                EasyRichText(
+                  widget.errorMessage,
+                  textAlign: TextAlign.center,
+                  patternList: [
+                    EasyRichTextPattern(
+                      targetString: '오류',
+                      style: const TextStyle(
+                        color: Colors.red,
                       ),
-                    ],
-                    defaultStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
                     ),
+                  ],
+                  defaultStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(
@@ -81,7 +78,7 @@ class _ReportCompleteScreenState extends State<ReportFailScreen> {
                   text: "다시 시도",
                   backgroundColor: white,
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const ReportPhotoScreen(),
