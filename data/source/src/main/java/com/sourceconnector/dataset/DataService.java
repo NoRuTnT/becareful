@@ -74,7 +74,7 @@ public class DataService {
 
 		private String baseURL = "http://t-data.seoul.go.kr/apig/apiman-gateway/tapi/v2xSignalPhaseTimingInformation/1.0?";
 
-		private final String query = "apiKey=bd30bf3b-df36-4c38-9e4e-8dd8b5e94ddc&type=json&pageNo=1&numOfRows=2&itstId=${intersectionId}";
+		private final String query = "apiKey=bd30bf3b-df36-4c38-9e4e-8dd8b5e94ddc&type=json&pageNo=1&numOfRows=1&itstId=${intersectionId}";
 
 
 		private final Map<String, Integer> values;
