@@ -6,7 +6,8 @@ class ButtonWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final double height;
 
-  ButtonWidget({
+  const ButtonWidget({
+    super.key,
     required this.text,
     required this.backgroundColor,
     required this.onPressed,
