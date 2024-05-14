@@ -62,16 +62,32 @@ class UserGuideScreen2 extends StatelessWidget {
                   ],
                 ),
               ),
-              GuideWidget(guide: '불편사항이 있는 장소를 촬영해주세요.', index: 0),
-              GuideWidget(guide: '말하기 버튼을 누른 상태로 불편사항을 설명해주세요.', index: 1),
-              GuideWidget(guide: '점자블록, 음향신호기 등을 자유롭게 말씀하세요.', index: 2),
-              GuideWidget(guide: '말씀하신 내용이 맞다면 신고하기 버튼을 눌러주세요.', index: 3),
+              const GuideWidget(
+                guide: '불편사항이 있는 장소를 촬영해주세요.',
+                index: 0,
+                screenIndex: 2,
+              ),
+              const GuideWidget(
+                guide: '말하기 버튼을 누른 상태로 불편사항을 설명해주세요.',
+                index: 1,
+                screenIndex: 2,
+              ),
+              const GuideWidget(
+                guide: '점자블록, 음향신호기 등을 자유롭게 말씀하세요.',
+                index: 2,
+                screenIndex: 2,
+              ),
+              const GuideWidget(
+                guide: '말씀하신 내용이 맞다면 신고하기 버튼을 눌러주세요.',
+                index: 3,
+                screenIndex: 2,
+              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MainScreen(),
+                      builder: (context) => const MainScreen(),
                       fullscreenDialog: true,
                     ),
                   );
@@ -106,7 +122,7 @@ class UserGuideScreen2 extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
