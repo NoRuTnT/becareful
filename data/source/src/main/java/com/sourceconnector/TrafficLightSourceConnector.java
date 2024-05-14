@@ -50,7 +50,7 @@ public class TrafficLightSourceConnector extends SourceConnector {
 	private Map<String, String> createTaskConfig(Integer intersectionId) {
 		HashMap<String, String> taskConfig = new HashMap<>(config.originalsStrings());
 		taskConfig.put("intersectionId", intersectionId.toString());
-		taskConfig.put("poll.interval.ms", String.valueOf(config.getPollIntervalMs()));
+		// taskConfig.put("poll.interval.ms", String.valueOf(config.getPollIntervalMs()));
 		return taskConfig;
 	}
 

@@ -29,29 +29,18 @@ public class DataService {
 
 	private LocalDateTime lastCall;
 
-	private final long secondsBetweenCalls;
 
-	private DataService(final URI uri, final HttpClient client, final long pollIntervalMs) {
+
+	private DataService(final URI uri, final HttpClient client) {
 		this.uri = uri;
 		this.client = HttpClient.newBuilder()
 			.followRedirects(HttpClient.Redirect.ALWAYS) // 리다이렉션을 자동으로 따름
 			.build();
-		this.secondsBetweenCalls = pollIntervalMs;
+
 	}
 
-	private long getTimeToWait() {
-		if (lastCall == null) {
-			return 0;
-		} else {
-			LocalDateTime now = LocalDateTime.now();
-			long diff = lastCall.until(now, ChronoUnit.SECONDS);
-			long timeToWait = secondsBetweenCalls - diff;
-			return timeToWait < 0 ? 0 : timeToWait * 1000;
-		}
-	}
 
 	public List<TrafficSignalData> getData() throws IOException, InterruptedException {
-		Thread.sleep(getTimeToWait());
 		lastCall = LocalDateTime.now();
 
 		final HttpRequest request = HttpRequest.newBuilder(uri)
@@ -92,12 +81,7 @@ public class DataService {
 
 		private final HttpClient client = HttpClient.newHttpClient();
 
-		private long pollIntervalMs;
 
-		public DataServiceBuilder pollIntervalMs(long pollIntervalMs) {
-			this.pollIntervalMs = pollIntervalMs;
-			return this;
-		}
 
 		private DataServiceBuilder() {
 			this.values = new HashMap<>();
@@ -114,16 +98,12 @@ public class DataService {
 			return this;
 		}
 
-		// public DataServiceBuilder secondsBetweenCalls(final long seconds) {
-		// 	this.secondsBetweenCalls = seconds;
-		// 	return this;
-		// }
 
 		public DataService build() throws URISyntaxException {
 			final StringSubstitutor substitutor = new StringSubstitutor(values);
 			URI uri = new URI(substitutor.replace(baseURL + query));
 			System.out.println("Constructed URI: " + uri);
-			return new DataService(uri, client, pollIntervalMs);
+			return new DataService(uri, client);
 		}
 	}
 }

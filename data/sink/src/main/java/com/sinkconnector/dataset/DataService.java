@@ -26,30 +26,14 @@ public class DataService {
 
 	private final HttpClient client;
 
-	private LocalDateTime lastCall;
 
-	private final long secondsBetweenCalls;
-
-	private DataService(final URI uri, final HttpClient client, final long secondsBetweenCalls) {
+	private DataService(final URI uri, final HttpClient client) {
 		this.uri = uri;
 		this.client = client;
-		this.secondsBetweenCalls = secondsBetweenCalls;
 	}
 
-	private long getTimeToWait() {
-		if (lastCall == null) {
-			return 0;
-		} else {
-			LocalDateTime now = LocalDateTime.now();
-			long diff = lastCall.until(now, ChronoUnit.SECONDS);
-			long timeToWait = secondsBetweenCalls - diff;
-			return timeToWait < 0 ? 0 : timeToWait * 1000;
-		}
-	}
 
 	public List<TrafficSignalData> getData() throws IOException, InterruptedException {
-		Thread.sleep(getTimeToWait());
-		lastCall = LocalDateTime.now();
 
 		final HttpRequest request = HttpRequest.newBuilder(uri)
 			.GET()
@@ -91,8 +75,6 @@ public class DataService {
 
 		private final HttpClient client = HttpClient.newHttpClient();
 
-		private long secondsBetweenCalls = 3L;
-
 		private DataServiceBuilder() {
 			this.values = new HashMap<>();
 		}
@@ -108,16 +90,12 @@ public class DataService {
 			return this;
 		}
 
-		public DataServiceBuilder secondsBetweenCalls(final long seconds) {
-			this.secondsBetweenCalls = seconds;
-			return this;
-		}
 
 		public DataService build() throws URISyntaxException {
 			final StringSubstitutor substitutor = new StringSubstitutor(values);
 			URI uri = new URI(substitutor.replace(baseURL + query));
 
-			return new DataService(uri, client, secondsBetweenCalls);
+			return new DataService(uri, client);
 		}
 	}
 }
