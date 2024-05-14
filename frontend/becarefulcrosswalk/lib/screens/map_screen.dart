@@ -328,7 +328,10 @@ class _MapScreenState extends State<MapScreen> {
                 }
                 if (!snapshot.hasData ||
                     snapshot.data?.snapshot.value == null) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 }
                 Map<dynamic, dynamic> trafficLightData =
                     (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);
