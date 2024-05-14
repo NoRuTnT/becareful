@@ -1,3 +1,4 @@
+import 'package:becarefulcrosswalk/screens/report/report_fail_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
 import 'package:becarefulcrosswalk/service/my_location.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
@@ -47,6 +48,14 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
       );
     } catch (e) {
       print('Error getting road address: $e');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              const ReportFailScreen(errorMessage: '위치 정보 조회 중\n오류가 발생했습니다'),
+        ),
+      );
     }
   }
 
@@ -58,14 +67,11 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: Semantics(
-          label: '불편신고 3단계중 2단계',
-          child: const Text(
-            "불편신고(2/3)",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+        title: const Text(
+          "불편신고(2/3)",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
         leading: IconButton(
@@ -91,24 +97,21 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Semantics(
-                      label: '현재 위치를 조회 중입니다 잠시만 기다려주세요',
-                      child: EasyRichText(
-                        '현재 위치를 조회 중입니다\n잠시만 기다려주세요',
-                        textAlign: TextAlign.center,
-                        patternList: [
-                          EasyRichTextPattern(
-                            targetString: '조회 중',
-                            style: const TextStyle(
-                              color: Colors.red,
-                            ),
+                    EasyRichText(
+                      '현재 위치를 조회 중입니다\n잠시만 기다려주세요',
+                      textAlign: TextAlign.center,
+                      patternList: [
+                        EasyRichTextPattern(
+                          targetString: '조회 중',
+                          style: const TextStyle(
+                            color: Colors.red,
                           ),
-                        ],
-                        defaultStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
                         ),
+                      ],
+                      defaultStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -122,36 +125,30 @@ class _ReportLocationScreenState extends State<ReportLocationScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Semantics(
-                      label: '현재 위치 조회 완료',
-                      child: EasyRichText(
-                        '현재 위치 조회 완료',
-                        textAlign: TextAlign.center,
-                        patternList: [
-                          EasyRichTextPattern(
-                            targetString: '조회 완료',
-                            style: const TextStyle(
-                              color: Colors.red,
-                            ),
+                    EasyRichText(
+                      '현재 위치 조회 완료',
+                      textAlign: TextAlign.center,
+                      patternList: [
+                        EasyRichTextPattern(
+                          targetString: '조회 완료',
+                          style: const TextStyle(
+                            color: Colors.red,
                           ),
-                        ],
-                        defaultStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
                         ),
+                      ],
+                      defaultStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Semantics(
-                      label: _roadAddress,
-                      child: Text(
-                        _roadAddress!,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: navy,
-                        ),
+                    Text(
+                      _roadAddress!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: navy,
                       ),
                     ),
                   ],
