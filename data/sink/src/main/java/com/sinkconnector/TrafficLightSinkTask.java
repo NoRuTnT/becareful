@@ -44,10 +44,10 @@ public class TrafficLightSinkTask extends SinkTask {
 					log.info("Parsed TrafficSignalData: {}", trafficSignalData);
 					String id = String.valueOf(trafficSignalData.getItstId());
 					if (id != null) {
-						log.info("Saving data to Firebase: Topic = {}, ID = {}, Data = {}", record.topic(), id,
+						log.info("Firebase 저장준비 : Topic = {}, ID = {}, Data = {}", record.topic(), id,
 							trafficSignalData);
 						firebaseAdmin.saveData(record.topic(), id, trafficSignalData);
-						log.info("Data saved successfully to Firebase");
+						log.info("Firebase 저장완료");
 					}
 				} else {
 					log.warn("Record value is not a Map: {}", value.getClass());
