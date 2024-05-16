@@ -10,6 +10,10 @@ abstract class Env {
   @EnviedField(varName: 'naver_client_secret', obfuscate: true)
   static final String naverClientSecret = _Env.naverClientSecret;
 
+  // Traffic Light API keys
+  @EnviedField(varName: 'traffic_light_api_key', obfuscate: true)
+  static final String trafficLightApiKey = _Env.trafficLightApiKey;
+
   // Firebase API Keys
   @EnviedField(varName: 'WEB_FIREBASE_API_KEY')
   static const String webFirebaseApiKey = _Env.webFirebaseApiKey;
