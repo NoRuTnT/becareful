@@ -45,22 +45,6 @@ class _MapScreenState extends State<MapScreen> {
     _initPolyGeofenceService();
   }
 
-  // Future<void> _initGeofenceService() async {
-  //   _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-  //   try {
-  //     if (Provider.of<MyLocationState>(context, listen: false)
-  //             .myLocationState ==
-  //         1) {
-  //       var geoId =
-  //           Provider.of<MyLocationState>(context, listen: false).geofenceId;
-  //       log('나 이미 들어와있어!!!!!!!!!!@@@@@@@@@@@@@@@');
-  //     }
-  //     await _geofenceService.start();
-  //   } catch (e) {
-  //     print('Error starting geofence service: $e');
-  //   }
-  // }
-
   Future<void> _onGeofenceStatusChanged(
       Geofence geofence,
       GeofenceRadius geofenceRadius,
@@ -133,7 +117,7 @@ class _MapScreenState extends State<MapScreen> {
 
   Future<void> _onPolyGeofenceStatusChanged(PolyGeofence polyGeofence,
       PolyGeofenceStatus polyGeofenceStatus, Location location) async {
-    setState(() {
+    setState(() async {
       // 횡단보도 직사각형 지오펜스에 들어왔을때
       if (polyGeofenceStatus == PolyGeofenceStatus.ENTER) {
         log("@@@@@@@@@@@@@@@횡단보도에 들어왔어@@@@@@@@@@@");
@@ -144,6 +128,19 @@ class _MapScreenState extends State<MapScreen> {
             .setGeofenceId(polyGeofence.id);
         Provider.of<CrosswalkInfo>(context, listen: false)
             .setCrosswalkInfo(polyGeofence.data["crosswalk"]);
+
+        var trafficLightState = await ApiService.getTrafficLightState(
+            polyGeofence.data['geofenceId'],
+            polyGeofence
+                .data["crosswalk"].direction); // 현재 신호등 빨간불인지 초록불인지 받아와서 저장하기
+        if (trafficLightState == 'protected-Movement-Allowed' ||
+            trafficLightState == 'permissive-Movement-Allowed') {
+          Provider.of<CrosswalkInfo>(context, listen: false)
+              .setTrafficLightState('green');
+        } else {
+          Provider.of<CrosswalkInfo>(context, listen: false)
+              .setTrafficLightState('red');
+        }
       } else if (polyGeofenceStatus == PolyGeofenceStatus.EXIT) {
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(1); // 원 안
