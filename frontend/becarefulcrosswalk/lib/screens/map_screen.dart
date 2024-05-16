@@ -34,6 +34,7 @@ class _MapScreenState extends State<MapScreen> {
   late final PolyGeofenceService _polyGeofenceService;
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
   late num previousRemainingTime = 1000;
+  late String trafficLightState;
 
   @override
   void initState() {
@@ -132,10 +133,13 @@ class _MapScreenState extends State<MapScreen> {
         Provider.of<CrosswalkInfo>(context, listen: false)
             .setCrosswalkInfo(polyGeofence.data["crosswalk"]);
 
+        int geoId = int.parse(polyGeofence.data['geofenceId']);
+
         var trafficLightState = await ApiService.getTrafficLightState(
-            polyGeofence.data['geofenceId'],
+            geoId,
             polyGeofence
                 .data["crosswalk"].direction); // 현재 신호등 빨간불인지 초록불인지 받아와서 저장하기
+        log('trafficLightState : $trafficLightState');
         if (trafficLightState == 'protected-Movement-Allowed' ||
             trafficLightState == 'permissive-Movement-Allowed') {
           Provider.of<CrosswalkInfo>(context, listen: false)
@@ -163,8 +167,6 @@ class _MapScreenState extends State<MapScreen> {
       case 1:
         return '근방에 보행자 신호등이 있습니다. 점자블록을 따라 건너시려는 횡단보도 앞으로 가주세요.';
       case 2:
-        return '보행자 신호 반경에 들어왔습니다. 신호 정보를 받으시려면 안내 시작 버튼을 눌러주세요.';
-      case 3:
         myLocation.getCurrentLocation();
         if (getClosestLocationIndex(
                 myLocation,
@@ -175,10 +177,12 @@ class _MapScreenState extends State<MapScreen> {
                     .crosswalkInfo!
                     .midpointList[1]) ==
             0) {
-          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideOne}방면 ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
+          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideOne}방면 ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도입니다. 신호 정보를 받으시려면 안내 시작 버튼을 눌러주세요.";
         } else {
-          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideTwo}방면 ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도";
+          return "${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.sideTwo}방면 ${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 횡단보도입니다. 신호 정보를 받으시려면 안내 시작 버튼을 눌러주세요.";
         }
+      case 3:
+        return '';
       default:
         return '근방에 보행자 신호등이 없습니다.';
     }
@@ -256,7 +260,9 @@ class _MapScreenState extends State<MapScreen> {
       ),
       body: Column(
         children: [
-          PromptWidget(message: getPromptMessage()),
+          Provider.of<MyLocationState>(context).myLocationState == 3
+              ? Container() // 상태가 3일 때 빈 컨테이너를 표시
+              : PromptWidget(message: getPromptMessage()),
           Expanded(
             child: NaverMap(
               options: NaverMapViewOptions(
