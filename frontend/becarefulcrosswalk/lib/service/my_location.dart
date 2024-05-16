@@ -23,11 +23,11 @@ class MyLocation {
     }
 
     locationSubscription = Geolocator.getPositionStream(
-            locationSettings: const LocationSettings(
-                accuracy: LocationAccuracy.high,
-                distanceFilter: 3 // 3 미터마다 업데이트
-                ))
-        .listen((Position position) {
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 2, // 1 미터마다 업데이트
+      ),
+    ).listen((Position position) {
       latitude = position.latitude;
       longitude = position.longitude;
       onLocationChanged(position); // 콜백 함수 실행
@@ -46,7 +46,7 @@ class MyLocation {
     }
     try {
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+          desiredAccuracy: LocationAccuracy.best);
       latitude = position.latitude;
       longitude = position.longitude;
     } catch (e) {
