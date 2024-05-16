@@ -13,9 +13,21 @@ class MyDirection {
   double? _headingAngle; // 디바이스가 바라보고 있는 방위각
   double? _destAngle1; // 목적지 한쪽 끝 방위각
   double? _destAngle2; // 목적지 다른 한쪽끝 방위각
-  late bool _isSafeAngle; // 안전 범위를 바라보고 있는지 여부
+  bool? _isSafeAngle; // 안전 범위를 바라보고 있는지 여부
   double? _remainingDistance; // 목적지 중간점까지 남은 거리
   bool _isPassHalf = false; // 횡단보도의 절반 지점을 지났는지 여부
+
+  bool? get getIsSafeAngle {
+    return _isSafeAngle;
+  }
+
+  double? get getRemainingDistance {
+    return _remainingDistance;
+  }
+
+  bool? get getIsPassHalf {
+    return _isPassHalf;
+  }
 
   void startListening(double destLat1, double destLng1, double destLat2,
       double destLng2, double midLat, double midLng, double length) {
@@ -89,10 +101,13 @@ class MyDirection {
   }
 
   void guideWithVibration() {
-    if (_isSafeAngle) {
-      Vibration.vibrate(pattern: [100, 400, 100, 400]); // 짧고 반복적인 패턴
+    if (_isSafeAngle == null) {
+      return;
+    }
+    if (_isSafeAngle!) {
+      Vibration.vibrate(pattern: [100, 100, 100, 100, 100, 200]);
     } else {
-      Vibration.vibrate(pattern: [500, 1000, 500, 2000]); // 길고 강한 패턴
+      Vibration.cancel();
     }
   }
 
