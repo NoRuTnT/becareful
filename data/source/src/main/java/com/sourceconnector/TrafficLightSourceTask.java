@@ -1,4 +1,5 @@
 package com.sourceconnector;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -8,15 +9,13 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.apache.kafka.connect.source.SourceTask;
 import org.apache.kafka.connect.storage.OffsetStorageReader;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sourceconnector.config.TrafficLightSourceConnectorConfig;
 import com.sourceconnector.dataset.DataService;
@@ -24,7 +23,6 @@ import com.sourceconnector.dataset.model.TrafficSignalData;
 
 public class TrafficLightSourceTask extends SourceTask {
 	private static final Logger log = LoggerFactory.getLogger(TrafficLightSourceTask.class);
-
 
 	private final Function<Integer, DataService> dataServiceSupplier;
 	private String topic;
@@ -50,11 +48,13 @@ public class TrafficLightSourceTask extends SourceTask {
 		super();
 		this.dataServiceSupplier = dataServiceSupplier;
 	}
+
 	@Override
 	public String version() {
 		// 버전 반환
 		return "1.0";
 	}
+
 	@Override
 	public void start(Map<String, String> props) {
 		config = new TrafficLightSourceConnectorConfig(props);
@@ -62,17 +62,15 @@ public class TrafficLightSourceTask extends SourceTask {
 		pollIntervalMs = Long.parseLong(props.get("poll.interval.ms"));
 		OffsetStorageReader offsetStorageReader = context.offsetStorageReader();
 
-
 		int intersectionId = config.getintersectionId();
 		trafficLightSourcePartitions = createTrafficLightPartition(intersectionId, offsetStorageReader);
-
-
 
 	}
 
 	@Override
 	public List<SourceRecord> poll() throws InterruptedException {
 		log.info("Starting poll method.");
+		//poll.interval.ms 만큼 sleep
 		Thread.sleep(pollIntervalMs);
 		// 데이터 추출 로직 구현
 		try {
@@ -86,10 +84,10 @@ public class TrafficLightSourceTask extends SourceTask {
 		}
 	}
 
-	private void pollSourcePartition(TrafficLightSourcePartition trafficLightSourcePartition, List<SourceRecord> sourceRecords)
+	private void pollSourcePartition(TrafficLightSourcePartition trafficLightSourcePartition,
+		List<SourceRecord> sourceRecords)
 		throws IOException, InterruptedException {
 		List<TrafficSignalData> data = getLastData(trafficLightSourcePartition);
-
 
 		for (TrafficSignalData signalData : data) {
 			trafficLightSourcePartition.setLastID(signalData.getItstId());
@@ -107,20 +105,19 @@ public class TrafficLightSourceTask extends SourceTask {
 		}
 	}
 
-	private List<TrafficSignalData> getLastData(TrafficLightSourcePartition trafficLightSourcePartition) throws IOException, InterruptedException {
+	private List<TrafficSignalData> getLastData(TrafficLightSourcePartition trafficLightSourcePartition) throws
+		IOException,
+		InterruptedException {
 		List<TrafficSignalData> data = trafficLightSourcePartition.getDataService().getData();
 		int idx = IntStream.range(0, data.size())
 			.filter(i -> Objects.equals(data.get(i).getItstId(), trafficLightSourcePartition.getLastID())
 				&& Objects.equals(data.get(i).getRegDt(), trafficLightSourcePartition.getLastTimeStamp()))
-			.map(i -> i+1)
+			.map(i -> i + 1)
 			.findFirst()
 			.orElse(0);
 
 		return data.subList(idx, data.size());
 	}
-
-
-
 
 	@Override
 	public void stop() {
@@ -128,7 +125,8 @@ public class TrafficLightSourceTask extends SourceTask {
 	}
 
 	//config 추가예정
-	private TrafficLightSourcePartition createTrafficLightPartition(int intersectionId, OffsetStorageReader offsetStorageReader) {
+	private TrafficLightSourcePartition createTrafficLightPartition(int intersectionId,
+		OffsetStorageReader offsetStorageReader) {
 
 		TrafficLightSourcePartition trafficLightSourcePartition = new TrafficLightSourcePartition(intersectionId,
 			this.dataServiceSupplier.apply(intersectionId));
