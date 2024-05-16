@@ -24,19 +24,30 @@ import com.sourceconnector.dataset.model.TrafficSignalData;
 public class TrafficLightSourceTask extends SourceTask {
 	private static final Logger log = LoggerFactory.getLogger(TrafficLightSourceTask.class);
 
-	private final Function<Integer, DataService> dataServiceSupplier;
+	private Function<Integer, DataService> dataServiceSupplier;
 	private String topic;
 	private TrafficLightSourceConnectorConfig config;
 
 	private TrafficLightSourcePartition trafficLightSourcePartitions;
 	private long pollIntervalMs;
 
+	private String apiKey;
+
 	public TrafficLightSourceTask() {
 		super();
-		this.dataServiceSupplier = (intersectionId) -> {
+	}
+
+	public TrafficLightSourceTask(final Function<Integer, DataService> dataServiceSupplier) {
+		super();
+		this.dataServiceSupplier = dataServiceSupplier;
+	}
+
+	private Function<Integer, DataService> createDataServiceSupplier(String apiKey) {
+		return (intersectionId) -> {
 			try {
 				return DataService.builder()
 					.intersectionId(intersectionId)
+					.apiKey(apiKey)
 					.build();
 			} catch (URISyntaxException e) {
 				throw new ConnectException(e);
@@ -44,10 +55,18 @@ public class TrafficLightSourceTask extends SourceTask {
 		};
 	}
 
-	public TrafficLightSourceTask(final Function<Integer, DataService> dataServiceSupplier) {
-		super();
-		this.dataServiceSupplier = dataServiceSupplier;
-	}
+	// public TrafficLightSourceTask() {
+	// 	super();
+	// 	this.dataServiceSupplier = (intersectionId) -> {
+	// 		try {
+	// 			return DataService.builder()
+	// 				.intersectionId(intersectionId)
+	// 				.build();
+	// 		} catch (URISyntaxException e) {
+	// 			throw new ConnectException(e);
+	// 		}
+	// 	};
+	// }
 
 	@Override
 	public String version() {
@@ -60,9 +79,11 @@ public class TrafficLightSourceTask extends SourceTask {
 		config = new TrafficLightSourceConnectorConfig(props);
 		topic = config.getTopic();
 		pollIntervalMs = Long.parseLong(props.get("poll.interval.ms"));
+		apiKey = props.get("apiKey");
 		OffsetStorageReader offsetStorageReader = context.offsetStorageReader();
 
 		int intersectionId = config.getintersectionId();
+		this.dataServiceSupplier = createDataServiceSupplier(apiKey);
 		trafficLightSourcePartitions = createTrafficLightPartition(intersectionId, offsetStorageReader);
 
 	}

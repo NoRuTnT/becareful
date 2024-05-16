@@ -4,18 +4,22 @@ import java.util.Map;
 
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
-import org.apache.kafka.common.config.ConfigException;
 
 public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 	public static final String INTERSECTIONID_CONFIG = "intersection.id";
 
+	public static final String APIKEY_CONFIG = "apiKey";
+
 	public static final String TOPIC_CONFIG = "topics";
+
 	public static final String POLL_INTERVAL_CONFIG = "poll.interval.ms";
-
-
 
 	public int getintersectionId() {
 		return this.getInt(INTERSECTIONID_CONFIG);
+	}
+
+	public String getApiKey() {
+		return this.getString(APIKEY_CONFIG);
 	}
 
 	public String getTopic() {
@@ -30,7 +34,6 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 		super(conf(), originals);
 	}
 
-
 	public static ConfigDef conf() {
 		return new ConfigDef()
 			.define(
@@ -39,6 +42,13 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 				ConfigDef.NO_DEFAULT_VALUE,
 				ConfigDef.Importance.HIGH,
 				"intersection id"
+			)
+			.define(
+				APIKEY_CONFIG,
+				ConfigDef.Type.STRING,
+				ConfigDef.NO_DEFAULT_VALUE,
+				ConfigDef.Importance.HIGH,
+				"api key"
 			)
 			.define(
 				POLL_INTERVAL_CONFIG,
@@ -54,7 +64,6 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 				"topic name"
 			);
 	}
-
 
 	// private static class IntegersectionIdValidator implements ConfigDef.Validator {
 	//
@@ -75,6 +84,5 @@ public class TrafficLightSourceConnectorConfig extends AbstractConfig {
 	// 		}
 	// 	}
 	// }
-
 
 }
