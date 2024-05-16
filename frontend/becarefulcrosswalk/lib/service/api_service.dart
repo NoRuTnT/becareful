@@ -99,11 +99,32 @@ class ApiService {
     if (response.statusCode == 200) {
       List<dynamic> responseData = json.decode(response.body);
 
-      List filteredData = responseData.where((data) {
-        return int.parse(data['itstId']) == intersectionId;
-      }).toList();
+      List<Map<String, dynamic>> filteredData = responseData
+          .where((data) {
+            return data['itstId'] == '$intersectionId';
+          })
+          .toList()
+          .cast<Map<String, dynamic>>();
 
-      return filteredData[0][direction];
+      if (filteredData.isEmpty) {
+        throw Exception('No data found for intersectionId $intersectionId');
+      }
+
+      print(filteredData);
+
+      var temp = direction.substring(0, 6);
+      var tempWithStatNm = '$temp' + 'StatNm';
+      print('real direction $tempWithStatNm');
+
+      var directionData = filteredData[0][tempWithStatNm];
+      if (directionData == null) {
+        throw Exception(
+            'Direction $direction not found for intersectionId $intersectionId');
+      }
+
+      return directionData;
+
+      // return filteredData[0][direction];
     } else {
       throw Exception('Failed to load data');
     }
