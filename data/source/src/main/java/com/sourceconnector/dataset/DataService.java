@@ -7,16 +7,13 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.text.StringSubstitutor;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,8 +26,6 @@ public class DataService {
 
 	private LocalDateTime lastCall;
 
-
-
 	private DataService(final URI uri, final HttpClient client) {
 		this.uri = uri;
 		this.client = HttpClient.newBuilder()
@@ -39,7 +34,6 @@ public class DataService {
 
 	}
 
-
 	public List<TrafficSignalData> getData() throws IOException, InterruptedException {
 		lastCall = LocalDateTime.now();
 
@@ -47,24 +41,22 @@ public class DataService {
 			.GET()
 			.build();
 
-		return client.send(request, responseInfo -> {
-			if(responseInfo.statusCode() != 200) {
-				throw new RuntimeException(MessageFormat.format("Got HTTP {0}", responseInfo.statusCode()));
-			}
-			final HttpResponse.BodySubscriber<String> upstream = HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8);
-			return HttpResponse.BodySubscribers.mapping(
-				upstream,
-				(String body) -> {
-					final ObjectMapper mapper = new ObjectMapper();
-					try {
-						return mapper.readValue(body, new TypeReference<List<TrafficSignalData>>() {});
-					} catch (IOException e) {
-						throw new UncheckedIOException(e);
-					}
-				});
-		}).body();
-	}
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+		if (response.statusCode() != 200) {
+			throw new RuntimeException(MessageFormat.format("Got HTTP {0}", response.statusCode()));
+		}
+
+		String responseBody = response.body();
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			return mapper.readValue(responseBody, new TypeReference<>() {
+			});
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
 
 	public static DataServiceBuilder builder() {
 		return new DataServiceBuilder();
@@ -76,12 +68,9 @@ public class DataService {
 
 		private final String query = "apiKey=7e4a8564-66b0-4460-ab4f-881e9435c058&type=json&pageNo=1&numOfRows=1&itstId=${intersectionId}";
 
-
 		private final Map<String, Integer> values;
 
 		private final HttpClient client = HttpClient.newHttpClient();
-
-
 
 		private DataServiceBuilder() {
 			this.values = new HashMap<>();
@@ -92,12 +81,10 @@ public class DataService {
 			return this;
 		}
 
-
 		public DataServiceBuilder baseURL(final String baseURL) {
 			this.baseURL = baseURL;
 			return this;
 		}
-
 
 		public DataService build() throws URISyntaxException {
 			final StringSubstitutor substitutor = new StringSubstitutor(values);
