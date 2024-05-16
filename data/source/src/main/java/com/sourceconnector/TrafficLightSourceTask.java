@@ -2,12 +2,12 @@ package com.sourceconnector;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.IntStream;
 
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.errors.ConnectException;
@@ -72,7 +72,7 @@ public class TrafficLightSourceTask extends SourceTask {
 		log.info("Starting poll method.");
 		//poll.interval.ms 만큼 sleep
 		Thread.sleep(pollIntervalMs);
-		// 데이터 추출 로직 구현
+
 		try {
 			List<SourceRecord> sourceRecords = new ArrayList<>();
 			pollSourcePartition(trafficLightSourcePartitions, sourceRecords);
@@ -109,14 +109,24 @@ public class TrafficLightSourceTask extends SourceTask {
 		IOException,
 		InterruptedException {
 		List<TrafficSignalData> data = trafficLightSourcePartition.getDataService().getData();
-		int idx = IntStream.range(0, data.size())
-			.filter(i -> Objects.equals(data.get(i).getItstId(), trafficLightSourcePartition.getLastID())
-				&& Objects.equals(data.get(i).getRegDt(), trafficLightSourcePartition.getLastTimeStamp()))
-			.map(i -> i + 1)
-			.findFirst()
-			.orElse(0);
 
-		return data.subList(idx, data.size());
+		// 찾으려는 요소의 인덱스 계산
+		int startIndex = findStartIndex(data, trafficLightSourcePartition.getLastID(),
+			trafficLightSourcePartition.getLastTimeStamp());
+
+		// 주어진 인덱스부터 끝까지 서브리스트 반환
+		return data.subList(startIndex, data.size());
+	}
+
+	private int findStartIndex(List<TrafficSignalData> data, Long lastID, LocalDateTime lastTimeStamp) {
+		for (int i = 0; i < data.size(); i++) {
+			TrafficSignalData signalData = data.get(i);
+			if (Objects.equals(signalData.getItstId(), lastID) && Objects.equals(signalData.getRegDt(),
+				lastTimeStamp)) {
+				return i + 1;
+			}
+		}
+		return 0; // 일치하는 항목이 없는 경우 시작 인덱스를 0으로 설정
 	}
 
 	@Override
@@ -124,7 +134,6 @@ public class TrafficLightSourceTask extends SourceTask {
 
 	}
 
-	//config 추가예정
 	private TrafficLightSourcePartition createTrafficLightPartition(int intersectionId,
 		OffsetStorageReader offsetStorageReader) {
 
