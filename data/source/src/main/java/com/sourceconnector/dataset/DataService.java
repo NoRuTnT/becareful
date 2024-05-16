@@ -66,18 +66,23 @@ public class DataService {
 
 		private String baseURL = "http://t-data.seoul.go.kr/apig/apiman-gateway/tapi/v2xSignalPhaseTimingInformation/1.0?";
 
-		private final String query = "apiKey=876070cd-abc7-4eac-89d3-665c1f932f5e&type=json&pageNo=1&numOfRows=1&itstId=${intersectionId}";
+		private final String query = "apiKey=${apiKey}&type=json&pageNo=1&numOfRows=1&itstId=${intersectionId}";
 
-		private final Map<String, Integer> values;
+		private final Map<String, Object> values = new HashMap<>();
 
 		private final HttpClient client = HttpClient.newHttpClient();
 
 		private DataServiceBuilder() {
-			this.values = new HashMap<>();
+
 		}
 
 		public DataServiceBuilder intersectionId(int intersectionId) {
 			values.put("intersectionId", intersectionId);
+			return this;
+		}
+
+		public DataServiceBuilder apiKey(final String apiKey) {
+			values.put("apiKey", apiKey);
 			return this;
 		}
 
