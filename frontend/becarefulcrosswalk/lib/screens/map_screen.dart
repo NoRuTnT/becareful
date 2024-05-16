@@ -339,21 +339,21 @@ class _MapScreenState extends State<MapScreen> {
                 }
                 Map<dynamic, dynamic> trafficLightData =
                     (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);
-
-                String? trafficLightState =
-                    Provider.of<CrosswalkInfo>(context, listen: false)
-                        .trafficLightState; // 신호 색상
-                String lightColor = ''; // 신호 색상 (한글)
+                String lightColor = ''; // 신호 색상
                 Color backgroundColor = const Color(0xFFFFFFFF);
                 String? direction =
                     Provider.of<CrosswalkInfo>(context, listen: false)
                         .crosswalkInfo
                         ?.direction; // 횡단보도 방향
 
-                if (trafficLightState == "green") {
+                if (Provider.of<CrosswalkInfo>(context, listen: false)
+                        .trafficLightState ==
+                    "green") {
                   lightColor = "초록";
                   backgroundColor = const Color(0xFF7EC25E);
-                } else if (trafficLightState == "red") {
+                } else if (Provider.of<CrosswalkInfo>(context, listen: false)
+                        .trafficLightState ==
+                    "red") {
                   lightColor = "빨간";
                   backgroundColor = const Color(0xFFFD7559);
                 }
@@ -361,17 +361,24 @@ class _MapScreenState extends State<MapScreen> {
                 num remainingTime =
                     (trafficLightData[direction] / 10).toInt(); // 잔여 시간
 
-                if (remainingTime < 1) {
-                  if (trafficLightState == "green") {
-                    Provider.of<CrosswalkInfo>(context, listen: false)
-                        .setTrafficLightState("red");
-                  } else if (trafficLightState == "red") {
-                    Provider.of<CrosswalkInfo>(context, listen: false)
-                        .setTrafficLightState("green");
+                Future.microtask(() {
+                  if (previousRemainingTime < remainingTime) {
+                    if (Provider.of<CrosswalkInfo>(context, listen: false)
+                            .trafficLightState ==
+                        "green") {
+                      Provider.of<CrosswalkInfo>(context, listen: false)
+                          .setTrafficLightState("red");
+                    } else if (Provider.of<CrosswalkInfo>(context,
+                                listen: false)
+                            .trafficLightState ==
+                        "red") {
+                      Provider.of<CrosswalkInfo>(context, listen: false)
+                          .setTrafficLightState("green");
+                    }
                   }
-                }
 
-                previousRemainingTime = remainingTime;
+                  previousRemainingTime = remainingTime;
+                });
 
                 return PromptWidget(
                   message: "$lightColor불 $remainingTime초",
