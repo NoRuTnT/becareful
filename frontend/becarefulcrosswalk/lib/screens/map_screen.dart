@@ -61,11 +61,15 @@ class _MapScreenState extends State<MapScreen> {
             .setMyLocationState(1); // 내 위치상태 원 안
         Provider.of<MyLocationState>(context, listen: false)
             .setGeofenceId(geofence.id);
+
+        myLocation.startLocationTracking((p0) => null);
       } else if (geofenceStatus == GeofenceStatus.EXIT) {
         print('${geofence.id}에 나감');
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(0); // 내 위치상태 원 밖
         Provider.of<MyLocationState>(context, listen: false).setGeofenceId('0');
+
+        myLocation.stopLocationTracking();
       }
     });
 
@@ -152,7 +156,7 @@ class _MapScreenState extends State<MapScreen> {
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(1); // 원 안
         Provider.of<MyLocationState>(context, listen: false)
-            .setGeofenceId(polyGeofence.data.geofenceId);
+            .setGeofenceId(polyGeofence.data['geofenceId']);
 
         print('횡단보도 나감');
 
@@ -263,6 +267,20 @@ class _MapScreenState extends State<MapScreen> {
           Provider.of<MyLocationState>(context).myLocationState == 3
               ? Container() // 상태가 3일 때 빈 컨테이너를 표시
               : PromptWidget(message: getPromptMessage()),
+          if (Provider.of<MyLocationState>(context).myLocationState == 3)
+            Container(
+              padding: const EdgeInsets.all(16),
+              width: double.infinity,
+              color: const Color(0xFF48A3F7),
+              child: Text(
+                '남은거리: 약 ${MyDirection().getRemainingDistance}미터 \n 안전각도여부: ${MyDirection().getIsSafeAngle} \n 절반이상보행: ${MyDirection().getIsPassHalf}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           Expanded(
             child: NaverMap(
               options: NaverMapViewOptions(
@@ -337,6 +355,7 @@ class _MapScreenState extends State<MapScreen> {
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
+
                 Map<dynamic, dynamic> trafficLightData =
                     (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);
 
@@ -374,7 +393,8 @@ class _MapScreenState extends State<MapScreen> {
                 previousRemainingTime = remainingTime;
 
                 return PromptWidget(
-                  message: "$lightColor불 $remainingTime초",
+                  message:
+                      "$lightColor불 ${remainingTime < 2 ? 0 : (remainingTime - 2)}초",
                   backgroundColor: backgroundColor,
                   fontSize: 25,
                   fontWeight: FontWeight.w600,
