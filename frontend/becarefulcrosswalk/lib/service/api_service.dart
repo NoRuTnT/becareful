@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
+import '../env/env.dart';
 import '../models/intersection_model.dart';
 
 class ApiService {
@@ -88,5 +89,23 @@ class ApiService {
     }
     log("교차로 정보 받아오지 못했음");
     throw Error();
+  }
+
+  static Future<String> getTrafficLightState(
+      int intersectionId, String direction) async {
+    final url = Uri.parse(
+        'https://t-data.seoul.go.kr/apig/apiman-gateway/tapi/v2xSignalPhaseInformation/1.0?apikey=${Env.trafficLightApiKey}&&numOfRows=500');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      List<dynamic> responseData = json.decode(response.body);
+
+      List filteredData = responseData.where((data) {
+        return int.parse(data['itstId']) == intersectionId;
+      }).toList();
+
+      return filteredData[0][direction];
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 }
