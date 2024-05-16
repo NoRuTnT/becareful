@@ -33,6 +33,7 @@ class _MapScreenState extends State<MapScreen> {
   late Future<void> initializationFuture;
   late final PolyGeofenceService _polyGeofenceService;
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  late num previousRemainingTime = 1000;
 
   @override
   void initState() {
@@ -53,6 +54,8 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       if (geofenceStatus == GeofenceStatus.ENTER) {
         print('@@@@@@@@@@@@@@@@@@@@${geofence.id}에 들어옴@@@@@@@@@@@@@@@@@@@@@');
+        Provider.of<CrosswalkInfo>(context, listen: false)
+            .setIntersectionId(int.parse(geofence.id));
         Provider.of<MyLocationState>(context, listen: false)
             .setMyLocationState(1); // 내 위치상태 원 안
         Provider.of<MyLocationState>(context, listen: false)
@@ -315,7 +318,7 @@ class _MapScreenState extends State<MapScreen> {
             StreamBuilder(
               stream: _dbRef
                   .child(
-                      'traffic-lights/${Provider.of<CrosswalkInfo>(context, listen: false).crosswalkInfo?.crosswalkId}')
+                      'trafficlight-data/${Provider.of<CrosswalkInfo>(context, listen: false).intersectionId}')
                   .onValue,
               builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
                 if (snapshot.hasError) {
@@ -331,17 +334,44 @@ class _MapScreenState extends State<MapScreen> {
                 Map<dynamic, dynamic> trafficLightData =
                     (snapshot.data!.snapshot.value as Map<dynamic, dynamic>);
 
-                String lightColor =
-                    trafficLightData['color'] == "green" ? "초록" : "빨간";
-                Color backgroundColor = trafficLightData['color'] == "green"
-                    ? const Color(0xFF7EC25E)
-                    : const Color(0xFFFD7559);
+                String? trafficLightState =
+                    Provider.of<CrosswalkInfo>(context, listen: false)
+                        .trafficLightState; // 신호 색상
+                String lightColor = ''; // 신호 색상 (한글)
+                Color backgroundColor = const Color(0xFFFFFFFF);
+                String? direction =
+                    Provider.of<CrosswalkInfo>(context, listen: false)
+                        .crosswalkInfo
+                        ?.direction; // 횡단보도 방향
+
+                if (trafficLightState == "green") {
+                  lightColor = "초록";
+                  backgroundColor = const Color(0xFF7EC25E);
+                } else if (trafficLightState == "red") {
+                  lightColor = "빨간";
+                  backgroundColor = const Color(0xFFFD7559);
+                }
+
+                num remainingTime =
+                    (trafficLightData[direction] / 10).toInt(); // 잔여 시간
+
+                if (previousRemainingTime < remainingTime) {
+                  if (trafficLightState == "green") {
+                    Provider.of<CrosswalkInfo>(context, listen: false)
+                        .setTrafficLightState("red");
+                  } else if (trafficLightState == "red") {
+                    Provider.of<CrosswalkInfo>(context, listen: false)
+                        .setTrafficLightState("green");
+                  }
+                }
+
+                previousRemainingTime = remainingTime;
 
                 return PromptWidget(
-                  message: "$lightColor불 ${trafficLightData['remainingTime']}초",
+                  message: "$lightColor불 $remainingTime초",
                   backgroundColor: backgroundColor,
-                  fontSize: 35,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
                 );
               },
             ),
