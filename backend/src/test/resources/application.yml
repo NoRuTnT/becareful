@@ -1,0 +1,29 @@
+spring:
+  config:
+    import:
+      - optional:file:env/test-db.env[.properties]
+      - optional:file:env/security.env[.properties]
+      - optional:file:env/s3.env[.properties]
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_TEST_URL}
+    username: ${MYSQL_TEST_USERNAME}
+    password: ${MYSQL_TEST_PASSWORD}
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+      show-sql: true
+    hibernate:
+      ddl-auto: update
+
+amazon:
+  aws:
+    accessKey: ${S3_ACCESSKEY}
+    secretKey: ${S3_SECRETKEY}
+    region: ap-northeast-2
+    bucket: be-careful

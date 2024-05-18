@@ -1,0 +1,11 @@
+spring:
+  config:
+    import:
+      - optional:file:env/s3.env[.properties]
+
+amazon:
+  aws:
+    accessKey: ${S3_ACCESSKEY}
+    secretKey: ${S3_SECRETKEY}
+    region: ap-northeast-2
+    bucket: be-careful
