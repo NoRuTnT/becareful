@@ -14,18 +14,12 @@
 <a name="intro"></a>
 ## 💬 서비스 소개
 
-**사용자의 관심사와 테스트를 통한 영어 실력을 기반으로 CNN 뉴스를 추천해주고 학습을 지원합니다.**
+**횡단보도 보행시 잔여 시간 알림과 같은 보조 기능들을 제공합니다.**
 
-1. 뉴스 속 문장의 발음을 듣고 쉐도잉하며 스피킹 실력 향상
-2. 발음 점수 측정을 통해 영어 발음 개선
-3. 뉴스 스크립트의 해석본를 제공하여 독해 역량 향상
-4. 레벨에 맞는 영단어와 한글의미를 제공하여 단어 실력을 향상
-5. 학습한 영상에 대한 단어 테스트를 통해 이해도 평가
-6. 사용자 관심사와 실력에 맞는 학습 영상 추천
-7. 학습 통계를 시각적으로 확인하며 성과 확인 및 동기부여
-8. 커스텀 단어장 및 영상 학습 기록을 제공하여 진행 상태 파악
-9. 최신 뉴스의 학습자료(영상과 스크립트)가 매일 업데이트되도록 자동화
-10. CEFR 레벨시스템에 따른 어휘 빈도수와 평균 문장 길이에 따른 영상 난이도 판별
+- 횡단보도 잔여 시간 알림
+- 횡단보도 보행시 횡단보도에서 벗어나지 않도록 진동을 통한 방향 보조 기능
+- 진입한 횡단보도의 진행 방면을 알려주는 알림 기능
+- 파손된 점자블록 신고 기능
 
 <a name="plans"></a>
 ## 🎯 기획 배경
@@ -41,14 +35,14 @@
 <a name="members"></a>
 ## 🙇 팀원 소개
 
-|**최동헌 (팀장/FS)**|**김하은 (팀원/FS)**|**이민주 (팀원/FS)**|
+|**최동헌 (팀장/BE)**|**문준형 (팀원/BE)**|**차다운 (팀원/BE)**|
 |:---:|:---:|:---:|
-|인프라, 학습 기록 구현|인프라, 레벨 시스템|검색 기능, 회원 관리|
-|인프라, 학습 기록 구현|인프라, 레벨 시스템|검색 기능, 회원 관리|
+|S3, 카프카 Sink Connector|인프라, 카프카 파이프라인|카프카 Sink Connector , Firebase|
 
-|**이은지 (팀원/FS)**|**유혜승 (팀원/FS)**|**차다운 (팀원/FS)**|
-|:---:|:---:|:---:|
-|학습 진행 관련 기능|데이터 수집 및 관리|뉴스 추천 알고리즘|
+
+|**이은지 (팀원/FE)**|**김지환 (팀원/FE)**|
+|:---:|:---:|
+|화면 페이지 구현, Firebase|화면 페이지 구현, Geofencing 구현|
 
 <a name="features"></a>
 
@@ -132,30 +126,19 @@
 <a name="technology"></a>
 ## 🔑 기술 소개
 
-### 📈 TalkBack
 
-
----
 
 ### 📉 Geofence
-
+- 실제 위치에 기반해 가상의 경계를 생성
+- 기반 서비스와 센서 기술을 결합하여 실시간으로 특정 지역에서의 사건을 감지하고 대응
 
 ---
 
 ### 📊 kafka Connect
 
+- EC2 서버의 높은 처리량과 내결함성을 고려하여 **kafka connect** 데이터 파이프라인 사용
+- 실서비스의 유연성과 확장성를 위해 **kafka connect** 데이터 파이프라인 구현
 
-
----
-
-### 🥇 
-
----
-### ❤ 추천 알고리즘
-
-
----
-### 🔍 
 
 
 <a name="skills"></a>
@@ -182,10 +165,420 @@
 
 <a name="installation"></a>
 ## 🚀 포팅 메뉴얼
-[포팅 메뉴얼](https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A507/-/blob/master/exec/CNNect_A507_%ED%8F%AC%ED%8C%85%EB%A9%94%EB%89%B4%EC%96%BC.pdf?ref_type=heads)
+[포팅 메뉴얼](https://lab.ssafy.com/s10-final/S10P31A207/-/blob/aaf44307db9b6e519f78350e60d70e315db3e4b0/exec/deploy.md)
 
 <a name="folder"></a>
 ## 📂 폴더 구조
 <details>
-<summary>FE 폴더 구조</summary>
+<summary>BackEnd 폴더 구조</summary>
 <div markdown="1">
+
+```
+📦backend
+ ┣ 📂gradle
+ ┃ ┗ 📂wrapper
+ ┃ ┃ ┣ 📜gradle-wrapper.jar
+ ┃ ┃ ┗ 📜gradle-wrapper.properties
+ ┣ 📂src
+ ┃ ┣ 📂main
+ ┃ ┃ ┣ 📂java
+ ┃ ┃ ┃ ┗ 📂com
+ ┃ ┃ ┃ ┃ ┗ 📂becareful
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂backend
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂config
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜S3Config.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜FileController.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂exception
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BadRequestException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜BusinessException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ForbiddenException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NotFoundException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UnauthorizedException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜SuccessResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜BaseTimeEntity.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜S3UploaderService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂domain
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂intersection
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜.gitkeep
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜IntersectionController.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CoordinateDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CrosswalkResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜IntersectionResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜crosswalk.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Intersection.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CrosswalkRepository.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜IntersectionRepository.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜IntersectionService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂report
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜.gitkeep
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ReportController.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ReportResponseDto.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂entity
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Report.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ReportRepository.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ReportService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜BackendApplication.java
+ ┃ ┃ ┗ 📂resources
+ ┃ ┃ ┃ ┣ 📜application-db.yml
+ ┃ ┃ ┃ ┣ 📜application-s3.yml
+ ┃ ┃ ┃ ┣ 📜application-security.yml
+ ┃ ┃ ┃ ┗ 📜application.yml
+ ┃ ┗ 📂test
+ ┃ ┃ ┣ 📂java
+ ┃ ┃ ┃ ┗ 📂com
+ ┃ ┃ ┃ ┃ ┗ 📂becareful
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂backend
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂report
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂controller
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ReportControllerTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜BackendApplicationTests.java
+ ┃ ┃ ┗ 📂resources
+ ┃ ┃ ┃ ┗ 📜application.yml
+ ┣ 📜.gitignore
+ ┣ 📜build.gradle
+ ┣ 📜Dockerfile
+ ┣ 📜gradlew
+ ┣ 📜gradlew.bat
+ ┗ 📜settings.gradle
+```
+</div>
+</details>
+
+<details>
+<summary>FrontEnd폴더 구조</summary>
+<div markdown="1">
+
+```
+📦frontend
+ ┣ 📂.idea
+ ┃ ┣ 📜frontend.iml
+ ┃ ┣ 📜misc.xml
+ ┃ ┣ 📜modules.xml
+ ┃ ┣ 📜vcs.xml
+ ┃ ┗ 📜workspace.xml
+ ┗ 📂becarefulcrosswalk
+ ┃ ┣ 📂android
+ ┃ ┃ ┣ 📂app
+ ┃ ┃ ┃ ┣ 📂src
+ ┃ ┃ ┃ ┃ ┣ 📂debug
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜AndroidManifest.xml
+ ┃ ┃ ┃ ┃ ┣ 📂main
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂kotlin
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂com
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂a207
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂becarefulcrosswalk
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MainActivity.kt
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂res
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂drawable
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜launch_background.xml
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂drawable-v21
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜launch_background.xml
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂mipmap-hdpi
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ic_launcher.png
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜traffic_lights.png
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂mipmap-mdpi
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ic_launcher.png
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂mipmap-xhdpi
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ic_launcher.png
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂mipmap-xxhdpi
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ic_launcher.png
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂mipmap-xxxhdpi
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ic_launcher.png
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂values
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜styles.xml
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂values-night
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜styles.xml
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜AndroidManifest.xml
+ ┃ ┃ ┃ ┃ ┗ 📂profile
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜AndroidManifest.xml
+ ┃ ┃ ┃ ┗ 📜build.gradle
+ ┃ ┃ ┣ 📂gradle
+ ┃ ┃ ┃ ┗ 📂wrapper
+ ┃ ┃ ┃ ┃ ┗ 📜gradle-wrapper.properties
+ ┃ ┃ ┣ 📜.gitignore
+ ┃ ┃ ┣ 📜build.gradle
+ ┃ ┃ ┣ 📜gradle.properties
+ ┃ ┃ ┗ 📜settings.gradle
+ ┃ ┣ 📂assets
+ ┃ ┃ ┗ 📂sounds
+ ┃ ┃ ┃ ┣ 📜cameraFlash.mp3
+ ┃ ┃ ┃ ┗ 📜half-pass.mp3
+ ┃ ┣ 📂images
+ ┃ ┃ ┣ 📜checked.png
+ ┃ ┃ ┣ 📜fail.png
+ ┃ ┃ ┣ 📜information.png
+ ┃ ┃ ┣ 📜lamplight.png
+ ┃ ┃ ┣ 📜map.png
+ ┃ ┃ ┣ 📜report.png
+ ┃ ┃ ┗ 📜traffic-lights.png
+ ┃ ┣ 📂ios
+ ┃ ┃ ┣ 📂Flutter
+ ┃ ┃ ┃ ┣ 📜AppFrameworkInfo.plist
+ ┃ ┃ ┃ ┣ 📜Debug.xcconfig
+ ┃ ┃ ┃ ┗ 📜Release.xcconfig
+ ┃ ┃ ┣ 📂Runner
+ ┃ ┃ ┃ ┣ 📂Assets.xcassets
+ ┃ ┃ ┃ ┃ ┣ 📂AppIcon.appiconset
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Contents.json
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-1024x1024@1x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-20x20@1x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-20x20@2x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-20x20@3x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-29x29@1x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-29x29@2x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-29x29@3x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-40x40@1x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-40x40@2x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-40x40@3x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-60x60@2x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-60x60@3x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-76x76@1x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Icon-App-76x76@2x.png
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜Icon-App-83.5x83.5@2x.png
+ ┃ ┃ ┃ ┃ ┗ 📂LaunchImage.imageset
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Contents.json
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜LaunchImage.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜LaunchImage@2x.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜LaunchImage@3x.png
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜README.md
+ ┃ ┃ ┃ ┣ 📂Base.lproj
+ ┃ ┃ ┃ ┃ ┣ 📜LaunchScreen.storyboard
+ ┃ ┃ ┃ ┃ ┗ 📜Main.storyboard
+ ┃ ┃ ┃ ┣ 📜AppDelegate.swift
+ ┃ ┃ ┃ ┣ 📜Info.plist
+ ┃ ┃ ┃ ┗ 📜Runner-Bridging-Header.h
+ ┃ ┃ ┣ 📂Runner.xcodeproj
+ ┃ ┃ ┃ ┣ 📂project.xcworkspace
+ ┃ ┃ ┃ ┃ ┣ 📂xcshareddata
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜IDEWorkspaceChecks.plist
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜WorkspaceSettings.xcsettings
+ ┃ ┃ ┃ ┃ ┗ 📜contents.xcworkspacedata
+ ┃ ┃ ┃ ┣ 📂xcshareddata
+ ┃ ┃ ┃ ┃ ┗ 📂xcschemes
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜Runner.xcscheme
+ ┃ ┃ ┃ ┗ 📜project.pbxproj
+ ┃ ┃ ┣ 📂Runner.xcworkspace
+ ┃ ┃ ┃ ┣ 📂xcshareddata
+ ┃ ┃ ┃ ┃ ┣ 📜IDEWorkspaceChecks.plist
+ ┃ ┃ ┃ ┃ ┗ 📜WorkspaceSettings.xcsettings
+ ┃ ┃ ┃ ┗ 📜contents.xcworkspacedata
+ ┃ ┃ ┣ 📂RunnerTests
+ ┃ ┃ ┃ ┗ 📜RunnerTests.swift
+ ┃ ┃ ┗ 📜.gitignore
+ ┃ ┣ 📂lib
+ ┃ ┃ ┣ 📂env
+ ┃ ┃ ┃ ┗ 📜env.dart
+ ┃ ┃ ┣ 📂models
+ ┃ ┃ ┃ ┣ 📜geofence_model.dart
+ ┃ ┃ ┃ ┣ 📜intersection_model.dart
+ ┃ ┃ ┃ ┗ 📜traffic_light_model.dart
+ ┃ ┃ ┣ 📂provider
+ ┃ ┃ ┃ ┣ 📜crosswalk_info.dart
+ ┃ ┃ ┃ ┣ 📜current_page.dart
+ ┃ ┃ ┃ ┣ 📜my_location_state.dart
+ ┃ ┃ ┃ ┗ 📜report_data.dart
+ ┃ ┃ ┣ 📂screens
+ ┃ ┃ ┃ ┣ 📂report
+ ┃ ┃ ┃ ┃ ┣ 📜report_fail_screen.dart
+ ┃ ┃ ┃ ┃ ┣ 📜report_location_screen.dart
+ ┃ ┃ ┃ ┃ ┣ 📜report_photo_screen.dart
+ ┃ ┃ ┃ ┃ ┣ 📜report_stt_result_screen.dart
+ ┃ ┃ ┃ ┃ ┣ 📜report_success_screen.dart
+ ┃ ┃ ┃ ┃ ┗ 📜report_voice_screen.dart
+ ┃ ┃ ┃ ┣ 📂userGuide
+ ┃ ┃ ┃ ┃ ┣ 📜user_guide_screen.dart
+ ┃ ┃ ┃ ┃ ┗ 📜user_guide_screen2.dart
+ ┃ ┃ ┃ ┣ 📜landing_screen.dart
+ ┃ ┃ ┃ ┣ 📜main_screen.dart
+ ┃ ┃ ┃ ┗ 📜map_screen.dart
+ ┃ ┃ ┣ 📂service
+ ┃ ┃ ┃ ┣ 📜api_service.dart
+ ┃ ┃ ┃ ┣ 📜my_direction.dart
+ ┃ ┃ ┃ ┗ 📜my_location.dart
+ ┃ ┃ ┣ 📂theme
+ ┃ ┃ ┃ ┗ 📜colors.dart
+ ┃ ┃ ┣ 📂utils
+ ┃ ┃ ┃ ┣ 📜bottom_bar.dart
+ ┃ ┃ ┃ ┗ 📜temp.dart
+ ┃ ┃ ┣ 📂widgets
+ ┃ ┃ ┃ ┣ 📜alert_dialog_widget.dart
+ ┃ ┃ ┃ ┣ 📜button_widget.dart
+ ┃ ┃ ┃ ┣ 📜guide_widget.dart
+ ┃ ┃ ┃ ┣ 📜logo_widget.dart
+ ┃ ┃ ┃ ┣ 📜modal_widget.dart
+ ┃ ┃ ┃ ┣ 📜prompt_widget.dart
+ ┃ ┃ ┃ ┗ 📜service_box_widget.dart
+ ┃ ┃ ┣ 📜firebase_options.dart
+ ┃ ┃ ┗ 📜main.dart
+ ┃ ┣ 📂linux
+ ┃ ┃ ┣ 📂flutter
+ ┃ ┃ ┃ ┣ 📜CMakeLists.txt
+ ┃ ┃ ┃ ┣ 📜generated_plugins.cmake
+ ┃ ┃ ┃ ┣ 📜generated_plugin_registrant.cc
+ ┃ ┃ ┃ ┗ 📜generated_plugin_registrant.h
+ ┃ ┃ ┣ 📜.gitignore
+ ┃ ┃ ┣ 📜CMakeLists.txt
+ ┃ ┃ ┣ 📜main.cc
+ ┃ ┃ ┣ 📜my_application.cc
+ ┃ ┃ ┗ 📜my_application.h
+ ┃ ┣ 📂macos
+ ┃ ┃ ┣ 📂Flutter
+ ┃ ┃ ┃ ┣ 📜Flutter-Debug.xcconfig
+ ┃ ┃ ┃ ┣ 📜Flutter-Release.xcconfig
+ ┃ ┃ ┃ ┗ 📜GeneratedPluginRegistrant.swift
+ ┃ ┃ ┣ 📂Runner
+ ┃ ┃ ┃ ┣ 📂Assets.xcassets
+ ┃ ┃ ┃ ┃ ┗ 📂AppIcon.appiconset
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_1024.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_128.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_16.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_256.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_32.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_512.png
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜app_icon_64.png
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜Contents.json
+ ┃ ┃ ┃ ┣ 📂Base.lproj
+ ┃ ┃ ┃ ┃ ┗ 📜MainMenu.xib
+ ┃ ┃ ┃ ┣ 📂Configs
+ ┃ ┃ ┃ ┃ ┣ 📜AppInfo.xcconfig
+ ┃ ┃ ┃ ┃ ┣ 📜Debug.xcconfig
+ ┃ ┃ ┃ ┃ ┣ 📜Release.xcconfig
+ ┃ ┃ ┃ ┃ ┗ 📜Warnings.xcconfig
+ ┃ ┃ ┃ ┣ 📜AppDelegate.swift
+ ┃ ┃ ┃ ┣ 📜DebugProfile.entitlements
+ ┃ ┃ ┃ ┣ 📜Info.plist
+ ┃ ┃ ┃ ┣ 📜MainFlutterWindow.swift
+ ┃ ┃ ┃ ┗ 📜Release.entitlements
+ ┃ ┃ ┣ 📂Runner.xcodeproj
+ ┃ ┃ ┃ ┣ 📂project.xcworkspace
+ ┃ ┃ ┃ ┃ ┗ 📂xcshareddata
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜IDEWorkspaceChecks.plist
+ ┃ ┃ ┃ ┣ 📂xcshareddata
+ ┃ ┃ ┃ ┃ ┗ 📂xcschemes
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜Runner.xcscheme
+ ┃ ┃ ┃ ┗ 📜project.pbxproj
+ ┃ ┃ ┣ 📂Runner.xcworkspace
+ ┃ ┃ ┃ ┣ 📂xcshareddata
+ ┃ ┃ ┃ ┃ ┗ 📜IDEWorkspaceChecks.plist
+ ┃ ┃ ┃ ┗ 📜contents.xcworkspacedata
+ ┃ ┃ ┣ 📂RunnerTests
+ ┃ ┃ ┃ ┗ 📜RunnerTests.swift
+ ┃ ┃ ┗ 📜.gitignore
+ ┃ ┣ 📂sounds
+ ┃ ┃ ┗ 📜all-pass.mp3
+ ┃ ┣ 📂test
+ ┃ ┃ ┗ 📜widget_test.dart
+ ┃ ┣ 📂web
+ ┃ ┃ ┣ 📂icons
+ ┃ ┃ ┃ ┣ 📜Icon-192.png
+ ┃ ┃ ┃ ┣ 📜Icon-512.png
+ ┃ ┃ ┃ ┣ 📜Icon-maskable-192.png
+ ┃ ┃ ┃ ┗ 📜Icon-maskable-512.png
+ ┃ ┃ ┣ 📜favicon.png
+ ┃ ┃ ┣ 📜index.html
+ ┃ ┃ ┗ 📜manifest.json
+ ┃ ┣ 📂windows
+ ┃ ┃ ┣ 📂flutter
+ ┃ ┃ ┃ ┣ 📜CMakeLists.txt
+ ┃ ┃ ┃ ┣ 📜generated_plugins.cmake
+ ┃ ┃ ┃ ┣ 📜generated_plugin_registrant.cc
+ ┃ ┃ ┃ ┗ 📜generated_plugin_registrant.h
+ ┃ ┃ ┣ 📂runner
+ ┃ ┃ ┃ ┣ 📂resources
+ ┃ ┃ ┃ ┃ ┗ 📜app_icon.ico
+ ┃ ┃ ┃ ┣ 📜CMakeLists.txt
+ ┃ ┃ ┃ ┣ 📜flutter_window.cpp
+ ┃ ┃ ┃ ┣ 📜flutter_window.h
+ ┃ ┃ ┃ ┣ 📜main.cpp
+ ┃ ┃ ┃ ┣ 📜resource.h
+ ┃ ┃ ┃ ┣ 📜runner.exe.manifest
+ ┃ ┃ ┃ ┣ 📜Runner.rc
+ ┃ ┃ ┃ ┣ 📜utils.cpp
+ ┃ ┃ ┃ ┣ 📜utils.h
+ ┃ ┃ ┃ ┣ 📜win32_window.cpp
+ ┃ ┃ ┃ ┗ 📜win32_window.h
+ ┃ ┃ ┣ 📜.gitignore
+ ┃ ┃ ┗ 📜CMakeLists.txt
+ ┃ ┣ 📜.gitignore
+ ┃ ┣ 📜.metadata
+ ┃ ┣ 📜analysis_options.yaml
+ ┃ ┣ 📜pubspec.lock
+ ┃ ┣ 📜pubspec.yaml
+ ┃ ┗ 📜README.md
+```
+</div>
+</details>
+
+<details>
+<summary>Data 폴더 구조</summary>
+<div markdown="1">
+
+```
+📦data
+ ┣ 📂gradle
+ ┃ ┗ 📂wrapper
+ ┃ ┃ ┣ 📜gradle-wrapper.jar
+ ┃ ┃ ┗ 📜gradle-wrapper.properties
+ ┣ 📂sink
+ ┃ ┣ 📂src
+ ┃ ┃ ┗ 📂main
+ ┃ ┃ ┃ ┗ 📂java
+ ┃ ┃ ┃ ┃ ┗ 📂com
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂sinkconnector
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂config
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TrafficLightSinkConnectorConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dataset
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TrafficSignalData.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CustomLocalDateTimeDeserializer.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FirebaseAdmin.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜TrafficLightSinkConnector.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TrafficLightSinkTask.java
+ ┃ ┗ 📜build.gradle
+ ┣ 📂source
+ ┃ ┣ 📂src
+ ┃ ┃ ┗ 📂main
+ ┃ ┃ ┃ ┗ 📂java
+ ┃ ┃ ┃ ┃ ┗ 📂com
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂sourceconnector
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂config
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TrafficLightSourceConnectorConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dataset
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TrafficSignalData.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomLocalDateTimeDeserializer.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜DataService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜TrafficLightSourceConnector.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜TrafficLightSourcePartition.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜TrafficLightSourceTask.java
+ ┃ ┗ 📜build.gradle
+ ┣ 📜.gitignore
+ ┣ 📜application.yml
+ ┣ 📜build.gradle
+ ┣ 📜Dockerfile
+ ┣ 📜gradlew
+ ┣ 📜gradlew.bat
+ ┗ 📜settings.gradle
+```
+</div>
+</details>
+
