@@ -84,15 +84,19 @@
 
 
 ### 📉 Geofence
+![image](https://github.com/NoRuTnT/Dotori/assets/114069644/45e53796-5ac9-480d-9278-2769bb06ca49)
 - 실제 위치에 기반해 가상의 경계를 생성
 - 기반 서비스와 센서 기술을 결합하여 실시간으로 특정 지역에서의 사건을 감지하고 대응
 
 ---
 
 ### 📊 kafka Connect
+![image](https://github.com/NoRuTnT/Dotori/assets/114069644/102c4418-0330-4dc9-a812-a773a30f2b2f)
 
-- EC2 서버의 높은 처리량과 내결함성을 고려하여 **kafka connect** 데이터 파이프라인 사용
-- 실서비스의 유연성과 확장성를 위해 **kafka connect** 데이터 파이프라인 구현
+Kafka Connect는 데이터베이스, 키-값 저장소, 검색 인덱스 및 파일 시스템 간의 간단한 데이터 통합을 위한 중앙 집중식 데이터 허브 역할을 하는 Apache Kafka의 무료 오픈소스 구성요소로 해당 프로젝트에서는 api데이터소스에서 firebase로 데이터를 전달하기위한 파이프라인으로 사용하였습니다.
+
+- kafka 클러스터에서는 데이터소스에서 kafka 토픽으로 데이터를 전달하는 source connector와, kafka 토픽에서 firebase로 데이터를 전달하는 sink connector 두개의 커스텀 커넥터를 구현했습니다.
+- 실시간 교통데이터를 다루기때문에 높은 처리량과 내결함성을 고려하여 **kafka connect** 데이터 파이프라인을 이용하기로 했습니다. 
 
 
 
