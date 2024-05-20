@@ -1,66 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
-class PromptWidget extends StatefulWidget {
+class PromptWidget extends StatelessWidget {
   final String message;
-  final Color? backgroundColor;
+  final Color backgroundColor;
+  final double fontSize;
+  final FontWeight fontWeight;
 
   const PromptWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.backgroundColor = const Color(0xFF48A3F7),
-  }) : super(key: key);
-
-  @override
-  _PromptWidgetState createState() => _PromptWidgetState();
-}
-
-class _PromptWidgetState extends State<PromptWidget> {
-  final FlutterTts flutterTts = FlutterTts();
-
-  @override
-  void initState() {
-    super.initState();
-    flutterTts.setLanguage("ko-KR");
-    flutterTts.setSpeechRate(0.5);
-    speak(widget.message);
-  }
-
-  @override
-  void didUpdateWidget(covariant PromptWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.message != oldWidget.message) {
-      speak(widget.message);
-    }
-  }
-
-  void speak(String message) async {
-    await flutterTts.awaitSpeakCompletion(true);
-    if (message.isNotEmpty) {
-      await flutterTts.speak(message);
-    }
-  }
+    this.fontSize = 20,
+    this.fontWeight = FontWeight.w500,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       width: double.infinity,
-      color: widget.backgroundColor,
+      color: backgroundColor,
       child: Text(
-        widget.message,
-        style: const TextStyle(
-          fontSize: 20,
+        message,
+        style: TextStyle(
+          fontSize: fontSize,
           color: Colors.white,
+          fontWeight: fontWeight,
         ),
         textAlign: TextAlign.center,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    flutterTts.stop();
-    super.dispose();
   }
 }
