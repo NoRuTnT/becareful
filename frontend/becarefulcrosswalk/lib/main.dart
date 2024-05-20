@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:becarefulcrosswalk/firebase_options.dart';
+import 'package:becarefulcrosswalk/provider/my_location_state.dart';
 import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/landing_screen.dart';
 import 'package:becarefulcrosswalk/screens/map_screen.dart';
@@ -63,8 +64,15 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ReportData>(
-      create: (context) => ReportData(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ReportData>(
+          create: (context) => ReportData(),
+        ),
+        ChangeNotifierProvider<MyLocationState>(
+          create: (context) => MyLocationState(),
+        ),
+      ],
       child: MaterialApp(
         routes: {
           '/': (context) => const LandingScreen(),
