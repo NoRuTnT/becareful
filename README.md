@@ -147,9 +147,14 @@ Kafka Connect는 데이터베이스, 키-값 저장소, 검색 인덱스 및 파
 소스 -> 카프카 : 소스 커넥터(Source Connector)  
 카프카 -> 싱크 : 싱크 커넥터(Sink Connector)  
 
-- kafka 클러스터에서는 데이터소스에서 kafka 토픽으로 데이터를 전달하는 source connector와, kafka 토픽에서 firebase로 데이터를 전달하는 sink connector 두개의 커스텀 커넥터를 구현했다.
+
 - 실시간 교통데이터를 다루기때문에 높은 처리량과 내결함성을 고려하여 **kafka connect** 데이터 파이프라인을 이용하기로 했다. 
 
+![image](https://github.com/NoRuTnT/Dotori/assets/114069644/c22a0e96-a5b0-4684-aa08-a5e246890c83)
+
+- kafka 클러스터에서는 데이터소스에서 kafka 토픽으로 데이터를 전달하는 source connector와, kafka 토픽에서 firebase로 데이터를 전달하는 sink connector 두개의 커스텀 커넥터를 구현했다.
+
+![동영상](https://github.com/NoRuTnT/Dotori/assets/114069644/24788a84-8bb4-4a18-9d7e-1d6eaa0ac0ed)
 
 
 <a name="skills"></a>
@@ -170,6 +175,7 @@ Kafka Connect는 데이터베이스, 키-값 저장소, 검색 인덱스 및 파
 ||Docker Hub||
 ||Nginx||
 ||AWS EC2||
+||Prometheus||
 ||Promtail||
 ||Loki||
 ||Grafana||
