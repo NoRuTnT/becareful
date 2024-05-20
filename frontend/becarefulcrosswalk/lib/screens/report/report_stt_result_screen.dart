@@ -26,14 +26,11 @@ class ReportSttResultScreen extends StatelessWidget {
         elevation: 2,
         backgroundColor: Colors.white,
         foregroundColor: black,
-        title: Semantics(
-          label: '불편신고 마지막 단계',
-          child: const Text(
-            "불편신고(3/3)",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
+        title: const Text(
+          "불편신고(3/3)",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
           ),
         ),
         leading: IconButton(
@@ -53,24 +50,21 @@ class ReportSttResultScreen extends StatelessWidget {
         child: Column(
           children: [
             Center(
-              child: Semantics(
-                label: '말씀하신 내용이 맞다면 신고하기 버튼을 눌러주세요',
-                child: EasyRichText(
-                  '말씀하신 내용이 맞다면\n신고하기 버튼을 눌러주세요',
-                  textAlign: TextAlign.center,
-                  patternList: [
-                    EasyRichTextPattern(
-                      targetString: '신고하기',
-                      style: const TextStyle(
-                        color: Colors.red,
-                      ),
+              child: EasyRichText(
+                '말씀하신 내용이 맞다면\n신고하기 버튼을 눌러주세요',
+                textAlign: TextAlign.center,
+                patternList: [
+                  EasyRichTextPattern(
+                    targetString: '신고하기',
+                    style: const TextStyle(
+                      color: Colors.red,
                     ),
-                  ],
-                  defaultStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
                   ),
+                ],
+                defaultStyle: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -89,28 +83,25 @@ class ReportSttResultScreen extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Semantics(
-                    label: text,
-                    child: text == ''
-                        ? const Text(
-                            "인식된 텍스트가 없습니다\n큰소리로 말씀해주세요",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 22,
-                              letterSpacing: 1,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : Text(
-                            text,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 22,
-                              letterSpacing: 1,
-                            ),
+                  child: text == ''
+                      ? const Text(
+                          "인식된 텍스트가 없습니다\n큰소리로 말씀해주세요",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 22,
+                            letterSpacing: 1,
                           ),
-                  ),
+                          textAlign: TextAlign.center,
+                        )
+                      : Text(
+                          text,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 22,
+                            letterSpacing: 1,
+                          ),
+                        ),
                 ),
               ),
             ),
