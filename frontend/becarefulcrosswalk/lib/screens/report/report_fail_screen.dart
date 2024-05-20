@@ -6,7 +6,12 @@ import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 
 class ReportFailScreen extends StatefulWidget {
-  const ReportFailScreen({super.key});
+  final String errorMessage;
+
+  const ReportFailScreen({
+    super.key,
+    required this.errorMessage,
+  });
 
   @override
   State<ReportFailScreen> createState() => _ReportCompleteScreenState();
@@ -52,7 +57,7 @@ class _ReportCompleteScreenState extends State<ReportFailScreen> {
                 Semantics(
                   label: '신고 내용 접수 중 오류가 발생했습니다',
                   child: EasyRichText(
-                    '신고 내용 접수 중\n오류가 발생했습니다',
+                    widget.errorMessage,
                     textAlign: TextAlign.center,
                     patternList: [
                       EasyRichTextPattern(
