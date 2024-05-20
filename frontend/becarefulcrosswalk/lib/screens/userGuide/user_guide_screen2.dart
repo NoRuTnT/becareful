@@ -4,8 +4,10 @@ import 'package:becarefulcrosswalk/widgets/guide_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 
-class UserGuideScreen extends StatelessWidget {
-  const UserGuideScreen({super.key});
+import '../main_screen.dart';
+
+class UserGuideScreen2 extends StatelessWidget {
+  const UserGuideScreen2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +32,6 @@ class UserGuideScreen extends StatelessWidget {
             ),
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -47,53 +43,60 @@ class UserGuideScreen extends StatelessWidget {
                   vertical: 20,
                 ),
                 child: Semantics(
-                  label: '보행자 신호등의 실시간 신호정보 받는 방법',
+                  label: '시각장애인 편의시설\n불편사항 신고 방법',
                   child: EasyRichText(
                     textAlign: TextAlign.center,
-                    '보행자 신호등의\n실시간 신호정보 받는 방법',
+                    '시각장애인 편의시설\n불편사항 신고 방법',
                     defaultStyle: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                     ),
                     patternList: [
                       EasyRichTextPattern(
-                        targetString: '실시간 신호정보',
+                        targetString: '불편',
                         style: const TextStyle(
                           color: Colors.red,
                         ),
-                      )
+                      ),
+                      EasyRichTextPattern(
+                        targetString: '신고',
+                        style: const TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
               const GuideWidget(
-                guide: '주변 60미터 이내에 보행자 신호가 있다면 안내가 나와요.',
+                guide: '불편사항이 있는 장소를 촬영해주세요.',
                 index: 0,
-                screenIndex: 1,
+                screenIndex: 2,
               ),
               const GuideWidget(
-                guide: '건너고자 하는 횡단보도 앞에 서주세요.',
+                guide: '말하기 버튼을 누른 상태로 불편사항을 설명해주세요.',
                 index: 1,
-                screenIndex: 1,
+                screenIndex: 2,
               ),
               const GuideWidget(
-                guide: '안내 시작 버튼을 누르면 신호정보가 나와요.',
+                guide: '점자블록, 음향신호기 등을 자유롭게 말씀하세요.',
                 index: 2,
-                screenIndex: 1,
+                screenIndex: 2,
               ),
               const GuideWidget(
-                guide: '횡단보도를 50%, 100% 건널때 효과음이 들려요.',
+                guide: '말씀하신 내용이 맞다면 신고하기 버튼을 눌러주세요.',
                 index: 3,
-                screenIndex: 1,
-              ),
-              const GuideWidget(
-                guide: '횡단보도를 벗어나는 방향이면 진동이 울려요.',
-                index: 4,
-                screenIndex: 1,
+                screenIndex: 2,
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/userGuide2');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(),
+                      fullscreenDialog: true,
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),
@@ -109,11 +112,11 @@ class UserGuideScreen extends StatelessWidget {
                     ),
                     child: Semantics(
                       button: true,
-                      label: '다음',
+                      label: '홈으로',
                       child: const Center(
                         child: Text(
                           textAlign: TextAlign.center,
-                          '다음',
+                          '홈으로',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
