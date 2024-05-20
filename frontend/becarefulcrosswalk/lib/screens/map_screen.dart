@@ -249,6 +249,12 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [

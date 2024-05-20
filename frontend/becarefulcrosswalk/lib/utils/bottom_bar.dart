@@ -17,13 +17,13 @@ class BottomBar extends StatelessWidget {
         onTap: (int index) {
           switch (index) {
             case 0:
-              Navigator.popAndPushNamed(context, '/userGuide');
+              Navigator.pushReplacementNamed(context, '/userGuide');
               break;
             case 1:
-              Navigator.popAndPushNamed(context, '/map');
+              Navigator.pushReplacementNamed(context, '/map');
               break;
             case 2:
-              Navigator.popAndPushNamed(context, '/report');
+              Navigator.pushReplacementNamed(context, '/report');
               break;
             default:
           }
