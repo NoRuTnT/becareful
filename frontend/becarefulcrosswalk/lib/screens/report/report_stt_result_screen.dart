@@ -161,7 +161,8 @@ class ReportSttResultScreen extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ReportFailScreen(),
+                            builder: (context) => const ReportFailScreen(
+                                errorMessage: '신고 내용 접수 중\n오류가 발생했습니다'),
                           ),
                         );
                       }
