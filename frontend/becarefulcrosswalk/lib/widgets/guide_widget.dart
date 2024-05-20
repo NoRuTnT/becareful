@@ -5,13 +5,23 @@ import 'package:vibration/vibration.dart';
 
 import '../theme/colors.dart';
 
-class GuideWidget extends StatelessWidget {
-  GuideWidget({
-    super.key,
+class GuideWidget extends StatefulWidget {
+  const GuideWidget({
+    Key? key,
     required this.guide,
     required this.index,
-  });
+    required this.screenIndex,
+  }) : super(key: key);
 
+  final String guide;
+  final int index;
+  final int screenIndex;
+
+  @override
+  _GuideWidgetState createState() => _GuideWidgetState();
+}
+
+class _GuideWidgetState extends State<GuideWidget> {
   final Map<int, Color> colorMap = {
     0: lightRed,
     1: lightYellow,
@@ -25,14 +35,33 @@ class GuideWidget extends StatelessWidget {
     9: strokePurple,
   };
 
-  final String guide;
-  final int index;
+  late FocusNode _focusNode;
 
-  void _onGuidePressed(BuildContext context) async {
-    if (index == 3) {
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_handleFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_handleFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleFocusChange() {
+    if (_focusNode.hasFocus) {
+      _onGuidePressed();
+    }
+  }
+
+  void _onGuidePressed() async {
+    if (widget.screenIndex == 1 && widget.index == 3) {
       final player = AudioPlayer();
       await player.play(AssetSource('sounds/half-pass.mp3'));
-    } else if (index == 4) {
+    } else if (widget.screenIndex == 1 && widget.index == 4) {
       Vibration.vibrate(pattern: [100, 400, 100, 400]);
     }
   }
@@ -74,8 +103,38 @@ class GuideWidget extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+            Positioned(
+              top: -15,
+              left: MediaQuery.of(context).size.width / 2 - 40,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: colorMap[widget.index + 5] ?? Colors.black,
+                      width: 2.5),
+                  color: colorMap[widget.index],
+                ),
+                child: Center(
+                  child: Semantics(
+                    sortKey: const OrdinalSortKey(0),
+                    label: '${widget.index + 1}단계',
+                    child: Text(
+                      '${widget.index + 1}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: colorMap[widget.index + 5] ?? Colors.black,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
