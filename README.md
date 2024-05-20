@@ -52,6 +52,30 @@
 
 ## 💡 프로젝트 진행
 
+### ✏ Notion
+
+- 프로젝트 관련 학습 내용과 논의 내용을 notion 에 작성하여 문서 관리
+
+### ✏ Jira
+
+- 프로젝트 일정 관리
+- 이슈 발행 및 담당자 지정
+  - 매주 스프린트 시작 전 백로그에 이슈 등록
+  - 소요 시간 별 스토리 포인트 지정
+  - 하위 작업 등록을 통한 세부 일정 관리
+- 스프린트 번다운 차트 활용
+
+### ✏ Git
+
+- 팀 Notion에 Git 행동 강령과 Commit convention 작성, 공유
+
+
+- 작업 브랜치 전략
+```
+master - fe-develop  - feature/이슈번호/기능
+       - be-develop                  
+       - data-develop                  
+```
 ### ✏ 요구사항 정의서
 
 - 아이디어 기획 및 구체화 단계에서 요구사항 정의
@@ -64,7 +88,7 @@
 ![image](https://github.com/NoRuTnT/Dotori/assets/114069644/7d3c8cde-3b70-49bf-b7f3-8b12add3650e)
 
 
-### ✏ 인프라 구조도
+### ✏ System Architecture
 ![KakaoTalk_20240519_154835047](https://github.com/NoRuTnT/Dotori/assets/114069644/3d20700d-71ec-4cdf-8be4-af629ebcbad3)
 
 
@@ -117,10 +141,14 @@
 ### 📊 kafka Connect
 ![image](https://github.com/NoRuTnT/Dotori/assets/114069644/102c4418-0330-4dc9-a812-a773a30f2b2f)
 
-Kafka Connect는 데이터베이스, 키-값 저장소, 검색 인덱스 및 파일 시스템 간의 간단한 데이터 통합을 위한 중앙 집중식 데이터 허브 역할을 하는 Apache Kafka의 무료 오픈소스 구성요소로 해당 프로젝트에서는 api데이터소스에서 firebase로 데이터를 전달하기위한 파이프라인으로 사용하였습니다.
+Kafka Connect는 데이터베이스, 키-값 저장소, 검색 인덱스 및 파일 시스템 간의 간단한 데이터 통합을 위한 중앙 집중식 데이터 허브 역할을 하는 Apache Kafka의 무료 오픈소스 구성요소로 해당 프로젝트에서는 api데이터소스에서 firebase로 데이터를 전달하기위한 파이프라인으로 사용하였다.  
 
-- kafka 클러스터에서는 데이터소스에서 kafka 토픽으로 데이터를 전달하는 source connector와, kafka 토픽에서 firebase로 데이터를 전달하는 sink connector 두개의 커스텀 커넥터를 구현했습니다.
-- 실시간 교통데이터를 다루기때문에 높은 처리량과 내결함성을 고려하여 **kafka connect** 데이터 파이프라인을 이용하기로 했습니다. 
+커넥트는 2가지 종류가 존재하는데 이를 아래와 같이 분류할 수 있다.  
+소스 -> 카프카 : 소스 커넥터(Source Connector)  
+카프카 -> 싱크 : 싱크 커넥터(Sink Connector)  
+
+- kafka 클러스터에서는 데이터소스에서 kafka 토픽으로 데이터를 전달하는 source connector와, kafka 토픽에서 firebase로 데이터를 전달하는 sink connector 두개의 커스텀 커넥터를 구현했다.
+- 실시간 교통데이터를 다루기때문에 높은 처리량과 내결함성을 고려하여 **kafka connect** 데이터 파이프라인을 이용하기로 했다. 
 
 
 
