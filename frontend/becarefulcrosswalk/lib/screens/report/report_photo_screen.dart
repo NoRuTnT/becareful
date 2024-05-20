@@ -4,7 +4,6 @@ import 'package:becarefulcrosswalk/provider/report_data.dart';
 import 'package:becarefulcrosswalk/screens/report/report_location_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
-import 'package:becarefulcrosswalk/widgets/alert_dialog_widget.dart';
 import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -78,12 +77,7 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const AlertDialogWidget();
-              },
-            );
+            Navigator.pop(context);
           },
         ),
       ),
@@ -187,11 +181,10 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
                               Provider.of<ReportData>(context, listen: false)
                                   .setImageFile(_image!);
                             }
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const ReportLocationScreen(),
+                                builder: (context) => ReportLocationScreen(),
                               ),
                             );
                           },
@@ -202,7 +195,7 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomBar(),
+      bottomNavigationBar: BottomBar(),
     );
   }
 }
