@@ -1,5 +1,6 @@
 import 'package:becarefulcrosswalk/provider/report_data.dart';
-import 'package:becarefulcrosswalk/screens/report/report_complete_screen.dart';
+import 'package:becarefulcrosswalk/screens/report/report_fail_screen.dart';
+import 'package:becarefulcrosswalk/screens/report/report_success_screen.dart';
 import 'package:becarefulcrosswalk/screens/report/report_voice_screen.dart';
 import 'package:becarefulcrosswalk/theme/colors.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
@@ -146,14 +147,24 @@ class ReportSttResultScreen extends StatelessWidget {
                     onPressed: () async {
                       Provider.of<ReportData>(context, listen: false)
                           .setReportText(text);
-                      await Provider.of<ReportData>(context, listen: false)
-                          .sendReportToServer();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ReportCompleteScreen(),
-                        ),
-                      );
+                      bool result =
+                          await Provider.of<ReportData>(context, listen: false)
+                              .sendReportToServer();
+                      if (result) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ReportSuccessScreen(),
+                          ),
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ReportFailScreen(),
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
