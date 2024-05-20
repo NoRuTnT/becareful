@@ -5,6 +5,7 @@
 - [💬 서비스 소개](#intro)
 - [🎯 기획 배경](#plans)
 - [🙇 팀원 소개](#members)
+- [🏠 프로젝트 진행](#project)
 - [💡 주요 기능](#features)
 - [🔑 기술 소개](#technology)
 - [🔨 개발 환경](#skills)
@@ -24,13 +25,16 @@
 <a name="plans"></a>
 ## 🎯 기획 배경
 - 시각장애인들의 횡단보도 보행시 다양한 불편함
+    ![image](https://github.com/NoRuTnT/Dotori/assets/114069644/2e23fc40-279e-4602-96af-69ebab1b2504)
     - 도로는 건너는 중 현재 신호가 초록불인지 빨간불인지 알수가없다
     - 신호가 몇초 남았는지 알 수 없어 건너는도중 빨간불로 바뀌었을까봐 걱정된다.
     - 음향신호기가 고장나서 소리가 나지 않거나 소리가 너무 작아서 알아들을수없는 경우가 있다.
+    ![image](https://github.com/NoRuTnT/Dotori/assets/114069644/49a6f785-8b09-44ab-bd4e-c634ec73645a)
     - 음향신호기가 설치되지 않은 교차로가 존재한다
     - 음향신호기 위치까지 점자블록이 이어져 있지 않아서 음향신호기 버튼을 찾을수가없다.  
 
 위의 문제점들을 해결할 수 있는 시각장애인을 위한 안전보행서비스를 개발하게되었다.
+(출처 : 원샷한솔OneshotHansol 유튜브 영상 캡쳐)
 
 <a name="members"></a>
 ## 🙇 팀원 소개
@@ -43,6 +47,26 @@
 |**이은지 (팀원/FE)**|**김지환 (팀원/FE)**|
 |:---:|:---:|
 |화면 페이지 구현, Firebase|화면 페이지 구현, Geofencing 구현|
+
+<a name="project"></a>
+
+## 💡 프로젝트 진행
+
+### ✏ 요구사항 정의서
+
+- 아이디어 기획 및 구체화 단계에서 요구사항 정의
+- 우선순위 지정 후 기능 확정
+
+### ✏ Wireframe
+
+- Figma 활용 UI/UX 디자인 진행
+- 기능 develop
+![image](https://github.com/NoRuTnT/Dotori/assets/114069644/7d3c8cde-3b70-49bf-b7f3-8b12add3650e)
+
+
+### ✏ 인프라 구조도
+![KakaoTalk_20240519_154835047](https://github.com/NoRuTnT/Dotori/assets/114069644/3d20700d-71ec-4cdf-8be4-af629ebcbad3)
+
 
 <a name="features"></a>
 
