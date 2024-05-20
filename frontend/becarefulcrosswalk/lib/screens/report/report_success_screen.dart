@@ -5,14 +5,14 @@ import 'package:becarefulcrosswalk/widgets/button_widget.dart';
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:flutter/material.dart';
 
-class ReportCompleteScreen extends StatefulWidget {
-  const ReportCompleteScreen({super.key});
+class ReportSuccessScreen extends StatefulWidget {
+  const ReportSuccessScreen({super.key});
 
   @override
-  State<ReportCompleteScreen> createState() => _ReportCompleteScreenState();
+  State<ReportSuccessScreen> createState() => _ReportCompleteScreenState();
 }
 
-class _ReportCompleteScreenState extends State<ReportCompleteScreen> {
+class _ReportCompleteScreenState extends State<ReportSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -30,7 +30,12 @@ class _ReportCompleteScreenState extends State<ReportCompleteScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          leading: Container(),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
