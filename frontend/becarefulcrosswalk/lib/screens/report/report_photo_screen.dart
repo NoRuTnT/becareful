@@ -181,10 +181,11 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
                               Provider.of<ReportData>(context, listen: false)
                                   .setImageFile(_image!);
                             }
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ReportLocationScreen(),
+                                builder: (context) =>
+                                    const ReportLocationScreen(),
                               ),
                             );
                           },
@@ -195,7 +196,7 @@ class _ReportPhotoScreenState extends State<ReportPhotoScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomBar(),
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }
