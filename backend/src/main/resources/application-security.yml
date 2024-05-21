@@ -1,0 +1,7 @@
+spring:
+  config:
+    import:
+      - optional:file:env/security.env[.properties]
+
+server:
+  port: ${SERVER_PORT}

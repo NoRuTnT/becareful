@@ -1,0 +1,65 @@
+version: '3'
+
+networks:
+  becareful-network:
+
+
+services:
+  becareful-mysql:
+    container_name: "mysql"
+    image: mysql:8.0.32
+    networks:
+      - becareful-network
+    ports:
+      - "3306:3306"
+    env_file:
+      - docker-db.env
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - ./initial-mysql:/docker-entrypoint-initdb.d
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    restart: "no"
+
+
+  becareful-back:
+    container_name: "back"
+    build:
+      dockerfile: "dockerfile"
+      context: "../../backend"
+    image: becareful-back-image
+    networks:
+      - becareful-network
+    ports:
+      - "8081:8081"
+    env_file:
+      - becareful-back/env/db.env
+      - becareful-back/env/test-db.env
+      - becareful-back/env/security.env
+    environment:
+      TZ: Asia/Seoul
+    depends_on:
+      - becareful-mysql
+    restart: "no"
+
+  becareful-nginx:
+    container_name: "nginx"
+    image: nginx:1.18.0
+    volumes:
+      - ./becareful-nginx/image:/usr/share/nginx/html
+      - ./becareful-nginx/conf:/etc/nginx/conf.d
+    networks:
+      - becareful-network
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - becareful-mysql
+      - becareful-back
+    restart: always
+
+
+
