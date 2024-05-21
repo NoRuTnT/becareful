@@ -1,15 +1,20 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 
-import 'package:becarefulcrosswalk/service/my_direction.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:becarefulcrosswalk/provider/my_direction.dart';
 import 'package:becarefulcrosswalk/utils/bottom_bar.dart';
 import 'package:becarefulcrosswalk/widgets/prompt_widget.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geofence_service/geofence_service.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:poly_geofence_service/poly_geofence_service.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 import '../models/intersection_model.dart';
 import '../provider/crosswalk_info.dart';
@@ -160,7 +165,8 @@ class _MapScreenState extends State<MapScreen> {
 
         print('횡단보도 나감');
 
-        MyDirection().stopListening();
+        print("stopListening호출함");
+        stopListening();
       }
     });
   }
@@ -200,7 +206,7 @@ class _MapScreenState extends State<MapScreen> {
     if (getClosestLocationIndex(
             myLocation, temp!.midpointList[0], temp!.midpointList[1]) ==
         0) {
-      MyDirection().startListening(
+      startListening(
           double.parse(temp.coordinateList[2].latitude),
           double.parse(temp.coordinateList[2].longitude),
           double.parse(temp.coordinateList[3].latitude),
@@ -209,7 +215,7 @@ class _MapScreenState extends State<MapScreen> {
           double.parse(temp.midpointList[1].longitude),
           double.parse(temp.length));
     } else {
-      MyDirection().startListening(
+      startListening(
           double.parse(temp.coordinateList[0].latitude),
           double.parse(temp.coordinateList[0].longitude),
           double.parse(temp.coordinateList[1].latitude),
@@ -222,18 +228,176 @@ class _MapScreenState extends State<MapScreen> {
 
   int getClosestLocationIndex(
       MyLocation myLocation, Coordinate a, Coordinate b) {
-    double distanceToA = MyDirection().calculateDistance(
+    double distanceToA = calculateDistance(
         myLocation.latitude,
         myLocation.longitude,
         double.parse(a.latitude),
         double.parse(a.longitude));
-    double distanceToB = MyDirection().calculateDistance(
+    double distanceToB = calculateDistance(
         myLocation.latitude,
         myLocation.longitude,
         double.parse(b.latitude),
         double.parse(b.longitude));
 
     return (distanceToA < distanceToB) ? 0 : 1;
+  }
+
+  //// 방향 가이드 & 절반 가이드
+  StreamSubscription<CompassEvent>? _compassSubscription;
+  StreamSubscription<Position>? _positionSubscription;
+
+  void startListening(double destLat1, double destLng1, double destLat2,
+      double destLng2, double midLat, double midLng, double length) {
+    Provider.of<MyDirection>(context, listen: false).setIsPassHalf(false);
+
+    // 디바이스 방향이 바뀔 때마다
+    _compassSubscription = FlutterCompass.events!.listen((CompassEvent event) {
+      // 디바이스 방향 계산
+      Provider.of<MyDirection>(context, listen: false)
+          .setHeadingAngle(event.heading);
+      // 방위각이 안전범위 내에 있는지 확인
+      checkSafeAngle();
+    });
+
+    // 위치 바뀔 때마다
+    _positionSubscription =
+        Geolocator.getPositionStream().listen((Position myLocation) {
+      // 목적지1의 방위각 계산
+      Provider.of<MyDirection>(context, listen: false).setDestAngle1(
+          calculateAngle(
+              myLocation.latitude, myLocation.longitude, destLat1, destLng1));
+
+      // 목적지2의 방위각 계산
+      Provider.of<MyDirection>(context, listen: false).setDestAngle2(
+          calculateAngle(
+              myLocation.latitude, myLocation.longitude, destLat2, destLng2));
+
+      // 방위각이 안전범위 내에 있는지 확인
+      checkSafeAngle();
+
+      // 남은 거리 계산
+      Provider.of<MyDirection>(context, listen: false).setRemainingDistance(
+          calculateDistance(
+              myLocation.latitude, myLocation.longitude, midLat, midLng));
+
+      // 절반을 안건넜다면, 절반을 지났는지 확인
+      print(Provider.of<MyDirection>(context, listen: false).getIsPassHalf);
+      if (Provider.of<MyDirection>(context, listen: false).getIsPassHalf !=
+              null &&
+          !Provider.of<MyDirection>(context, listen: false).getIsPassHalf!) {
+        checkHalfWalk(length);
+      }
+    });
+  }
+
+  void stopListening() {
+    _compassSubscription?.cancel();
+    _positionSubscription?.cancel();
+  }
+
+  // 두 지점 사이의 방위각 계산
+  double calculateAngle(
+      double startLat, double startLng, double endLat, double endLng) {
+    var startLatRad = radians(startLat);
+    var startLngRad = radians(startLng);
+    var endLatRad = radians(endLat);
+    var endLngRad = radians(endLng);
+
+    var dLng = endLngRad - startLngRad;
+
+    var bearing = math.atan2(
+      math.sin(dLng) * math.cos(endLatRad),
+      math.cos(startLatRad) * math.sin(endLatRad) -
+          math.sin(startLatRad) * math.cos(endLatRad) * math.cos(dLng),
+    );
+
+    return (degrees(bearing) + 360) % 360;
+  }
+
+  double radians(double degree) {
+    return degree * math.pi / 180.0;
+  }
+
+  double degrees(double radian) {
+    return radian * 180.0 / math.pi;
+  }
+
+  void checkSafeAngle() {
+    if (Provider.of<MyDirection>(context, listen: false).getHeadingAngle ==
+            null ||
+        Provider.of<MyDirection>(context, listen: false).getDestAngle1 ==
+            null ||
+        Provider.of<MyDirection>(context, listen: false).getDestAngle2 ==
+            null) {
+      return;
+    }
+
+    double maxAngle = math.max(
+        Provider.of<MyDirection>(context, listen: false).getDestAngle1!,
+        Provider.of<MyDirection>(context, listen: false).getDestAngle2!);
+    double minAngle = math.min(
+        Provider.of<MyDirection>(context, listen: false).getDestAngle1!,
+        Provider.of<MyDirection>(context, listen: false).getDestAngle2!);
+
+    if (maxAngle - minAngle >= 180) {
+      bool isSafe = (maxAngle <
+                  Provider.of<MyDirection>(context, listen: false)
+                      .getHeadingAngle! &&
+              Provider.of<MyDirection>(context, listen: false)
+                      .getHeadingAngle! <=
+                  360) ||
+          (0 <=
+                  Provider.of<MyDirection>(context, listen: false)
+                      .getHeadingAngle! &&
+              Provider.of<MyDirection>(context, listen: false)
+                      .getHeadingAngle! <=
+                  minAngle);
+      Provider.of<MyDirection>(context, listen: false).setIsSafeAngle(isSafe);
+    } else {
+      bool isSafe = (minAngle <=
+              Provider.of<MyDirection>(context, listen: false)
+                  .getHeadingAngle! &&
+          Provider.of<MyDirection>(context, listen: false).getHeadingAngle! <=
+              maxAngle);
+      Provider.of<MyDirection>(context, listen: false).setIsSafeAngle(isSafe);
+    }
+
+    guideWithVibration();
+  }
+
+  void guideWithVibration() {
+    if (Provider.of<MyDirection>(context, listen: false).getIsSafeAngle ==
+        null) {
+      return;
+    }
+    if (!Provider.of<MyDirection>(context, listen: false).getIsSafeAngle!) {
+      Vibration.vibrate(pattern: [100, 100, 100, 100, 100, 200]);
+    } else {
+      Vibration.cancel();
+    }
+  }
+
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    var p = math.pi / 180;
+    var c = math.cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * math.asin(math.sqrt(a)); // 2 * R; R = 6371 km
+  }
+
+  void checkHalfWalk(double length) {
+    if (Provider.of<MyDirection>(context, listen: false).getRemainingDistance ==
+        null) {
+      return;
+    }
+    if (Provider.of<MyDirection>(context, listen: false).getRemainingDistance! *
+            1000 <=
+        length / 2) {
+      Provider.of<MyDirection>(context, listen: false).setIsPassHalf(true);
+      final player = AudioPlayer();
+      player.play(AssetSource('sounds/half-pass.mp3'));
+    }
   }
 
   @override
@@ -264,23 +428,46 @@ class _MapScreenState extends State<MapScreen> {
       ),
       body: Column(
         children: [
-          Provider.of<MyLocationState>(context).myLocationState == 3
-              ? Container() // 상태가 3일 때 빈 컨테이너를 표시
-              : PromptWidget(message: getPromptMessage()),
-          if (Provider.of<MyLocationState>(context).myLocationState == 3)
-            Container(
-              padding: const EdgeInsets.all(16),
-              width: double.infinity,
-              color: const Color(0xFF48A3F7),
-              child: Text(
-                '남은거리: 약 ${MyDirection().getRemainingDistance}미터 \n 안전각도여부: ${MyDirection().getIsSafeAngle} \n 절반이상보행: ${MyDirection().getIsPassHalf}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
+          Provider.of<MyLocationState>(context).myLocationState != 3
+              ? PromptWidget(message: getPromptMessage())
+              : Column(
+                  children: [
+                    if (Provider.of<MyDirection>(context).getIsSafeAngle ==
+                        false)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        width: double.infinity,
+                        color: const Color(0xFF48A3F7),
+                        child: const Text(
+                          "방향을 바로잡아주세요",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    const SizedBox(
+                      height: 1,
+                    ),
+                    if (Provider.of<MyDirection>(context, listen: false)
+                            .getRemainingDistance !=
+                        null)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        width: double.infinity,
+                        color: const Color(0xFF48A3F7),
+                        child: Text(
+                          '${Provider.of<CrosswalkInfo>(context).crosswalkInfo?.length}미터 중 ${(Provider.of<MyDirection>(context, listen: false).getRemainingDistance! * 1000).round()}미터 남았습니다',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
           Expanded(
             child: NaverMap(
               options: NaverMapViewOptions(
